@@ -2,9 +2,9 @@ import * as React from 'react';
 import * as style from './style.css';
 import { inject, observer } from 'mobx-react';
 import { RouteComponentProps } from 'react-router';
-import { Header } from 'app/components/Header';
-import { TodoList } from 'app/components/TodoList';
-import { Footer } from 'app/components/Footer';
+import { Header } from 'app/components/todos/Header';
+import { TodoList } from 'app/components/todos/TodoList';
+import { Footer } from 'app/components/todos/Footer';
 import { TodoStore, RouterStore } from 'app/stores';
 import {
   STORE_TODO,
@@ -16,7 +16,7 @@ import {
 export interface TodoAppProps extends RouteComponentProps<any> {
   /** MobX Stores will be injected via @inject() **/
   // [STORE_ROUTER]: RouterStore;
-  // [STOURE_TODO]: TodoStore;
+  // [STOURE_TODO]: UserStore;
 }
 
 export interface TodoAppState {
@@ -76,7 +76,7 @@ export class TodoApp extends React.Component<TodoAppProps, TodoAppState> {
     const { filter } = this.state;
     const filteredTodos = this.getFilteredTodo(filter);
 
-    const footer = todoStore.todos.length && (
+    const footer = todoStore.todos.length > 0 && (
       <Footer
         filter={filter}
         activeCount={todoStore.activeTodos.length}

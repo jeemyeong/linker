@@ -16,5 +16,3 @@ export class TodoModel {
     return this.nextId++;
   }
 }
-
-export default TodoModel;

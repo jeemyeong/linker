@@ -1,0 +1,155 @@
+###
+
+GET http://localhost:8080/users/all
+Content-Type: application/json
+
+###
+
+POST http://localhost:8080/users/
+Content-Type: application/json
+
+{
+  "email": "jeemyeong@gmail.com"
+}
+
+###
+
+GET http://localhost:8080/columns/all
+Content-Type: application/json
+
+###
+
+POST http://localhost:8080/columns/
+Content-Type: application/json
+
+{
+  "title": "react",
+  "email": "jeemyeong@gmail.com"
+}
+
+###
+
+POST http://localhost:8080/columns/
+Content-Type: application/json
+
+{
+  "title": "kotlin",
+  "email": "jeemyeong@gmail.com"
+}
+
+###
+
+POST http://localhost:8080/columns/
+Content-Type: application/json
+
+{
+  "title": "redis",
+  "email": "jeemyeong@gmail.com"
+}
+
+###
+
+POST http://localhost:8080/columns/
+Content-Type: application/json
+
+{
+  "title": "CQRS",
+  "email": "jeemyeong@gmail.com"
+}
+
+###
+
+GET http://localhost:8080/links/all
+Content-Type: application/json
+
+###
+
+GET http://localhost:8080/links/user/jeemyeong@gmail.com
+Content-Type: application/json
+
+###
+
+POST http://localhost:8080/links/
+Content-Type: application/json
+
+{
+  "url": "https://reactjs.org/blog/2018/03/29/react-v-16-3.html",
+  "content": "리액트 블로그",
+  "linkColumnId": "1",
+  "email": "jeemyeong@gmail.com"
+}
+
+###
+
+POST http://localhost:8080/links/
+Content-Type: application/json
+
+{
+  "url": "https://github.com/atlassian/react-beautiful-dnd/",
+  "content": "리액트 dnd",
+  "linkColumnId": "1",
+  "email": "jeemyeong@gmail.com"
+}
+
+###
+
+POST http://localhost:8080/links/
+Content-Type: application/json
+
+{
+  "url": "https://react.semantic-ui.com/introduction",
+  "content": "리액트 semantic ui",
+  "linkColumnId": "1",
+  "email": "jeemyeong@gmail.com"
+}
+
+###
+
+POST http://localhost:8080/links/
+Content-Type: application/json
+
+{
+  "url": "https://kotlinlang.org/docs/tutorials/koans.html",
+  "content": "코틀린 튜토리얼",
+  "linkColumnId": "2",
+  "email": "jeemyeong@gmail.com"
+}
+
+###
+
+POST http://localhost:8080/links/
+Content-Type: application/json
+
+{
+  "url": "https://redis.io/",
+  "content": "레디스",
+  "linkColumnId": "3",
+  "email": "jeemyeong@gmail.com"
+}
+
+###
+
+POST http://localhost:8080/links/
+Content-Type: application/json
+
+{
+  "url": "https://www.popit.kr/cqrs-eventsourcing/",
+  "content": "나만 모르고 있던 CQRS",
+  "linkColumnId": "4",
+  "email": "jeemyeong@gmail.com"
+}
+
+###
+
+POST http://localhost:8080/links/
+Content-Type: application/json
+
+{
+  "url": "https://blog.aliencube.org/ko/2013/08/18/cqrs-oversimplified-overview/",
+  "content": "CQRS 초간단 정리",
+  "linkColumnId": "4",
+  "email": "jeemyeong@gmail.com"
+}
+
+###
+

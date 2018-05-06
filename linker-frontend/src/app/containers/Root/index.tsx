@@ -1,4 +1,5 @@
 import * as React from 'react';
+import './style.css';
 
 export class Root extends React.Component<any, any> {
   renderDevTool() {
