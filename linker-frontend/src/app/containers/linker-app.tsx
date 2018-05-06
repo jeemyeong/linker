@@ -4,9 +4,9 @@ import { Board, ColumnItemMap } from 'app/components/linker/Board/board';
 import Banner from 'app/components/linker/Banner/banner';
 import styled from 'styled-components';
 import { inject, observer } from 'mobx-react';
-import { STORE_COLUMN, STORE_LINK } from 'app/constants';
-import { ColumnStore, LinkStore } from 'app/stores';
-import { LinkModel } from 'app/models';
+import { STORE_COLUMN, STORE_LINK } from 'app/constants/index';
+import { ColumnStore, LinkStore } from 'app/stores/index';
+import { LinkModel } from 'app/models/index';
 import { Link } from 'app/components/linker/Link/link';
 
 const Layout = styled.div`
