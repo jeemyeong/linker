@@ -9,7 +9,7 @@ import { grid, colors } from './constants';
 import styled from 'styled-components';
 import { BoardItem, RenderItemToJSXElement } from './board';
 import { ColumnId } from 'app/models';
-import AddItem from 'app/components/linker/Board/add-item';
+import {RenderAddItemToJSXElement} from "app/components/linker/Board/board";
 
 const Wrapper: any = styled.div`
   background-color: ${({ isDraggingOver }: DroppableStateSnapshot) =>
@@ -43,7 +43,7 @@ const ScrollContainer = styled.div`
 const Container = styled.div``;
 
 export interface InnerItemListProps<T> {
-  render: RenderItemToJSXElement<T>
+  renderItem: RenderItemToJSXElement<T>
   items: Array<T>
 }
 
@@ -65,7 +65,7 @@ class InnerItemList<T extends BoardItem> extends React.Component<InnerItemListPr
       <Draggable key={item.id} draggableId={(item.id).toString()} index={index}>
         {(dragProvided, dragSnapshot) => (
           <Item
-            render={this.props.render}
+            renderItem={this.props.renderItem}
             key={item.id}
             item={item}
             isDragging={dragSnapshot.isDragging}
@@ -78,7 +78,7 @@ class InnerItemList<T extends BoardItem> extends React.Component<InnerItemListPr
 }
 
 export interface InnerListProps<T> {
-  render: RenderItemToJSXElement<T>
+  renderItem: RenderItemToJSXElement<T>
   items: Array<T>
   title?: string
   dropProvided: DroppableProvided
@@ -90,14 +90,14 @@ export interface InnerListState {
 
 class InnerList<T extends BoardItem> extends React.Component<InnerListProps<T>, InnerListState> {
   render() {
-    const { items, dropProvided, render } = this.props;
+    const { items, dropProvided, renderItem } = this.props;
     const title = this.props.title ? <div>{this.props.title}</div> : null;
 
     return (
       <Container>
         {title}
         <DropZone innerRef={dropProvided.innerRef}>
-          <InnerItemList items={items} render={render} />
+          <InnerItemList items={items} renderItem={renderItem} />
           {dropProvided.placeholder}
         </DropZone>
       </Container>
@@ -106,7 +106,8 @@ class InnerList<T extends BoardItem> extends React.Component<InnerListProps<T>, 
 }
 
 export interface ItemListProps<T> {
-  render: RenderItemToJSXElement<T>
+  renderItem: RenderItemToJSXElement<T>
+  renderAddItem: RenderAddItemToJSXElement
   internalScroll?: boolean
   isDropDisabled?: boolean
   listId: ColumnId
@@ -114,7 +115,6 @@ export interface ItemListProps<T> {
   items: Array<T>
   title?: string
   style?
-  addItem?: { ({ item, columnId }: { item: T, columnId: number}): void }
 }
 
 export interface ItemListState {
@@ -124,7 +124,8 @@ export interface ItemListState {
 export default class ItemList<T extends BoardItem> extends React.Component<ItemListProps<T>, ItemListState> {
   render() {
     const {
-      render,
+      renderItem,
+      renderAddItem,
       internalScroll,
       isDropDisabled,
       listId,
@@ -132,7 +133,6 @@ export default class ItemList<T extends BoardItem> extends React.Component<ItemL
       items,
       title,
       style,
-      addItem
     } = this.props;
 
     return (
@@ -153,7 +153,7 @@ export default class ItemList<T extends BoardItem> extends React.Component<ItemL
             {internalScroll ? (
               <ScrollContainer>
                 <InnerList
-                  render={render}
+                  renderItem={renderItem}
                   items={items}
                   title={title}
                   dropProvided={dropProvided}
@@ -161,18 +161,13 @@ export default class ItemList<T extends BoardItem> extends React.Component<ItemL
               </ScrollContainer>
             ) : (
               <InnerList
-                render={render}
+                renderItem={renderItem}
                 items={items}
                 title={title}
                 dropProvided={dropProvided}
               />
             )}
-            {addItem &&
-              <AddItem
-                addItem={addItem}
-                listId={listId}
-              />
-            }
+            {renderAddItem(listId)}
           </Wrapper>
         )}
       </Droppable>

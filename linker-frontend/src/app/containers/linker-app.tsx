@@ -8,6 +8,7 @@ import { STORE_COLUMN, STORE_LINK } from 'app/constants/index';
 import { ColumnStore, LinkStore } from 'app/stores/index';
 import { LinkModel } from 'app/models/index';
 import { Link } from 'app/components/linker/Link/link';
+import AddLink from "app/components/linker/Link/add-link";
 
 const Layout = styled.div`
   margin: 0 0 40px 0;
@@ -50,8 +51,7 @@ export class LinkerApp extends React.Component<LinkerAppProps, LinkerAppState> {
         ...previous,
         [column.id]: getByColumn(column, links)
       }),
-      {}
-    );
+      {}    );
     return (
       <Layout>
         <Header>
@@ -64,8 +64,8 @@ export class LinkerApp extends React.Component<LinkerAppProps, LinkerAppState> {
             columns={columns}
             reorderColumn={columnStore.reorderColumn}
             reorderItem={linkStore.reorderLink}
-            render={(item) => <Link item={item}/>}
-            addItem={linkStore.addLink}
+            renderItem={(item) => <Link item={item}/>}
+            renderAddItem={(listId: number) => <AddLink addItem={linkStore.addLink} listId={listId}/>}
           />
         </Main>
       </Layout>

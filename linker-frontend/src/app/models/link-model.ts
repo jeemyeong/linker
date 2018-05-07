@@ -8,7 +8,7 @@ export class LinkModel {
   @observable public linkColumn: LinkColumnModel;
   @observable public url: string;
 
-  constructor({id, content, linkColumn, url, order}: LinkModel) {
+  constructor({id = 0, content = "", linkColumn, url = "", order = 0}: LinkModel) {
     this.id = id;
     this.content = content;
     this.linkColumn = linkColumn;

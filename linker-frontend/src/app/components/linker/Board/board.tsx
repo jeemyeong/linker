@@ -29,6 +29,10 @@ export interface RenderItemToJSXElement<T> {
   (item: T): JSX.Element
 }
 
+export interface RenderAddItemToJSXElement {
+  (listId: number): JSX.Element
+}
+
 export interface ColumnItemMap<T> {
   [key: string] : Array<T>
 }
@@ -37,10 +41,10 @@ export interface BoardProps<T, K> {
   containerHeight?: string
   columnItemMap: ColumnItemMap<T>
   columns: Array<K>
-  render: RenderItemToJSXElement<T>
+  renderItem: RenderItemToJSXElement<T>
+  renderAddItem: RenderAddItemToJSXElement
   reorderColumn: { ({ originIndex, newIndex }: { originIndex: number, newIndex: number}): void }
   reorderItem: { ({ itemId, newColumnId, newIndex }: {itemId: number, newColumnId: number, newIndex: number}): void }
-  addItem: { ({ item, columnId }: { item: T, columnId: number}): void }
 }
 
 export interface BoardState<T> {
@@ -87,8 +91,7 @@ export class Board<T extends BoardItem, K extends ColumnModel> extends React.Com
   render() {
     const columnItemMap = this.props.columnItemMap;
     const columns = this.props.columns;
-    const addItem = this.props.addItem;
-    const { containerHeight, render } = this.props;
+    const { containerHeight, renderItem, renderAddItem } = this.props;
     const board = (
       <Droppable droppableId="board" type="COLUMN" direction="horizontal">
         {(provided) => (
@@ -100,8 +103,8 @@ export class Board<T extends BoardItem, K extends ColumnModel> extends React.Com
                 index={index}
                 title={column.title}
                 items={columnItemMap[column.id]}
-                render={render}
-                addItem={addItem}
+                renderItem={renderItem}
+                renderAddItem={renderAddItem}
               />
             ))}
           </Container>

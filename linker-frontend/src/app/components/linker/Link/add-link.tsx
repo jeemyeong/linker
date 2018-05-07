@@ -1,15 +1,15 @@
 import * as React from 'react';
 
-interface AddItemProps {
-  addItem: { ({ item, columnId }): void }
+interface AddLinkProps {
+  addItem?: { ({ item, columnId }): void }
   listId: number
 }
 
-interface AddItemState {
+interface AddLinkState {
   opened: boolean
   url: string
 }
-export default class AddItem extends React.Component<AddItemProps, AddItemState> {
+export default class AddLink extends React.Component<AddLinkProps, AddLinkState> {
   state = {
     opened: false,
     url: ""
@@ -17,6 +17,8 @@ export default class AddItem extends React.Component<AddItemProps, AddItemState>
 
   onSubmit = (e) => {
     e.preventDefault();
+
+    console.log(this.props.addItem)
     console.log(this.props.listId)
     console.log(this.state.url)
   };

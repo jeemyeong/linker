@@ -36,7 +36,7 @@ export interface ItemProps<T> {
   item: T,
   isDragging: boolean,
   provided: DraggableProvided,
-  render: RenderItemToJSXElement<T>
+  renderItem: RenderItemToJSXElement<T>
 }
 
 export interface ItemState {
@@ -53,7 +53,7 @@ export default class Item<T> extends React.PureComponent<ItemProps<T>, ItemState
   }
 
   render() {
-    const { item, isDragging, provided } = this.props;
+    const { isDragging, provided, item } = this.props;
     return (
       <Container
         // href={item.author.url}
@@ -62,7 +62,7 @@ export default class Item<T> extends React.PureComponent<ItemProps<T>, ItemState
         {...provided.draggableProps}
         {...provided.dragHandleProps}
       >
-        {this.props.render(item)}
+        {this.props.renderItem(item)}
       </Container>
     );
   }

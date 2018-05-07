@@ -8,7 +8,7 @@ import {
   grid
 } from './constants';
 import { BoardItem } from './board';
-import { RenderItemToJSXElement } from 'app/components/linker/Board/board';
+import {RenderAddItemToJSXElement, RenderItemToJSXElement} from 'app/components/linker/Board/board';
 import { ColumnId } from 'app/models';
 
 const Container = styled.div`
@@ -42,12 +42,12 @@ const Title = styled.h4`
 `;
 
 export interface ColumnProps<T> {
-  render: RenderItemToJSXElement<T>
+  renderItem: RenderItemToJSXElement<T>
+  renderAddItem: RenderAddItemToJSXElement
   index: number
   title: string
   items: Array<T>
   columnId: ColumnId
-  addItem: { ({ item, columnId }: { item: T, columnId: number}): void }
 }
 
 export interface ColumnState {
@@ -76,8 +76,8 @@ export class Column<T extends BoardItem> extends React.Component<ColumnProps<T>,
               listId={columnId}
               listType="ITEM"
               items={items}
-              render={this.props.render}
-              addItem={this.props.addItem}
+              renderItem={this.props.renderItem}
+              renderAddItem={this.props.renderAddItem}
             />
           </Container>
         )}
