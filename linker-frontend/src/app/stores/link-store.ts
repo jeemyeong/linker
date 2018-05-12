@@ -12,21 +12,19 @@ export class LinkStore {
 
   @observable public links: Array<LinkModel>;
 
+  // TODO: throttling add
   @action
   addLink = ({
-    item: link,
-    categoryId
+    link,
   }: {
-    item: LinkModel;
-    categoryId: number;
+    link: LinkModel;
   }): Promise<void> =>
     axios
-      .post(`${config.API_URL}/links`, {
-        url: link.url,
-        content: link.content,
-        categoryId,
+      .post(`${config.API_URL}/links/`, {
+        link: link,
         email: 'jeemyeong@gmail.com'
       })
+      .then(() => this.updateLinks([...this.links, link]))
       .then(this.getLinks);
 
   @action
@@ -59,6 +57,7 @@ export class LinkStore {
     this.links = this.links.filter((link) => link.id !== id);
   };
 
+  // TODO: throttling reorder
   @action
   reorderLink = ({ itemId, newColumnId, newIndex }): Promise<void> => {
     const originLink = this.links.find((link) => link.id === itemId);

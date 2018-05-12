@@ -33,10 +33,9 @@ class LinkService(
     }
 
     fun newLink(createLinkCommand: CreateLinkCommand): Link {
-        val categoryId = createLinkCommand.categoryId
-        val category = categoryService.findById(categoryId)
+        val category = categoryService.findById(createLinkCommand.link.category.id)
         val order = linkRepository.findByCategory(category).size + 1
-        return linkRepository.save(createLinkCommand.toDomain(category, order))
+        return linkRepository.save(createLinkCommand.toDomain(order))
     }
 
     @Transactional

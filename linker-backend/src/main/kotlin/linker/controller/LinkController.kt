@@ -2,7 +2,6 @@ package linker.controller
 
 import linker.dto.CreateLinkCommand
 import linker.dto.LinkDto
-import linker.entity.Link
 import linker.service.LinkService
 import org.springframework.web.bind.annotation.*
 

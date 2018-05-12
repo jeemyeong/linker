@@ -41,6 +41,7 @@ export class CategoryStore {
     this.categories = this.categories.filter((i) => i !== category);
   };
 
+  // TODO: throttling reorder
   reorderCategories = ({ originIndex, newIndex }): Promise<void> => {
     const originOrder = originIndex + 1;
     const newOrder = newIndex + 1;

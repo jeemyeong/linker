@@ -1,6 +1,14 @@
 import { observable } from 'mobx';
 import { CategoryModel } from 'app/models/category-model';
 
+export interface LinkModelProps {
+  id?: number
+  order?: number
+  content?: string
+  category: CategoryModel
+  url?: string
+}
+
 export class LinkModel {
   @observable public id: number;
   @observable public order: number;
@@ -14,7 +22,7 @@ export class LinkModel {
     category,
     url = '',
     order = 0
-  }: LinkModel) {
+  } : LinkModelProps) {
     this.id = id;
     this.content = content;
     this.category = category;

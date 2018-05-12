@@ -66,7 +66,7 @@ export class LinkerApp extends React.Component<LinkerAppProps, LinkerAppState> {
             reorderItem={linkStore.reorderLink}
             renderItem={(item) => <Link item={item} />}
             renderAddItem={(listId: number) => (
-              <AddLink addItem={linkStore.addLink} listId={listId} />
+              <AddLink addLink={linkStore.addLink} listId={listId} />
             )}
           />
         </Main>

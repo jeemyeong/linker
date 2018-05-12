@@ -1,7 +1,10 @@
 import * as React from 'react';
+import { LinkModel } from 'app/models';
+import { rootStore } from '../../../../main';
+import { STORE_CATEGORY, STORE_LINK } from 'app/constants';
 
 interface AddLinkProps {
-  addItem?: { ({ item, categoryId }): void };
+  addLink: { ({ link }): Promise<void> };
   listId: number;
 }
 
@@ -20,10 +23,15 @@ export default class AddLink extends React.Component<
 
   onSubmit = (e) => {
     e.preventDefault();
+    const url = this.state.url;
+    const category = rootStore[STORE_CATEGORY].categories.find(category => category.id === this.props.listId);
+    const order = rootStore[STORE_LINK].links.filter(link => link.category.id == category.id).length + 1
+    const link: LinkModel = new LinkModel({url, category, order});
 
-    console.log(this.props.addItem);
-    console.log(this.props.listId);
-    console.log(this.state.url);
+    this.props.addLink({ link }).then(
+      () => this.setState({url: '', opened: false}, () => console.log("Add Link Success"))
+    );
+
   };
 
   render() {

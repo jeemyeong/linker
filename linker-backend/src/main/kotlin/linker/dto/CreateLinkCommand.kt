@@ -1,6 +1,5 @@
 package linker.dto
 
-import linker.entity.Category
 import linker.entity.Link
 
 /**
@@ -10,15 +9,13 @@ import linker.entity.Link
  * Time: 10:45 PM
  */
 data class CreateLinkCommand(
-        val url: String,
-        val content: String,
-        val categoryId: Long,
+        val link: LinkDto,
         val email: String
 )
 
-fun CreateLinkCommand.toDomain(category: Category, order: Int): Link = Link(
-        url = url,
-        content = content,
-        category = category,
+fun CreateLinkCommand.toDomain(order: Int): Link = Link(
+        url = link.url,
+        content = link.content,
+        category = link.category.toDomain(),
         order = order
 )
