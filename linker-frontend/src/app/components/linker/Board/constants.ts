@@ -16,7 +16,6 @@ export const colors = {
   apricot: '#F8B195',
   red: '#F67280',
   wine: '#C06C84'
-
 };
 
 export const grid: number = 8;

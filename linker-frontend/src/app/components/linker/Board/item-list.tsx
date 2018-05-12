@@ -1,15 +1,16 @@
 import * as React from 'react';
 import {
   Draggable,
-  Droppable, DroppableProvided,
-  DroppableStateSnapshot,
+  Droppable,
+  DroppableProvided,
+  DroppableStateSnapshot
 } from 'react-beautiful-dnd';
 import Item from './item';
 import { grid, colors } from './constants';
 import styled from 'styled-components';
 import { BoardItem, RenderItemToJSXElement } from './board';
 import { CategoryId } from 'app/models';
-import {RenderAddItemToJSXElement} from "app/components/linker/Board/board";
+import { RenderAddItemToJSXElement } from 'app/components/linker/Board/board';
 
 const Wrapper: any = styled.div`
   background-color: ${({ isDraggingOver }: DroppableStateSnapshot) =>
@@ -43,15 +44,16 @@ const ScrollContainer = styled.div`
 const Container = styled.div``;
 
 export interface InnerItemListProps<T> {
-  renderItem: RenderItemToJSXElement<T>
-  items: Array<T>
+  renderItem: RenderItemToJSXElement<T>;
+  items: Array<T>;
 }
 
-export interface InnerItemListState {
+export interface InnerItemListState {}
 
-}
-
-class InnerItemList<T extends BoardItem> extends React.Component<InnerItemListProps<T>, InnerItemListState> {
+class InnerItemList<T extends BoardItem> extends React.Component<
+  InnerItemListProps<T>,
+  InnerItemListState
+> {
   shouldComponentUpdate(nextProps) {
     if (nextProps.items !== this.props.items) {
       return true;
@@ -62,7 +64,7 @@ class InnerItemList<T extends BoardItem> extends React.Component<InnerItemListPr
 
   render() {
     return this.props.items.map((item, index) => (
-      <Draggable key={item.id} draggableId={(item.id).toString()} index={index}>
+      <Draggable key={item.id} draggableId={item.id.toString()} index={index}>
         {(dragProvided, dragSnapshot) => (
           <Item
             renderItem={this.props.renderItem}
@@ -78,17 +80,18 @@ class InnerItemList<T extends BoardItem> extends React.Component<InnerItemListPr
 }
 
 export interface InnerListProps<T> {
-  renderItem: RenderItemToJSXElement<T>
-  items: Array<T>
-  title?: string
-  dropProvided: DroppableProvided
+  renderItem: RenderItemToJSXElement<T>;
+  items: Array<T>;
+  title?: string;
+  dropProvided: DroppableProvided;
 }
 
-export interface InnerListState {
+export interface InnerListState {}
 
-}
-
-class InnerList<T extends BoardItem> extends React.Component<InnerListProps<T>, InnerListState> {
+class InnerList<T extends BoardItem> extends React.Component<
+  InnerListProps<T>,
+  InnerListState
+> {
   render() {
     const { items, dropProvided, renderItem } = this.props;
     const title = this.props.title ? <div>{this.props.title}</div> : null;
@@ -106,22 +109,23 @@ class InnerList<T extends BoardItem> extends React.Component<InnerListProps<T>, 
 }
 
 export interface ItemListProps<T> {
-  renderItem: RenderItemToJSXElement<T>
-  renderAddItem: RenderAddItemToJSXElement
-  internalScroll?: boolean
-  isDropDisabled?: boolean
-  listId: CategoryId
-  listType?: string
-  items: Array<T>
-  title?: string
-  style?
+  renderItem: RenderItemToJSXElement<T>;
+  renderAddItem: RenderAddItemToJSXElement;
+  internalScroll?: boolean;
+  isDropDisabled?: boolean;
+  listId: CategoryId;
+  listType?: string;
+  items: Array<T>;
+  title?: string;
+  style?;
 }
 
-export interface ItemListState {
+export interface ItemListState {}
 
-}
-
-export default class ItemList<T extends BoardItem> extends React.Component<ItemListProps<T>, ItemListState> {
+export default class ItemList<T extends BoardItem> extends React.Component<
+  ItemListProps<T>,
+  ItemListState
+> {
   render() {
     const {
       renderItem,
@@ -132,12 +136,12 @@ export default class ItemList<T extends BoardItem> extends React.Component<ItemL
       listType,
       items,
       title,
-      style,
+      style
     } = this.props;
 
     return (
       <Droppable
-        droppableId={""+listId}
+        droppableId={'' + listId}
         type={listType}
         direction="vertical"
         isDropDisabled={false}

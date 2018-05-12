@@ -23,9 +23,7 @@ const Title = styled.h4`
 
 export class Banner extends React.Component<HeaderProps, HeaderState> {
   render() {
-    return (
-      <Title>Linker</Title>
-    );
+    return <Title>Linker</Title>;
   }
 }
 

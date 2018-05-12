@@ -1,6 +1,9 @@
 package linker.service
 
-import linker.dto.*
+import linker.dto.CreateLinkCommand
+import linker.dto.LinkDto
+import linker.dto.fromDomain
+import linker.dto.toDomain
 import linker.entity.Link
 import linker.repository.LinkRepository
 import org.springframework.stereotype.Service
@@ -24,9 +27,9 @@ class LinkService(
 
     fun findAll(): List<Link> = linkRepository.findAll().sortedBy { it.order }
 
-    fun findAllLinkByUser(email: String): UserWithLinksDto {
+    fun findAllLinkByUser(email: String): List<LinkDto> {
         val user = userService.findByEmail(email)
-        return UserWithLinksDto(user = UserDto.fromDomain(user), links = linkRepository.findAllLinksByUser(user).map { LinkDto.fromDomain(it) }.sortedBy { it.order })
+        return linkRepository.findAllLinksByUser(user).map { LinkDto.fromDomain(it) }.sortedBy { it.order }
     }
 
     fun newLink(createLinkCommand: CreateLinkCommand): Link {

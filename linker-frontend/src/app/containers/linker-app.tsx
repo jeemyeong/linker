@@ -8,7 +8,7 @@ import { STORE_CATEGORY, STORE_LINK } from 'app/constants/index';
 import { CategoryStore, LinkStore } from 'app/stores/index';
 import { LinkModel } from 'app/models/index';
 import { Link } from 'app/components/linker/Link/link';
-import AddLink from "app/components/linker/Link/add-link";
+import AddLink from 'app/components/linker/Link/add-link';
 
 const Layout = styled.div`
   margin: 0 0 40px 0;
@@ -24,7 +24,6 @@ const Main = styled.main`
   background: #fff;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 25px 50px 0 rgba(0, 0, 0, 0.1);
 `;
-
 
 export interface LinkerAppProps extends RouteComponentProps<any> {
   /** MobX Stores will be injected via @inject() **/
@@ -50,7 +49,9 @@ export class LinkerApp extends React.Component<LinkerAppProps, LinkerAppState> {
       (previous, column) => ({
         ...previous,
         [column.id]: getByColumn(column, links)
-      }), {});
+      }),
+      {}
+    );
     return (
       <Layout>
         <Header>
@@ -63,8 +64,10 @@ export class LinkerApp extends React.Component<LinkerAppProps, LinkerAppState> {
             columns={categories}
             reorderColumn={categoryStore.reorderCategories}
             reorderItem={linkStore.reorderLink}
-            renderItem={(item) => <Link item={item}/>}
-            renderAddItem={(listId: number) => <AddLink addItem={linkStore.addLink} listId={listId}/>}
+            renderItem={(item) => <Link item={item} />}
+            renderAddItem={(listId: number) => (
+              <AddLink addItem={linkStore.addLink} listId={listId} />
+            )}
           />
         </Main>
       </Layout>

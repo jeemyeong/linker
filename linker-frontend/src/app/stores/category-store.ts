@@ -4,28 +4,25 @@ import config from '../../config';
 import axios from 'axios';
 export class CategoryStore {
   constructor(categories: CategoryModel[] = []) {
-    this.updateCategories(categories)
+    this.updateCategories(categories);
   }
 
-  @observable public categories = new Array<CategoryModel>()
+  @observable public categories = new Array<CategoryModel>();
 
   @action
-  addCategories = (categories: CategoryModel[]): void => this.updateCategories([...this.categories, ...categories]);
+  addCategories = (categories: CategoryModel[]): void =>
+    this.updateCategories([...this.categories, ...categories]);
 
   @action
   updateCategories = (categories: CategoryModel[]): void => {
-    this.categories = [
-      ...categories
-    ].sort((a, b) => a.order - b.order);
+    this.categories = [...categories].sort((a, b) => a.order - b.order);
   };
 
   @action
   getAllCategories = (): Promise<void> =>
-    axios.get<Array<CategoryModel>>(`${config.API_URL}/categories/all`)
-      .then(res => {
-        const categories = res.data;
-        this.updateCategories(categories)
-      });
+    axios
+      .get<Array<CategoryModel>>(`${config.API_URL}/categories/all`)
+      .then(this.updateCategoriesFromResponse);
 
   @action
   editCategories = (id: number, data: Partial<CategoryModel>): void => {
@@ -41,28 +38,53 @@ export class CategoryStore {
 
   @action
   deleteCategories = (category: CategoryModel): void => {
-    this.categories = this.categories.filter(i => i !== category);
+    this.categories = this.categories.filter((i) => i !== category);
   };
 
-  reorderCategories = ({originIndex, newIndex}): Promise<void> => {
+  reorderCategories = ({ originIndex, newIndex }): Promise<void> => {
     const originOrder = originIndex + 1;
     const newOrder = newIndex + 1;
-    const originCategory = this.categories.find(category => category.order == originOrder);
+
+    const categories = [...this.categories];
+    const originCategory = categories.find(
+      (category) => category.order == originOrder
+    );
     if (originOrder < newOrder) {
-      this.categories.filter(category => category.order > originOrder && category.order <= newOrder).forEach(category => { category.order-=1 })
+      categories
+        .filter(
+          (category) =>
+            category.order > originOrder && category.order <= newOrder
+        )
+        .forEach((category) => {
+          category.order -= 1;
+        });
     } else {
-      this.categories.filter(category => category.order >= newOrder && category.order < originOrder).forEach(category => { category.order+=1 })
+      categories
+        .filter(
+          (category) =>
+            category.order >= newOrder && category.order < originOrder
+        )
+        .forEach((category) => {
+          category.order += 1;
+        });
     }
     originCategory.order = newOrder;
 
-    this.updateCategories(this.categories);
+    this.updateCategories(categories);
 
-    return axios.post<Array<CategoryModel>>(`${config.API_URL}/categories/reorder`, this.categories)
-      .then(res => action(() => {
-      const categories = res.data;
-      this.updateCategories(categories);
-    })())
+    return axios
+      .post<Array<CategoryModel>>(
+        `${config.API_URL}/categories/reorder`,
+        categories
+      )
+      .then(this.updateCategoriesFromResponse);
   };
+
+  updateCategoriesFromResponse = ({
+    data: categories
+  }: {
+    data: Array<CategoryModel>;
+  }) => this.updateCategories(categories);
 }
 
 export default CategoryStore;

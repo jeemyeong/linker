@@ -8,7 +8,13 @@ export class LinkModel {
   @observable public category: CategoryModel;
   @observable public url: string;
 
-  constructor({id = 0, content = "", category, url = "", order = 0}: LinkModel) {
+  constructor({
+    id = 0,
+    content = '',
+    category,
+    url = '',
+    order = 0
+  }: LinkModel) {
     this.id = id;
     this.content = content;
     this.category = category;

@@ -31,19 +31,19 @@ const Container = styled.a`
   align-items: center;
 `;
 
-
 export interface ItemProps<T> {
-  item: T,
-  isDragging: boolean,
-  provided: DraggableProvided,
-  renderItem: RenderItemToJSXElement<T>
+  item: T;
+  isDragging: boolean;
+  provided: DraggableProvided;
+  renderItem: RenderItemToJSXElement<T>;
 }
 
-export interface ItemState {
+export interface ItemState {}
 
-}
-
-export default class Item<T> extends React.PureComponent<ItemProps<T>, ItemState> {
+export default class Item<T> extends React.PureComponent<
+  ItemProps<T>,
+  ItemState
+> {
   componentDidMount() {
     // cdm is called when item is put to another column
   }

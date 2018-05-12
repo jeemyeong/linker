@@ -22,7 +22,7 @@ export const reorderItemMap = ({ itemMap, source, destination }) => {
       [source.droppableId]: reordered
     };
     return {
-      itemMap: result,
+      itemMap: result
     };
   }
 
@@ -40,6 +40,6 @@ export const reorderItemMap = ({ itemMap, source, destination }) => {
   };
 
   return {
-    itemMap: result,
+    itemMap: result
   };
 };

@@ -48,14 +48,16 @@ const Attribution = styled.small`
   flex-grow: 1;
 `;
 
-export const Link = ({item}) => <div>
-  {/*<Avatar src={item.user.avatarUrl} alt={item.user.name} />*/}
-  <Content>
-    <BlockItem>{item.url}</BlockItem>
-    <Footer>
-      <ItemId>(id: {item.id})</ItemId>
-      <ItemId>(order: {item.order})</ItemId>
-      <Attribution>{item.content}</Attribution>
-    </Footer>
-  </Content>
-</div>;
+export const Link = ({ item }) => (
+  <div>
+    {/*<Avatar src={item.user.avatarUrl} alt={item.user.name} />*/}
+    <Content>
+      <BlockItem>{item.url}</BlockItem>
+      <Footer>
+        <ItemId>(id: {item.id})</ItemId>
+        <ItemId>(order: {item.order})</ItemId>
+        <Attribution>{item.content}</Attribution>
+      </Footer>
+    </Content>
+  </div>
+);

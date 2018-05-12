@@ -1,7 +1,7 @@
 package linker.controller
 
+import linker.dto.LinkDto
 import linker.dto.SignUpCommand
-import linker.dto.UserWithLinksDto
 import linker.entity.User
 import linker.service.LinkService
 import linker.service.UserService
@@ -30,7 +30,7 @@ class UserController(val userService: UserService, val linkService: LinkService)
     fun new(@RequestBody signUpCommand: SignUpCommand): User = userService.signUp(signUpCommand = signUpCommand)
 
     @GetMapping("/{userEmail}/links")
-    fun getListIPost(@PathVariable userEmail: String): UserWithLinksDto = linkService.findAllLinkByUser(email = userEmail)
+    fun getListIPost(@PathVariable userEmail: String): List<LinkDto> = linkService.findAllLinkByUser(email = userEmail)
 }
 
 

@@ -17,44 +17,58 @@ const Container = styled.div`
 `;
 
 export interface BoardItem {
-  id: number
+  id: number;
 }
 
 export interface ColumnModel {
-  id: number
-  title: string
+  id: number;
+  title: string;
 }
 
 export interface RenderItemToJSXElement<T> {
-  (item: T): JSX.Element
+  (item: T): JSX.Element;
 }
 
 export interface RenderAddItemToJSXElement {
-  (listId: number): JSX.Element
+  (listId: number): JSX.Element;
 }
 
 export interface ColumnItemMap<T> {
-  [key: string] : Array<T>
+  [key: string]: Array<T>;
 }
 
 export interface BoardProps<T, K> {
-  containerHeight?: string
-  columnItemMap: ColumnItemMap<T>
-  columns: Array<K>
-  renderItem: RenderItemToJSXElement<T>
-  renderAddItem: RenderAddItemToJSXElement
-  reorderColumn: { ({ originIndex, newIndex }: { originIndex: number, newIndex: number}): void }
-  reorderItem: { ({ itemId, newColumnId, newIndex }: {itemId: number, newColumnId: number, newIndex: number}): void }
+  containerHeight?: string;
+  columnItemMap: ColumnItemMap<T>;
+  columns: Array<K>;
+  renderItem: RenderItemToJSXElement<T>;
+  renderAddItem: RenderAddItemToJSXElement;
+  reorderColumn: {
+    (
+      { originIndex, newIndex }: { originIndex: number; newIndex: number }
+    ): void;
+  };
+  reorderItem: {
+    (
+      {
+        itemId,
+        newColumnId,
+        newIndex
+      }: { itemId: number; newColumnId: number; newIndex: number }
+    ): void;
+  };
 }
 
 export interface BoardState<T> {
-  columnItemMap: ColumnItemMap<T>
-  ordered: Array<string>
+  columnItemMap: ColumnItemMap<T>;
+  ordered: Array<string>;
 }
 
-export class Board<T extends BoardItem, K extends ColumnModel> extends React.Component<BoardProps<T, K>, BoardState<T>> {
-  onDragStart = (initial) => {
-  };
+export class Board<
+  T extends BoardItem,
+  K extends ColumnModel
+> extends React.Component<BoardProps<T, K>, BoardState<T>> {
+  onDragStart = (initial) => {};
 
   onDragEnd = (result) => {
     if (!result.destination) {

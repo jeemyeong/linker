@@ -2,13 +2,12 @@ import * as React from 'react';
 import { Draggable, DraggableStateSnapshot } from 'react-beautiful-dnd';
 import ItemList from './item-list';
 import styled from 'styled-components';
-import {
-  borderRadius,
-  colors,
-  grid
-} from './constants';
+import { borderRadius, colors, grid } from './constants';
 import { BoardItem } from './board';
-import {RenderAddItemToJSXElement, RenderItemToJSXElement} from 'app/components/linker/Board/board';
+import {
+  RenderAddItemToJSXElement,
+  RenderItemToJSXElement
+} from 'app/components/linker/Board/board';
 import { CategoryId } from 'app/models';
 
 const Container = styled.div`
@@ -42,19 +41,20 @@ const Title = styled.h4`
 `;
 
 export interface ColumnProps<T> {
-  renderItem: RenderItemToJSXElement<T>
-  renderAddItem: RenderAddItemToJSXElement
-  index: number
-  title: string
-  items: Array<T>
-  columnId: CategoryId
+  renderItem: RenderItemToJSXElement<T>;
+  renderAddItem: RenderAddItemToJSXElement;
+  index: number;
+  title: string;
+  items: Array<T>;
+  columnId: CategoryId;
 }
 
-export interface ColumnState {
+export interface ColumnState {}
 
-}
-
-export class Column<T extends BoardItem> extends React.Component<ColumnProps<T>, ColumnState> {
+export class Column<T extends BoardItem> extends React.Component<
+  ColumnProps<T>,
+  ColumnState
+> {
   render() {
     const title: string = this.props.title;
     const items = this.props.items;
