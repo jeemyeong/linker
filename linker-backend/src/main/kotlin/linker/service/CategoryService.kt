@@ -1,12 +1,9 @@
 package linker.service
 
-import linker.dto.CreateCategoryCommand
-import linker.dto.ReorderCategoryCommand
+import linker.dto.*
 import linker.entity.Category
 import linker.repository.CategoryRepository
-import linker.dto.UserDto
 import linker.repository.UserRepository
-import linker.dto.fromDomain
 import org.springframework.stereotype.Service
 import java.util.*
 
@@ -26,7 +23,8 @@ class CategoryService(val categoryRepository: CategoryRepository, val userReposi
     fun newColumn(createCategoryCommand: CreateCategoryCommand): Category {
         val email = createCategoryCommand.email
         val user = Optional.ofNullable(userRepository.findByEmail(email).firstOrNull()).orElseThrow { throw IllegalArgumentException("Cannot find by email: $email") }
-        return categoryRepository.save(createCategoryCommand.toDomain(userDto = UserDto.fromDomain(user)))
+        val order = categoryRepository.findAll().size + 1
+        return categoryRepository.save(createCategoryCommand.toDomain(userDto = UserDto.fromDomain(user), order = order))
     }
 
     fun reorderColumn(categoryId: Long, reorderCategoryCommand: ReorderCategoryCommand): List<Category> {

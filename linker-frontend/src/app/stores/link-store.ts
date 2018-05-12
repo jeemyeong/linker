@@ -76,15 +76,17 @@ export class LinkStore {
       linksInCategoryOriginFrom.filter(link => link.order > originOrder).forEach(link => { link.order -= 1 });
       originLink.category = newCategory;
       originLink.order = newOrder;
+
+      console.log(this.links)
       this.updateLinks();
     }
 
-    axios.post<Array<LinkModel>>(`${config.API_URL}/links/reorder/${itemId}`, {
-      newCategoryId: newCategoryId,
-      newOrder: newIndex
-    }).then(res => action(() => {
-      this.links = res.data;
-    })())
+    // axios.post<Array<LinkModel>>(`${config.API_URL}/links/reorder/${itemId}`, {
+    //   newCategoryId: newCategoryId,
+    //   newOrder: newIndex
+    // }).then(res => action(() => {
+    //   this.links = res.data;
+    // })())
   };
 
   @action

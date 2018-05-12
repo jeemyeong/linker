@@ -1,8 +1,8 @@
 package linker.controller;
 
-import linker.service.CategoryService
 import linker.dto.CreateCategoryCommand
 import linker.dto.ReorderCategoryCommand
+import linker.service.CategoryService
 import org.springframework.web.bind.annotation.*
 
 /**

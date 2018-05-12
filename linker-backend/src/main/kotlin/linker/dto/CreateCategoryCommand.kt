@@ -1,7 +1,6 @@
 package linker.dto
 
 import linker.entity.Category
-import linker.dto.UserDto
 
 /**
  * Created by Jeemyeong.
@@ -11,11 +10,10 @@ import linker.dto.UserDto
  */
 data class CreateCategoryCommand(
         val title: String,
-        val email: String,
-        val order: Int
+        val email: String
 )
 
-fun CreateCategoryCommand.toDomain(userDto: UserDto): Category = Category(
+fun CreateCategoryCommand.toDomain(userDto: UserDto, order: Int): Category = Category(
         title = title,
         user = userDto.toDomain(),
         order = order

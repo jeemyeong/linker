@@ -39,7 +39,6 @@ export class CategoryStore {
     const originOrder = originIndex;
     const newOrder = newIndex;
     const originCategory = this.categories.find(category => category.order == originOrder);
-
     if (originOrder < newOrder) {
       this.categories.filter(category => category.order > originOrder && category.order <= newOrder).forEach(category => { category.order-=1 })
     } else {

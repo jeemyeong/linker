@@ -1,15 +1,9 @@
 package linker.service
 
-import linker.dto.CreateLinkCommand
-import linker.dto.UserWithLinksDto
-import linker.dto.toDomain
+import linker.dto.*
 import linker.entity.Link
-import linker.dto.LinkDto
-import linker.dto.ReorderLinkCommand
-import linker.dto.fromDomain
 import linker.repository.CategoryRepository
 import linker.repository.LinkRepository
-import linker.dto.UserDto
 import linker.repository.UserRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -40,7 +34,7 @@ class LinkService(
     fun newLink(createLinkCommand: CreateLinkCommand): Link {
         val categoryId = createLinkCommand.categoryId
         val category = categoryRepository.findById(categoryId).orElseThrow { throw IllegalArgumentException("Cannot find by categoryId: $categoryId") }
-        val order = linkRepository.findByCategory(category).size
+        val order = linkRepository.findByCategory(category).size + 1
         return linkRepository.save(createLinkCommand.toDomain(category, order))
     }
 
