@@ -1,5 +1,7 @@
-package linker
+package linker.user
 
+import linker.link.LinkService
+import linker.link.UserWithLinksDto
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 import org.springframework.stereotype.Service
@@ -31,7 +33,7 @@ class UserController(val userService: UserService, val linkService: LinkService)
     fun all(): MutableIterable<User> = userService.findAllUser()
 
     @PostMapping("/")
-    fun new(@RequestBody signUpUserDto: SignUpUserDto): User = userService.signUp(signUpUserDto)
+    fun new(@RequestBody signUpUserDto: SignUpCommand): User = userService.signUp(signUpUserDto)
 
     @GetMapping("/{userEmail}/links")
     fun getListIPost(@PathVariable userEmail: String): UserWithLinksDto = linkService.findAllLinkByUser(email = userEmail)
@@ -47,7 +49,7 @@ class UserService(val userRepository: UserRepository) {
         return userRepository.findById(id)
     }
 
-    fun signUp(signUpUserDto: SignUpUserDto): User {
+    fun signUp(signUpUserDto: SignUpCommand): User {
         return userRepository.save(User.fromDto(signUpUserDto))
     }
 }
@@ -73,7 +75,7 @@ data class User(
                 email = dto.email
         )
 
-        fun fromDto(dto: SignUpUserDto) = User(
+        fun fromDto(dto: SignUpCommand) = User(
                 email = dto.email
         )
     }
@@ -85,4 +87,4 @@ data class UserDto(
 )
 
 
-data class SignUpUserDto(val email: String)
+data class SignUpCommand(val email: String)

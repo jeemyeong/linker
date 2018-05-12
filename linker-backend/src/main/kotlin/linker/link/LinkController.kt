@@ -1,5 +1,11 @@
-package linker
+package linker.link
 
+import linker.category.Category
+import linker.category.CategoryDto
+import linker.category.CategoryRepository
+import linker.user.User
+import linker.user.UserDto
+import linker.user.UserRepository
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.stereotype.Repository
@@ -16,8 +22,8 @@ import javax.persistence.*
  */
 @Repository
 interface LinkRepository : JpaRepository<Link, Long> {
-    fun findByLinkColumn(linkColumn: LinkColumn): List<Link>
-    @Query(value = "select * from links l left join link_columns c on l.link_column_id = c.id WHERE c.user_id = ?1", nativeQuery = true)
+    fun findByCategory(category: Category): List<Link>
+    @Query(value = "select * from links l left join categories c on l.category_id = c.id WHERE c.user_id = ?1", nativeQuery = true)
     fun findAllLinksByUser(user: User): List<Link>
 }
 
@@ -34,8 +40,8 @@ class LinkController(val linkService: LinkService) {
     fun all() = linkService.findAll()
 
     @PostMapping("/")
-    fun new(@RequestBody createLinkDto: CreateLinkDto) =
-            linkService.newLink(createLinkDto)
+    fun new(@RequestBody createLinkCommand: CreateLinkCommand) =
+            linkService.newLink(createLinkCommand)
 
     @PostMapping("/reorder/{id}")
     fun reorder(@PathVariable id: Long, @RequestBody reorderLinkDto: ReorderLinkDto) = linkService.reorderLink(id, reorderLinkDto)
@@ -46,7 +52,7 @@ class LinkController(val linkService: LinkService) {
 @Service
 class LinkService(
         val linkRepository: LinkRepository,
-        val linkColumnRepository: LinkColumnRepository,
+        val categoryRepository: CategoryRepository,
         val userRepository: UserRepository
 ) {
     fun findById(id: Long) = linkRepository.findById(id)
@@ -55,43 +61,43 @@ class LinkService(
 
     fun findAllLinkByUser(email: String): UserWithLinksDto {
         val user = userRepository.findByEmail(email = email).firstOrNull()
-                ?: throw IllegalArgumentException("Cannot find by columnId: $email")
+                ?: throw IllegalArgumentException("Cannot find by email: $email")
         return UserWithLinksDto(user = user.toDto(), links = linkRepository.findAllLinksByUser(user).map { it.toDto() }.sortedBy { it.order })
     }
 
-    fun newLink(createLinkDto: CreateLinkDto): Link {
-        val linkColumnId = createLinkDto.linkColumnId
-        val linkColumn = linkColumnRepository.findById(linkColumnId).orElseThrow { throw IllegalArgumentException("Cannot find by columnId: $linkColumnId") }
-        val order = linkRepository.findByLinkColumn(linkColumn).size
-        return linkRepository.save(Link.fromDto(createLinkDto, linkColumn.toDto(), order))
+    fun newLink(createLinkCommand: CreateLinkCommand): Link {
+        val categoryId = createLinkCommand.categoryId
+        val category = categoryRepository.findById(categoryId).orElseThrow { throw IllegalArgumentException("Cannot find by categoryId: $categoryId") }
+        val order = linkRepository.findByCategory(category).size
+        return linkRepository.save(Link.fromDto(createLinkCommand, category.toDto(), order))
     }
 
     fun reorderLink(linkId: Long, reorderLinkDto: ReorderLinkDto): List<Link> {
         val originLink = linkRepository.findById(linkId).orElseThrow { throw IllegalArgumentException("Cannot find by linkId: $linkId") }
 
-        val originColumn = originLink.linkColumn
-        val newColumnId = reorderLinkDto.newColumnId
-        val newColumn = linkColumnRepository.findById(newColumnId).orElseThrow { throw IllegalArgumentException("Cannot find by columnIdLinkToGo: $newColumnId") }
+        val originCategory = originLink.category
+        val newCategoryId = reorderLinkDto.newCategoryId
+        val newCategory = categoryRepository.findById(newCategoryId).orElseThrow { throw IllegalArgumentException("Cannot find by categoryIdLinkToGo: $newCategoryId") }
         val originOrder = originLink.order
         val newOrder = reorderLinkDto.newOrder
 
-        // If link moves to same column
-        if (newColumn.id == originLink.linkColumn.id) {
+        // If link moves to same category
+        if (newCategory.id == originLink.category.id) {
             if (originOrder < newOrder) {
-                linkRepository.findByLinkColumn(originColumn).filter { it.order in (originOrder + 1)..(newOrder) }.map { it.order = it.order-1; it }.forEach{ linkRepository.save(it) }
+                linkRepository.findByCategory(originCategory).filter { it.order in (originOrder + 1)..(newOrder) }.map { it.order = it.order-1; it }.forEach{ linkRepository.save(it) }
             } else {
-                linkRepository.findByLinkColumn(originColumn).filter { it.order in (newOrder)..(originOrder - 1) }.map { it.order = it.order+1; it }.forEach{ linkRepository.save(it) }
+                linkRepository.findByCategory(originCategory).filter { it.order in (newOrder)..(originOrder - 1) }.map { it.order = it.order+1; it }.forEach{ linkRepository.save(it) }
             }
             originLink.order = newOrder
             linkRepository.save(originLink)
             return findAll()
         }
 
-        // If link moves to another column
-        linkRepository.findByLinkColumn(originColumn).filter { it.order > originOrder }.map { it.order = it.order-1; it }.forEach{ linkRepository.save(it) }
-        linkRepository.findByLinkColumn(newColumn).filter { it.order >= newOrder }.map { it.order = it.order+1; it }.forEach{ linkRepository.save(it) }
+        // If link moves to another category
+        linkRepository.findByCategory(originCategory).filter { it.order > originOrder }.map { it.order = it.order-1; it }.forEach{ linkRepository.save(it) }
+        linkRepository.findByCategory(newCategory).filter { it.order >= newOrder }.map { it.order = it.order+1; it }.forEach{ linkRepository.save(it) }
 
-        originLink.linkColumn = newColumn
+        originLink.category = newCategory
         originLink.order = newOrder
         linkRepository.save(originLink)
         return findAll()
@@ -108,9 +114,9 @@ data class Link(
         val url: String,
         @field:Column(nullable = false)
         val content: String,
-        @field:ManyToOne(targetEntity = LinkColumn::class, fetch = FetchType.LAZY)
-        @field:JoinColumn(name = "link_column_id")
-        var linkColumn: LinkColumn,
+        @field:ManyToOne(targetEntity = Category::class, fetch = FetchType.LAZY)
+        @field:JoinColumn(name = "category_id")
+        var category: Category,
         @field:Column(name = "`order`")
         var order: Int
 
@@ -119,7 +125,7 @@ data class Link(
             id = this.id,
             url = this.url,
             content = this.content,
-            linkColumn = this.linkColumn.toDto(),
+            category = this.category.toDto(),
             order = this.order
     )
 
@@ -128,14 +134,14 @@ data class Link(
                 id = dto.id,
                 url = dto.url,
                 content = dto.content,
-                linkColumn = LinkColumn.fromDto(dto.linkColumn),
+                category = Category.fromDto(dto.category),
                 order = dto.order
         )
 
-        fun fromDto(dto: CreateLinkDto, linkColumnDto: LinkColumnDto, order: Int) = Link(
-                url = dto.url,
-                content = dto.content,
-                linkColumn = LinkColumn.fromDto(linkColumnDto),
+        fun fromDto(command: CreateLinkCommand, categoryDto: CategoryDto, order: Int) = Link(
+                url = command.url,
+                content = command.content,
+                category = Category.fromDto(categoryDto),
                 order = order
         )
     }
@@ -145,14 +151,14 @@ data class LinkDto(
         var id: Long,
         var url: String,
         var content: String,
-        var linkColumn: LinkColumnDto,
+        var category: CategoryDto,
         var order: Int
 )
 
-data class CreateLinkDto(
+data class CreateLinkCommand(
         val url: String,
         val content: String,
-        val linkColumnId: Long,
+        val categoryId: Long,
         val email: String
 )
 data class UserWithLinksDto(
@@ -160,6 +166,6 @@ data class UserWithLinksDto(
         val links: List<LinkDto>
 )
 data class ReorderLinkDto(
-        val newColumnId: Long,
+        val newCategoryId: Long,
         val newOrder: Int
 )

@@ -3,7 +3,7 @@ import { LinkModel, UserModel } from 'app/models';
 import axios from 'axios';
 import config from '../../config';
 import { rootStore } from '../../main';
-import { STORE_COLUMN } from 'app/constants';
+import { STORE_CATEGORY } from 'app/constants';
 
 export class LinkStore {
   constructor(fixtures: LinkModel[] = []) {
@@ -13,13 +13,12 @@ export class LinkStore {
   @observable public links: Array<LinkModel>;
 
   @action
-  addLink = ({item, columnId}: {item: LinkModel, columnId: number}): void => {
+  addLink = ({item, categoryId}: {item: LinkModel, categoryId: number}): void => {
     const link = item;
-    const linkColumnId = columnId;
     axios.post(`${config.API_URL}/links`, {
         "url": link.url,
         "content": link.content,
-        linkColumnId,
+        categoryId,
         "email": "jeemyeong@gmail.com"
       }).then(this.getLinks)
   };
@@ -57,30 +56,31 @@ export class LinkStore {
     const originLink = this.links.find(link => link.id === itemId);
     const originOrder = originLink.order;
     const newOrder = newIndex;
-    const originColumn = originLink.linkColumn;
-    const newColumn = rootStore[STORE_COLUMN].linkColumns.find(linkColumn => linkColumn.id == newColumnId);
+    const originCategory = originLink.category;
+    const newCategoryId = newColumnId;
+    const newCategory = rootStore[STORE_CATEGORY].categories.find(category => category.id == newCategoryId);
 
-    if (originLink.linkColumn.id == newColumnId) {
-      const linksInSameColumn = this.links.filter(link => link.linkColumn.id == originColumn.id);
+    if (originLink.category.id == newCategoryId) {
+      const linksInSameCategory = this.links.filter(link => link.category.id == originCategory.id);
       if (originOrder > newOrder) {
-        linksInSameColumn.filter(link => link.order >= newOrder && link.order < originOrder).forEach(link => { link.order += 1})
+        linksInSameCategory.filter(link => link.order >= newOrder && link.order < originOrder).forEach(link => { link.order += 1})
       } else {
-        linksInSameColumn.filter(link => link.order > originOrder && link.order <= newOrder).forEach(link => { link.order -= 1})
+        linksInSameCategory.filter(link => link.order > originOrder && link.order <= newOrder).forEach(link => { link.order -= 1})
       }
       originLink.order = newOrder;
       this.updateLinks();
     } else {
-      const linksInColumnOriginToGo = this.links.filter(link => link.linkColumn.id == newColumn.id);
-      const linksInColumnOriginFrom = this.links.filter(link => link.linkColumn.id == originColumn.id);
-      linksInColumnOriginToGo.filter(link => link.order >= newOrder).forEach(link => { link.order += 1 });
-      linksInColumnOriginFrom.filter(link => link.order > originOrder).forEach(link => { link.order -= 1 });
-      originLink.linkColumn = newColumn;
+      const linksInCategoryOriginToGo = this.links.filter(link => link.category.id == newCategory.id);
+      const linksInCategoryOriginFrom = this.links.filter(link => link.category.id == originCategory.id);
+      linksInCategoryOriginToGo.filter(link => link.order >= newOrder).forEach(link => { link.order += 1 });
+      linksInCategoryOriginFrom.filter(link => link.order > originOrder).forEach(link => { link.order -= 1 });
+      originLink.category = newCategory;
       originLink.order = newOrder;
       this.updateLinks();
     }
 
     axios.post<Array<LinkModel>>(`${config.API_URL}/links/reorder/${itemId}`, {
-      newColumnId: newColumnId,
+      newCategoryId: newCategoryId,
       newOrder: newIndex
     }).then(res => action(() => {
       this.links = res.data;

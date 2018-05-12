@@ -5,9 +5,10 @@ import { Provider } from 'mobx-react';
 import { createBrowserHistory } from 'history';
 import { App } from 'app';
 import { createStores } from 'app/stores';
-import { TodoModel, LinkColumnModel } from 'app/models';
+import { TodoModel, CategoryModel } from 'app/models';
 import config from './config';
 import axios from 'axios';
+import { STORE_CATEGORY } from 'app/constants';
 
 // enable MobX strict mode
 useStrict(true);
@@ -27,12 +28,12 @@ const defaultUsers = [
   // jake, BMO, finn, princess,
 ];
 
-// const kafka = new LinkColumnModel("kafka");
-// const docker = new LinkColumnModel("docker");
-// const kotlin = new LinkColumnModel("kotlin");
-// const react = new LinkColumnModel("react");
+// const kafka = new CategoryModel("kafka");
+// const docker = new CategoryModel("docker");
+// const kotlin = new CategoryModel("kotlin");
+// const react = new CategoryModel("react");
 
-const defaultColumns = [
+const defaultCategories = [
   // kafka, docker, kotlin, react
 ];
 
@@ -53,12 +54,12 @@ const defaultLinks = [
 
 // prepare MobX stores
 const history = createBrowserHistory();
-export const rootStore = createStores({history, defaultTodos, defaultLinks, defaultUsers, defaultColumns});
+export const rootStore = createStores({history, defaultTodos, defaultLinks, defaultUsers, defaultCategories});
 
-axios.get<Array<LinkColumnModel>>(`${config.API_URL}/columns/all`)
+axios.get<Array<CategoryModel>>(`${config.API_URL}/categories/all`)
   .then(res => {
-    const columns = res.data;
-    rootStore.column.addColumns(columns)});
+    const categories = res.data;
+    rootStore[STORE_CATEGORY].addCategories(categories)});
 
 rootStore.link.getLinks();
 

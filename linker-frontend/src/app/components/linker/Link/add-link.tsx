@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 interface AddLinkProps {
-  addItem?: { ({ item, columnId }): void }
+  addItem?: { ({ item, categoryId }): void }
   listId: number
 }
 

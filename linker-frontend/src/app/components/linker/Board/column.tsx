@@ -9,7 +9,7 @@ import {
 } from './constants';
 import { BoardItem } from './board';
 import {RenderAddItemToJSXElement, RenderItemToJSXElement} from 'app/components/linker/Board/board';
-import { ColumnId } from 'app/models';
+import { CategoryId } from 'app/models';
 
 const Container = styled.div`
   margin: ${grid}px;
@@ -47,7 +47,7 @@ export interface ColumnProps<T> {
   index: number
   title: string
   items: Array<T>
-  columnId: ColumnId
+  columnId: CategoryId
 }
 
 export interface ColumnState {
