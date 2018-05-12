@@ -7,6 +7,5 @@ package linker.dto
  * Time: 10:46 PM
  */
 data class ReorderLinkCommand(
-        val newCategoryId: Long,
-        val newOrder: Int
+        val links: List<LinkDto>
 )

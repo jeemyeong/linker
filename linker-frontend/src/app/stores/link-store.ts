@@ -24,14 +24,16 @@ export class LinkStore {
   };
 
   @action
-  getLinks = (): void => {
+  getLinks = (): Promise<void> =>
     axios.get<{ user: UserModel, links: LinkModel[] }>(`${config.API_URL}/users/jeemyeong@gmail.com/links`)
       .then(res => {
         const { links } = res.data;
-        action(() => {
-          this.links = links;
-        })()
+        this.updateLinks(links);
       });
+
+  @action
+  updateLinks = (links: LinkModel[]): void => {
+    this.links = [...links].sort((a, b) => a.order - b.order);
   };
 
   @action
@@ -55,7 +57,7 @@ export class LinkStore {
   reorderLink = ({ itemId, newColumnId, newIndex }) => {
     const originLink = this.links.find(link => link.id === itemId);
     const originOrder = originLink.order;
-    const newOrder = newIndex;
+    const newOrder = newIndex + 1;
     const originCategory = originLink.category;
     const newCategoryId = newColumnId;
     const newCategory = rootStore[STORE_CATEGORY].categories.find(category => category.id == newCategoryId);
@@ -68,7 +70,7 @@ export class LinkStore {
         linksInSameCategory.filter(link => link.order > originOrder && link.order <= newOrder).forEach(link => { link.order -= 1})
       }
       originLink.order = newOrder;
-      this.updateLinks();
+      this.updateLinks(this.links);
     } else {
       const linksInCategoryOriginToGo = this.links.filter(link => link.category.id == newCategory.id);
       const linksInCategoryOriginFrom = this.links.filter(link => link.category.id == originCategory.id);
@@ -77,22 +79,16 @@ export class LinkStore {
       originLink.category = newCategory;
       originLink.order = newOrder;
 
-      console.log(this.links)
-      this.updateLinks();
+      this.updateLinks(this.links);
     }
 
-    // axios.post<Array<LinkModel>>(`${config.API_URL}/links/reorder/${itemId}`, {
-    //   newCategoryId: newCategoryId,
-    //   newOrder: newIndex
-    // }).then(res => action(() => {
-    //   this.links = res.data;
-    // })())
+    axios.post<Array<LinkModel>>(`${config.API_URL}/links/reorder`, {
+      links: this.links
+    }).then(res => action(() => {
+      const links = res.data;
+      this.updateLinks(links);
+    })())
   };
-
-  @action
-  updateLinks = () => {
-    this.links = [...this.links].sort((a, b) => a.order - b.order);
-  }
 }
 
 export default LinkStore;

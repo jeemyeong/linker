@@ -1,6 +1,5 @@
 package linker.entity
 
-import com.fasterxml.jackson.annotation.JsonProperty
 import javax.persistence.*
 
 /**
@@ -20,7 +19,6 @@ data class Category(
         val title: String,
         @field:ManyToOne(targetEntity = User::class, fetch = FetchType.LAZY)
         @field:JoinColumn(name = "user_id")
-        @field:JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
         val user: User,
         @field:Column(name = "`order`")
         var order: Int

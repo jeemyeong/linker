@@ -26,9 +26,6 @@ class CategoryController(val categoryService: CategoryService) {
     @PostMapping("/")
     fun new(@RequestBody createCategoryCommand: CreateCategoryCommand) = categoryService.newColumn(createCategoryCommand = createCategoryCommand)
 
-    @PostMapping("/reorder/{id}")
-    fun reorder(@PathVariable id: Long, @RequestBody reorderCategoryCommand: ReorderCategoryCommand) = categoryService.reorderColumn(
-            categoryId = id,
-            reorderCategoryCommand = reorderCategoryCommand
-    )
+    @PostMapping("/reorder")
+    fun reorder(@RequestBody reorderCategoryCommand: ReorderCategoryCommand) = categoryService.reorderColumn(reorderCategoryCommand = reorderCategoryCommand)
 }

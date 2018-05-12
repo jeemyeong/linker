@@ -2,9 +2,7 @@ package linker.service
 
 import linker.dto.*
 import linker.entity.Link
-import linker.repository.CategoryRepository
 import linker.repository.LinkRepository
-import linker.repository.UserRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -18,54 +16,36 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class LinkService(
         val linkRepository: LinkRepository,
-        val categoryRepository: CategoryRepository,
-        val userRepository: UserRepository
+        val userService: UserService,
+        val categoryService: CategoryService
 ) {
-    fun findById(id: Long) = linkRepository.findById(id)
+    fun findById(id: Long): Link =
+            linkRepository.findById(id).orElseThrow { throw IllegalArgumentException("Cannot find by linkId: $id") }
 
     fun findAll(): List<Link> = linkRepository.findAll().sortedBy { it.order }
 
     fun findAllLinkByUser(email: String): UserWithLinksDto {
-        val user = userRepository.findByEmail(email = email).firstOrNull()
-                ?: throw IllegalArgumentException("Cannot find by email: $email")
+        val user = userService.findByEmail(email)
         return UserWithLinksDto(user = UserDto.fromDomain(user), links = linkRepository.findAllLinksByUser(user).map { LinkDto.fromDomain(it) }.sortedBy { it.order })
     }
 
     fun newLink(createLinkCommand: CreateLinkCommand): Link {
         val categoryId = createLinkCommand.categoryId
-        val category = categoryRepository.findById(categoryId).orElseThrow { throw IllegalArgumentException("Cannot find by categoryId: $categoryId") }
+        val category = categoryService.findById(categoryId)
         val order = linkRepository.findByCategory(category).size + 1
         return linkRepository.save(createLinkCommand.toDomain(category, order))
     }
 
-    fun reorderLink(linkId: Long, reorderLinkCommand: ReorderLinkCommand): List<Link> {
-        val originLink = linkRepository.findById(linkId).orElseThrow { throw IllegalArgumentException("Cannot find by linkId: $linkId") }
-
-        val originCategory = originLink.category
-        val newCategoryId = reorderLinkCommand.newCategoryId
-        val newCategory = categoryRepository.findById(newCategoryId).orElseThrow { throw IllegalArgumentException("Cannot find by categoryIdLinkToGo: $newCategoryId") }
-        val originOrder = originLink.order
-        val newOrder = reorderLinkCommand.newOrder
-
-        // If link moves to same category
-        if (newCategory.id == originLink.category.id) {
-            if (originOrder < newOrder) {
-                linkRepository.findByCategory(originCategory).filter { it.order in (originOrder + 1)..(newOrder) }.map { it.order = it.order-1; it }.forEach{ linkRepository.save(it) }
-            } else {
-                linkRepository.findByCategory(originCategory).filter { it.order in (newOrder)..(originOrder - 1) }.map { it.order = it.order+1; it }.forEach{ linkRepository.save(it) }
-            }
-            originLink.order = newOrder
-            linkRepository.save(originLink)
-            return findAll()
+    @Transactional
+    fun reorderLink(reorderLinkCommand: ReorderLinkCommand): List<Link> {
+        reorderLinkCommand.links.forEach {
+            val category = categoryService.findById(it.category.id)
+            val link = this.findById(it.id)
+            link.category = category
+            link.order = it.order
+            linkRepository.save(link)
         }
 
-        // If link moves to another category
-        linkRepository.findByCategory(originCategory).filter { it.order > originOrder }.map { it.order = it.order-1; it }.forEach{ linkRepository.save(it) }
-        linkRepository.findByCategory(newCategory).filter { it.order >= newOrder }.map { it.order = it.order+1; it }.forEach{ linkRepository.save(it) }
-
-        originLink.category = newCategory
-        originLink.order = newOrder
-        linkRepository.save(originLink)
         return findAll()
     }
 }

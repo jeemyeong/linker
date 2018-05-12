@@ -1,9 +1,9 @@
 package linker.service
 
-import linker.entity.User
-import linker.repository.UserRepository
 import linker.dto.SignUpCommand
 import linker.dto.toDomain
+import linker.entity.User
+import linker.repository.UserRepository
 import org.springframework.stereotype.Service
 import java.util.*
 
@@ -17,6 +17,10 @@ import java.util.*
 class UserService(val userRepository: UserRepository) {
     fun findAllUser(): MutableIterable<User> {
         return userRepository.findAll()
+    }
+
+    fun findByEmail(email: String): User {
+        return userRepository.findByEmail(email).firstOrNull() ?: throw IllegalArgumentException("Cannot find by email: $email")
     }
 
     fun findById(id: Long): Optional<User> {

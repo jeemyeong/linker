@@ -3,20 +3,29 @@ import { CategoryModel } from 'app/models';
 import config from '../../config';
 import axios from 'axios';
 export class CategoryStore {
-  constructor(fixtures: CategoryModel[] = []) {
-    this.categories.push(...fixtures)
-    this.updateCategories()
+  constructor(categories: CategoryModel[] = []) {
+    this.updateCategories(categories)
   }
 
   @observable public categories = new Array<CategoryModel>()
 
   @action
-  addCategories = (categories: CategoryModel[]): void => {
+  addCategories = (categories: CategoryModel[]): void => this.updateCategories([...this.categories, ...categories]);
+
+  @action
+  updateCategories = (categories: CategoryModel[]): void => {
     this.categories = [
-      ...this.categories,
       ...categories
-    ];
+    ].sort((a, b) => a.order - b.order);
   };
+
+  @action
+  getAllCategories = (): Promise<void> =>
+    axios.get<Array<CategoryModel>>(`${config.API_URL}/categories/all`)
+      .then(res => {
+        const categories = res.data;
+        this.updateCategories(categories)
+      });
 
   @action
   editCategories = (id: number, data: Partial<CategoryModel>): void => {
@@ -46,19 +55,15 @@ export class CategoryStore {
     }
     originCategory.order = newOrder;
 
-    this.updateCategories();
+    this.updateCategories(this.categories);
 
-    axios.post<Array<CategoryModel>>(`${config.API_URL}/categories/reorder/${originCategory.id}`, {
-      newOrder: newOrder
+    axios.post<Array<CategoryModel>>(`${config.API_URL}/categories/reorder`, {
+      categories: this.categories
     }).then(res => action(() => {
-      this.categories = res.data.sort((a, b) => a.order - b.order);
+      const categories = res.data;
+      this.updateCategories(categories);
     })())
   };
-
-  @action
-  updateCategories = () => {
-    this.categories = [...this.categories].sort((a, b) => a.order - b.order)
-  }
 }
 
 export default CategoryStore;

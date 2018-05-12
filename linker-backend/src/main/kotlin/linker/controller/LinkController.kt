@@ -28,9 +28,8 @@ class LinkController(val linkService: LinkService) {
     fun new(@RequestBody createLinkCommand: CreateLinkCommand) =
             linkService.newLink(createLinkCommand)
 
-    @PostMapping("/reorder/{id}")
-    fun reorder(@PathVariable id: Long, @RequestBody reorderLinkCommand: ReorderLinkCommand) = linkService.reorderLink(
-            linkId = id,
+    @PostMapping("/reorder")
+    fun reorder(@RequestBody reorderLinkCommand: ReorderLinkCommand) = linkService.reorderLink(
             reorderLinkCommand = reorderLinkCommand
     )
 

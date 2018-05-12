@@ -3,9 +3,8 @@ package linker.service
 import linker.dto.*
 import linker.entity.Category
 import linker.repository.CategoryRepository
-import linker.repository.UserRepository
 import org.springframework.stereotype.Service
-import java.util.*
+import org.springframework.transaction.annotation.Transactional
 
 /**
  * Created by Jeemyeong.
@@ -15,29 +14,30 @@ import java.util.*
  */
 
 @Service
-class CategoryService(val categoryRepository: CategoryRepository, val userRepository: UserRepository) {
-    fun findById(id: Long) = categoryRepository.findById(id)
+class CategoryService(
+        val categoryRepository: CategoryRepository,
+        val userService: UserService
+) {
+    fun findById(id: Long): Category =
+            categoryRepository.findById(id).orElseThrow { throw IllegalArgumentException("Cannot find by categoryId: $id") }
 
     fun findAll(): List<Category> = categoryRepository.findAll().sortedBy { it.order }
 
     fun newColumn(createCategoryCommand: CreateCategoryCommand): Category {
-        val email = createCategoryCommand.email
-        val user = Optional.ofNullable(userRepository.findByEmail(email).firstOrNull()).orElseThrow { throw IllegalArgumentException("Cannot find by email: $email") }
+        val user = userService.findByEmail(createCategoryCommand.email)
         val order = categoryRepository.findAll().size + 1
         return categoryRepository.save(createCategoryCommand.toDomain(userDto = UserDto.fromDomain(user), order = order))
     }
 
-    fun reorderColumn(categoryId: Long, reorderCategoryCommand: ReorderCategoryCommand): List<Category> {
-        val originLinkColumn = categoryRepository.findById(categoryId).orElseThrow { throw IllegalArgumentException("Cannot find by categoryId: $categoryId") }
-        val newOrder = reorderCategoryCommand.newOrder
-        val originOrder = originLinkColumn.order
-        if (originOrder < newOrder) {
-            categoryRepository.findAll().filter { it.order in (originOrder + 1)..(newOrder) }.map { it.order = it.order-1; it }.forEach{ categoryRepository.save(it) }
-        } else {
-            categoryRepository.findAll().filter { it.order in (newOrder)..(originOrder - 1) }.map { it.order = it.order+1; it }.forEach{ categoryRepository.save(it) }
+    @Transactional
+    fun reorderColumn(reorderCategoryCommand: ReorderCategoryCommand): List<Category> {
+        reorderCategoryCommand.categories.forEach {
+            val order = it.order
+            val category = findById(it.id)
+            category.order = order
+            categoryRepository.save(category)
         }
-        originLinkColumn.order = newOrder
-        categoryRepository.save(originLinkColumn)
+
         return findAll()
     }
 }

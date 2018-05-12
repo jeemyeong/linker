@@ -5,10 +5,8 @@ import { Provider } from 'mobx-react';
 import { createBrowserHistory } from 'history';
 import { App } from 'app';
 import { createStores } from 'app/stores';
-import { TodoModel, CategoryModel } from 'app/models';
-import config from './config';
-import axios from 'axios';
-import { STORE_CATEGORY } from 'app/constants';
+import { TodoModel } from 'app/models';
+import { STORE_CATEGORY, STORE_LINK } from 'app/constants';
 
 // enable MobX strict mode
 useStrict(true);
@@ -56,17 +54,17 @@ const defaultLinks = [
 const history = createBrowserHistory();
 export const rootStore = createStores({history, defaultTodos, defaultLinks, defaultUsers, defaultCategories});
 
-axios.get<Array<CategoryModel>>(`${config.API_URL}/categories/all`)
-  .then(res => {
-    const categories = res.data;
-    rootStore[STORE_CATEGORY].addCategories(categories)});
-
-rootStore.link.getLinks();
-
-// render react DOM
-ReactDOM.render(
-  <Provider {...rootStore}>
-    <App history={history} />
-  </Provider>,
-  document.getElementById('root')
+Promise.all([
+  rootStore[STORE_CATEGORY].getAllCategories(),
+  rootStore[STORE_LINK].getLinks()
+]).then( () =>
+  // render react DOM
+  ReactDOM.render(
+    <Provider {...rootStore}>
+      <App history={history} />
+    </Provider>,
+    document.getElementById('root')
+  )
 );
+
+

@@ -6,6 +6,7 @@ package linker.dto
  * Date: 12/05/2018
  * Time: 10:45 PM
  */
+
 data class ReorderCategoryCommand(
-        val newOrder: Int
+        val categories: List<CategoryDto>
 )
