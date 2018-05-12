@@ -36,8 +36,8 @@ export class CategoryStore {
   };
 
   reorderCategories = ({originIndex, newIndex}): void => {
-    const originOrder = originIndex;
-    const newOrder = newIndex;
+    const originOrder = originIndex + 1;
+    const newOrder = newIndex + 1;
     const originCategory = this.categories.find(category => category.order == originOrder);
     if (originOrder < newOrder) {
       this.categories.filter(category => category.order > originOrder && category.order <= newOrder).forEach(category => { category.order-=1 })
@@ -49,7 +49,7 @@ export class CategoryStore {
     this.updateCategories();
 
     axios.post<Array<CategoryModel>>(`${config.API_URL}/categories/reorder/${originCategory.id}`, {
-      newOrder: newIndex
+      newOrder: newOrder
     }).then(res => action(() => {
       this.categories = res.data.sort((a, b) => a.order - b.order);
     })())
