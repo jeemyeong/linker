@@ -44,7 +44,7 @@ export class CategoryStore {
     this.categories = this.categories.filter(i => i !== category);
   };
 
-  reorderCategories = ({originIndex, newIndex}): void => {
+  reorderCategories = ({originIndex, newIndex}): Promise<void> => {
     const originOrder = originIndex + 1;
     const newOrder = newIndex + 1;
     const originCategory = this.categories.find(category => category.order == originOrder);
@@ -57,9 +57,8 @@ export class CategoryStore {
 
     this.updateCategories(this.categories);
 
-    axios.post<Array<CategoryModel>>(`${config.API_URL}/categories/reorder`, {
-      categories: this.categories
-    }).then(res => action(() => {
+    return axios.post<Array<CategoryModel>>(`${config.API_URL}/categories/reorder`, this.categories)
+      .then(res => action(() => {
       const categories = res.data;
       this.updateCategories(categories);
     })())

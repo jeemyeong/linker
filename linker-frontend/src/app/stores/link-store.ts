@@ -54,7 +54,7 @@ export class LinkStore {
   };
 
   @action
-  reorderLink = ({ itemId, newColumnId, newIndex }) => {
+  reorderLink = ({ itemId, newColumnId, newIndex }): Promise<void> => {
     const originLink = this.links.find(link => link.id === itemId);
     const originOrder = originLink.order;
     const newOrder = newIndex + 1;
@@ -70,7 +70,6 @@ export class LinkStore {
         linksInSameCategory.filter(link => link.order > originOrder && link.order <= newOrder).forEach(link => { link.order -= 1})
       }
       originLink.order = newOrder;
-      this.updateLinks(this.links);
     } else {
       const linksInCategoryOriginToGo = this.links.filter(link => link.category.id == newCategory.id);
       const linksInCategoryOriginFrom = this.links.filter(link => link.category.id == originCategory.id);
@@ -78,13 +77,11 @@ export class LinkStore {
       linksInCategoryOriginFrom.filter(link => link.order > originOrder).forEach(link => { link.order -= 1 });
       originLink.category = newCategory;
       originLink.order = newOrder;
-
-      this.updateLinks(this.links);
     }
+    this.updateLinks(this.links);
 
-    axios.post<Array<LinkModel>>(`${config.API_URL}/links/reorder`, {
-      links: this.links
-    }).then(res => action(() => {
+    return axios.post<Array<LinkModel>>(`${config.API_URL}/links/reorder`, this.links)
+      .then(res => action(() => {
       const links = res.data;
       this.updateLinks(links);
     })())

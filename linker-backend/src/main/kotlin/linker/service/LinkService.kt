@@ -37,8 +37,8 @@ class LinkService(
     }
 
     @Transactional
-    fun reorderLink(reorderLinkCommand: ReorderLinkCommand): List<Link> {
-        reorderLinkCommand.links.forEach {
+    fun reorderLink(links: List<LinkDto>): List<Link> {
+        links.forEach {
             val category = categoryService.findById(it.category.id)
             val link = this.findById(it.id)
             link.category = category

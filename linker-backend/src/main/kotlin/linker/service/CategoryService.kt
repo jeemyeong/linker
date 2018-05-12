@@ -30,8 +30,8 @@ class CategoryService(
     }
 
     @Transactional
-    fun reorderColumn(reorderCategoryCommand: ReorderCategoryCommand): List<Category> {
-        reorderCategoryCommand.categories.forEach {
+    fun reorderColumn(categories: List<CategoryDto>): List<Category> {
+        categories.forEach {
             val order = it.order
             val category = findById(it.id)
             category.order = order

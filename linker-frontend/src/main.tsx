@@ -65,6 +65,6 @@ Promise.all([
     </Provider>,
     document.getElementById('root')
   )
-);
+).catch(e => console.log(e));
 
 

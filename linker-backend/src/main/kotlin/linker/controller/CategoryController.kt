@@ -1,7 +1,7 @@
 package linker.controller;
 
+import linker.dto.CategoryDto
 import linker.dto.CreateCategoryCommand
-import linker.dto.ReorderCategoryCommand
 import linker.service.CategoryService
 import org.springframework.web.bind.annotation.*
 
@@ -27,5 +27,5 @@ class CategoryController(val categoryService: CategoryService) {
     fun new(@RequestBody createCategoryCommand: CreateCategoryCommand) = categoryService.newColumn(createCategoryCommand = createCategoryCommand)
 
     @PostMapping("/reorder")
-    fun reorder(@RequestBody reorderCategoryCommand: ReorderCategoryCommand) = categoryService.reorderColumn(reorderCategoryCommand = reorderCategoryCommand)
+    fun reorder(@RequestBody categories: List<CategoryDto>) = categoryService.reorderColumn(categories = categories)
 }

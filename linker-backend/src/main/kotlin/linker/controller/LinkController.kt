@@ -1,7 +1,8 @@
 package linker.controller
 
 import linker.dto.CreateLinkCommand
-import linker.dto.ReorderLinkCommand
+import linker.dto.LinkDto
+import linker.entity.Link
 import linker.service.LinkService
 import org.springframework.web.bind.annotation.*
 
@@ -29,9 +30,7 @@ class LinkController(val linkService: LinkService) {
             linkService.newLink(createLinkCommand)
 
     @PostMapping("/reorder")
-    fun reorder(@RequestBody reorderLinkCommand: ReorderLinkCommand) = linkService.reorderLink(
-            reorderLinkCommand = reorderLinkCommand
-    )
+    fun reorder(@RequestBody links: List<LinkDto>) = linkService.reorderLink(links = links)
 
 }
 
