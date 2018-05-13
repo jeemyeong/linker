@@ -153,3 +153,7 @@ Content-Type: application/json
 
 ###
 
+DELETE http://localhost:8080/links/20
+Content-Type: application/json
+
+###

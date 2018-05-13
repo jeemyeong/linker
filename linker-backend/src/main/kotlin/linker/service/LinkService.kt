@@ -50,4 +50,12 @@ class LinkService(
 
         return findAll()
     }
+
+
+    @Transactional
+    fun deleteLink(linkId: Long): Link {
+        val link = findById(linkId)
+        linkRepository.deleteById(linkId)
+        return link
+    }
 }

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { grid } from 'app/components/linker/Board/constants';
+import { LinkModel } from 'app/models';
 
 // const Avatar = styled.img`
 //   width: 40px;
@@ -48,7 +49,13 @@ const Attribution = styled.small`
   flex-grow: 1;
 `;
 
-export const Link = ({ item }) => (
+interface LinkProps {
+  item: LinkModel
+  deleteLink: { ({ link }): Promise<void> };
+}
+
+
+export const Link = ({ item, deleteLink }: LinkProps) => (
   <div>
     {/*<Avatar src={item.user.avatarUrl} alt={item.user.name} />*/}
     <Content>
@@ -58,6 +65,7 @@ export const Link = ({ item }) => (
         <ItemId>(order: {item.order})</ItemId>
         <Attribution>{item.content}</Attribution>
       </Footer>
+      <button onClick={() => deleteLink({link: item})}>X</button>
     </Content>
   </div>
 );

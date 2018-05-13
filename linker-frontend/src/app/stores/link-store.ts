@@ -52,9 +52,11 @@ export class LinkStore {
     });
   };
 
+  // TODO: throttling delete
   @action
-  deleteLink = (id: number): void => {
-    this.links = this.links.filter((link) => link.id !== id);
+  deleteLink = ({link}: {link: LinkModel}): Promise<void> => {
+    this.updateLinks(this.links.filter(value => value.id !== link.id))
+    return axios.delete(`${config.API_URL}/links/${link.id}`).then(this.getLinks)
   };
 
   // TODO: throttling reorder
