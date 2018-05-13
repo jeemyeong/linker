@@ -5,7 +5,10 @@ import linker.dto.LinkDto
 import linker.dto.fromDomain
 import linker.dto.toDomain
 import linker.entity.Link
+import linker.helper.PageParser
+import linker.pojo.PageHeaderInfo
 import linker.repository.LinkRepository
+import org.hibernate.validator.constraints.URL
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -20,7 +23,9 @@ import org.springframework.transaction.annotation.Transactional
 class LinkService(
         val linkRepository: LinkRepository,
         val userService: UserService,
-        val categoryService: CategoryService
+        val categoryService: CategoryService,
+        val pageParser: PageParser
+
 ) {
     fun findById(id: Long): Link =
             linkRepository.findById(id).orElseThrow { throw IllegalArgumentException("Cannot find by linkId: $id") }
@@ -32,10 +37,12 @@ class LinkService(
         return linkRepository.findAllLinksByUser(user).map { LinkDto.fromDomain(it) }.sortedBy { it.order }
     }
 
+    @Transactional
     fun newLink(createLinkCommand: CreateLinkCommand): Link {
         val category = categoryService.findById(createLinkCommand.link.category.id)
         val order = linkRepository.findByCategory(category).size + 1
-        return linkRepository.save(createLinkCommand.toDomain(order))
+        val pageHeaderInfo = pageParser.parsePageHeaderInfo(createLinkCommand.link.url)
+        return linkRepository.save(createLinkCommand.toDomain(order, pageHeaderInfo))
     }
 
     @Transactional
@@ -51,11 +58,16 @@ class LinkService(
         return findAll()
     }
 
-
     @Transactional
     fun deleteLink(linkId: Long): Link {
         val link = findById(linkId)
         linkRepository.deleteById(linkId)
         return link
+    }
+
+    fun testCrawler(
+            @URL url: String
+    ): PageHeaderInfo {
+        return pageParser.parsePageHeaderInfo(url = url)
     }
 }

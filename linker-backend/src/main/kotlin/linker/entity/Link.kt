@@ -1,6 +1,6 @@
 package linker.entity
 
-import linker.entity.Category
+import org.hibernate.validator.constraints.URL
 import javax.persistence.*
 
 /**
@@ -16,6 +16,7 @@ data class Link(
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         var id: Long = 0,
         @field:Column(nullable = false)
+        @field:URL
         val url: String,
         @field:Column(nullable = false)
         val content: String,
@@ -23,5 +24,9 @@ data class Link(
         @field:JoinColumn(name = "category_id")
         var category: Category,
         @field:Column(name = "`order`")
-        var order: Int
+        var order: Int,
+        @field:Column(nullable = true)
+        val ogTitle: String?,
+        @field:Column(nullable = true)
+        val ogImage: String?
 )

@@ -13,7 +13,9 @@ data class LinkDto(
         var url: String,
         var content: String,
         var category: CategoryDto,
-        var order: Int
+        var order: Int,
+        var ogImage: String?,
+        var ogTitle: String?
 ) {
     companion object
 }
@@ -23,12 +25,16 @@ fun LinkDto.toDomain(): Link = Link(
         url = url,
         content = content,
         category = category.toDomain(),
-        order = order
+        order = order,
+        ogTitle = ogTitle,
+        ogImage = ogImage
 )
 fun LinkDto.Companion.fromDomain(link: Link): LinkDto = LinkDto(
         id = link.id,
         url = link.url,
         content = link.content,
         category = CategoryDto.fromDomain(link.category),
-        order = link.order
+        order = link.order,
+        ogTitle = link.ogTitle,
+        ogImage = link.ogImage
 )

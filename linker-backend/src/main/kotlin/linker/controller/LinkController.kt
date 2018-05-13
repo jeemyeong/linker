@@ -2,7 +2,9 @@ package linker.controller
 
 import linker.dto.*
 import linker.service.LinkService
+import org.jetbrains.annotations.TestOnly
 import org.springframework.web.bind.annotation.*
+
 
 /**
  * Created by Jeemyeong.
@@ -44,5 +46,8 @@ class LinkController(val linkService: LinkService) {
             .let { link -> LinkDto.fromDomain(link = link) }
             .let { linkDto -> SuccessDeleteLinkResponse.fromLinkDto(linkDto) }
 
+    @TestOnly
+    @GetMapping("/testCrawl")
+    fun testCrawl() = linkService.testCrawler("https://www.naver.com/")
 }
 

@@ -157,3 +157,19 @@ DELETE http://localhost:8080/links/20
 Content-Type: application/json
 
 ###
+
+GET http://localhost:8080/links/testCrawl
+Content-Type: application/json
+
+###
+
+
+POST http://localhost:8080/links/
+Content-Type: application/json
+
+{"link":{"id":0,"content":"","category":{"id":4,"title":"CQRS","user":{"id":2,"email":"jeemyeong@gmail.com"},"order":2},"url":"asgd","order":5},"email":"jeemyeong@gmail.com",
+"hello": "String"
+
+}
+
+###

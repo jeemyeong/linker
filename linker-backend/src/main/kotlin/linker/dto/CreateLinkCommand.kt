@@ -1,6 +1,7 @@
 package linker.dto
 
 import linker.entity.Link
+import linker.pojo.PageHeaderInfo
 
 /**
  * Created by Jeemyeong.
@@ -13,9 +14,11 @@ data class CreateLinkCommand(
         val email: String
 )
 
-fun CreateLinkCommand.toDomain(order: Int): Link = Link(
+fun CreateLinkCommand.toDomain(order: Int, pageHeaderInfo: PageHeaderInfo): Link = Link(
         url = link.url,
         content = link.content,
         category = link.category.toDomain(),
+        ogTitle = pageHeaderInfo.ogTitle,
+        ogImage = pageHeaderInfo.ogImage,
         order = order
 )
