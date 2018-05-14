@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
-import { Board, ColumnItemMap } from 'app/components/linker/Board/board';
+import { Board } from 'app/components/linker/Board/board';
 import Banner from 'app/components/linker/Banner/banner';
 import styled from 'styled-components';
 import { inject, observer } from 'mobx-react';
 import { STORE_CATEGORY, STORE_LINK } from 'app/constants/index';
 import { CategoryStore, LinkStore } from 'app/stores/index';
-import { LinkModel } from 'app/models/index';
 import { Link } from 'app/components/linker/Link/link';
 import AddLink from 'app/components/linker/Link/add-link';
+import ColumnTitle from 'app/components/linker/ColumnTitle/column-title';
 
 const Layout = styled.div`
   margin: 0 0 40px 0;
@@ -41,17 +41,6 @@ export class LinkerApp extends React.Component<LinkerAppProps, LinkerAppState> {
     const categoryStore = this.props[STORE_CATEGORY] as CategoryStore;
     const links = linkStore.links;
     const categories = categoryStore.categories;
-    // TODO: memoize columns
-    const getByColumn = (column, items) =>
-      items.filter((link) => link.category.id === column.id);
-
-    const columnItemMap: ColumnItemMap<LinkModel> = categories.reduce(
-      (previous, column) => ({
-        ...previous,
-        [column.id]: getByColumn(column, links)
-      }),
-      {}
-    );
     return (
       <Layout>
         <Header>
@@ -59,12 +48,13 @@ export class LinkerApp extends React.Component<LinkerAppProps, LinkerAppState> {
         </Header>
         <Main>
           <Board
+            items={links}
             containerHeight={'80vh'}
-            columnItemMap={columnItemMap}
             columns={categories}
             reorderColumn={categoryStore.reorderCategories}
             reorderItem={linkStore.reorderLink}
-            renderItem={(item) => <Link item={item} deleteLink={linkStore.deleteLink} />}
+            renderItem={(item) => <Link link={item} deleteLink={linkStore.deleteLink} />}
+            renderColumnTitle={(column, isDragging, dragHandleProps) => <ColumnTitle category={column} isDragging={isDragging} dragHandleProps={dragHandleProps} />}
             renderAddItem={(listId: number) => (
               <AddLink addLink={linkStore.addLink} listId={listId} />
             )}

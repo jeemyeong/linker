@@ -4,19 +4,24 @@ import config from '../../config';
 import axios from 'axios';
 export class CategoryStore {
   constructor(categories: CategoryModel[] = []) {
-    this.updateCategories(categories);
+    this.updateCategories(...categories);
   }
 
   @observable public categories = new Array<CategoryModel>();
 
   @action
-  addCategories = (categories: CategoryModel[]): void =>
-    this.updateCategories([...this.categories, ...categories]);
+  addCategory = (category: CategoryModel): void =>
+    this.updateCategories(...this.categories.filter(v => v.id != category.id), category);
 
   @action
-  updateCategories = (categories: CategoryModel[]): void => {
+  updateCategories = (...categories: CategoryModel[]): void => {
     this.categories = [...categories].sort((a, b) => a.order - b.order);
   };
+
+  @action
+  updateCategoryToServer = (category: CategoryModel): Promise<void> =>
+    axios.put(`${config.API_URL}/categories/${category.id}`, category)
+      .then(this.getAllCategories);
 
   @action
   getAllCategories = (): Promise<void> =>
@@ -71,7 +76,7 @@ export class CategoryStore {
     }
     originCategory.order = newOrder;
 
-    this.updateCategories(categories);
+    this.updateCategories(...categories);
 
     return axios
       .post<Array<CategoryModel>>(
@@ -85,7 +90,7 @@ export class CategoryStore {
     data: categories
   }: {
     data: Array<CategoryModel>;
-  }) => this.updateCategories(categories);
+  }) => this.updateCategories(...categories);
 }
 
 export default CategoryStore;

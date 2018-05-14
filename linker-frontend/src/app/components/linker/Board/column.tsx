@@ -5,15 +5,16 @@ import styled from 'styled-components';
 import { borderRadius, colors, grid } from './constants';
 import { BoardItem } from './board';
 import {
-  RenderAddItemToJSXElement,
+  BoardColumn,
+  RenderAddItemToJSXElement, RenderColumnTitleToJSXElement,
   RenderItemToJSXElement
 } from 'app/components/linker/Board/board';
-import { CategoryId } from 'app/models';
 
 const Container = styled.div`
   margin: ${grid}px;
   display: flex;
   flex-direction: column;
+  height: 100%;
 `;
 const Header = styled.div`
   display: flex;
@@ -28,52 +29,34 @@ const Header = styled.div`
     background-color: ${colors.apricot};
   }
 `;
-const Title = styled.h4`
-  padding: ${grid}px;
-  transition: background-color ease 0.2s;
-  flex-grow: 1;
-  user-select: none;
-  position: relative;
-  &:focus {
-    outline: 2px solid ${colors.purple};
-    outline-offset: 2px;
-  }
-`;
 
-export interface ColumnProps<T> {
+export interface ColumnProps<T, K> {
   renderItem: RenderItemToJSXElement<T>;
   renderAddItem: RenderAddItemToJSXElement;
+  renderColumnTitle: RenderColumnTitleToJSXElement<K>;
   index: number;
-  title: string;
   items: Array<T>;
-  columnId: CategoryId;
+  column: K
 }
 
 export interface ColumnState {}
 
-export class Column<T extends BoardItem> extends React.Component<
-  ColumnProps<T>,
+export class Column<T extends BoardItem, K extends BoardColumn> extends React.Component<
+  ColumnProps<T, K>,
   ColumnState
 > {
+
   render() {
-    const title: string = this.props.title;
-    const items = this.props.items;
-    const index: number = this.props.index;
-    const columnId = this.props.columnId;
+    const { items, index, renderColumnTitle, column } = this.props;
     return (
-      <Draggable draggableId={title} index={index}>
+      <Draggable draggableId={column.id.toString()} index={index}>
         {(provided, snapshot) => (
           <Container innerRef={provided.innerRef} {...provided.draggableProps}>
             <Header isDragging={snapshot.isDragging}>
-              <Title
-                // isDragging={snapshot.isDragging}
-                {...provided.dragHandleProps}
-              >
-                {title}
-              </Title>
+              {renderColumnTitle(column, snapshot.isDragging, provided.dragHandleProps)}
             </Header>
             <ItemList
-              listId={columnId}
+              listId={column.id}
               listType="ITEM"
               items={items}
               renderItem={this.props.renderItem}

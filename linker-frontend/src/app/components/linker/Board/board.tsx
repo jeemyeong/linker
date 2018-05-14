@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DragDropContext, Droppable } from 'react-beautiful-dnd';
+import { DragDropContext, DraggableProvidedDragHandleProps, Droppable } from 'react-beautiful-dnd';
 import { Column } from './column';
 import styled from 'styled-components';
 
@@ -20,7 +20,7 @@ export interface BoardItem {
   id: number;
 }
 
-export interface ColumnModel {
+export interface BoardColumn {
   id: number;
   title: string;
 }
@@ -33,16 +33,18 @@ export interface RenderAddItemToJSXElement {
   (listId: number): JSX.Element;
 }
 
-export interface ColumnItemMap<T> {
-  [key: string]: Array<T>;
+
+export interface RenderColumnTitleToJSXElement<K> {
+  (column: K, isDragging, dragHandleProps: DraggableProvidedDragHandleProps): JSX.Element;
 }
 
 export interface BoardProps<T, K> {
   containerHeight?: string;
-  columnItemMap: ColumnItemMap<T>;
+  items: Array<T>;
   columns: Array<K>;
   renderItem: RenderItemToJSXElement<T>;
   renderAddItem: RenderAddItemToJSXElement;
+  renderColumnTitle: RenderColumnTitleToJSXElement<K>;
   reorderColumn: {
     (
       { originIndex, newIndex }: { originIndex: number; newIndex: number }
@@ -60,13 +62,12 @@ export interface BoardProps<T, K> {
 }
 
 export interface BoardState<T> {
-  columnItemMap: ColumnItemMap<T>;
   ordered: Array<string>;
 }
 
 export class Board<
   T extends BoardItem,
-  K extends ColumnModel
+  K extends BoardColumn
 > extends React.Component<BoardProps<T, K>, BoardState<T>> {
   onDragStart = (initial) => {};
 
@@ -96,16 +97,15 @@ export class Board<
       return;
     }
     this.props.reorderItem({
-      itemId: this.props.columnItemMap[source.droppableId][source.index].id,
+      itemId: this.props.items.filter(item => item["category"].id == source.droppableId)[source.index].id,
       newColumnId: destination.droppableId,
       newIndex: destination.index
     });
   };
 
   render() {
-    const columnItemMap = this.props.columnItemMap;
-    const columns = this.props.columns;
-    const { containerHeight, renderItem, renderAddItem } = this.props;
+    const { columns, items } = this.props;
+    const { containerHeight, renderItem, renderAddItem, renderColumnTitle } = this.props;
     const board = (
       <Droppable droppableId="board" type="COLUMN" direction="horizontal">
         {(provided) => (
@@ -113,12 +113,12 @@ export class Board<
             {columns.map((column: K, index: number) => (
               <Column
                 key={column.id}
-                columnId={column.id}
+                column={column}
                 index={index}
-                title={column.title}
-                items={columnItemMap[column.id]}
+                items={items.filter(item => item["category"].id == column.id)}
                 renderItem={renderItem}
                 renderAddItem={renderAddItem}
+                renderColumnTitle={renderColumnTitle}
               />
             ))}
           </Container>

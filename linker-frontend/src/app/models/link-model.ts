@@ -7,6 +7,8 @@ export interface LinkModelProps {
   content?: string
   category: CategoryModel
   url?: string
+  ogImage?: string
+  ogTitle?: string
 }
 
 export class LinkModel {
@@ -15,18 +17,25 @@ export class LinkModel {
   @observable public content: string;
   @observable public category: CategoryModel;
   @observable public url: string;
+  @observable public ogImage: string;
+  @observable public ogTitle: string;
+
 
   constructor({
     id = 0,
     content = '',
     category,
     url = '',
-    order = 0
+    order = 0,
+    ogImage = '',
+    ogTitle = ''
   } : LinkModelProps) {
     this.id = id;
     this.content = content;
     this.category = category;
     this.url = url;
     this.order = order;
+    this.ogImage = ogImage;
+    this.ogTitle = ogTitle;
   }
 }

@@ -3,14 +3,14 @@ import styled from 'styled-components';
 import { grid } from 'app/components/linker/Board/constants';
 import { LinkModel } from 'app/models';
 
-// const Avatar = styled.img`
-//   width: 40px;
-//   height: 40px;
-//   border-radius: 50%;
-//   margin-right: ${grid}px;
-//   flex-shrink: 0;
-//   flex-grow: 0;
-// `;
+const Avatar = styled.img`
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: ${grid}px;
+  flex-shrink: 0;
+  flex-grow: 0;
+`;
 
 const Content = styled.div`
 /* flex child */
@@ -50,22 +50,21 @@ const Attribution = styled.small`
 `;
 
 interface LinkProps {
-  item: LinkModel
+  link: LinkModel
   deleteLink: { ({ link }): Promise<void> };
 }
 
-
-export const Link = ({ item, deleteLink }: LinkProps) => (
+export const Link = ({ link, deleteLink }: LinkProps) => (
   <div>
-    {/*<Avatar src={item.user.avatarUrl} alt={item.user.name} />*/}
+    {link.ogImage && <Avatar src={link.ogImage} alt={link.content} /> }
     <Content>
-      <BlockItem>{item.url}</BlockItem>
+      <BlockItem>{link.url}</BlockItem>
       <Footer>
-        <ItemId>(id: {item.id})</ItemId>
-        <ItemId>(order: {item.order})</ItemId>
-        <Attribution>{item.content}</Attribution>
+        <ItemId>(id: {link.id})</ItemId>
+        <ItemId>(order: {link.order})</ItemId>
+        <Attribution>{link.content}</Attribution>
       </Footer>
-      <button onClick={() => deleteLink({link: item})}>X</button>
+      <button onClick={() => deleteLink({link})}>X</button>
     </Content>
   </div>
 );

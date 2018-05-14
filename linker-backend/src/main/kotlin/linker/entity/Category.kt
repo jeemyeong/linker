@@ -16,7 +16,7 @@ data class Category(
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         var id: Long = 0,
         @field:Column(nullable = false)
-        val title: String,
+        var title: String,
         @field:ManyToOne(targetEntity = User::class, fetch = FetchType.LAZY)
         @field:JoinColumn(name = "user_id")
         val user: User,

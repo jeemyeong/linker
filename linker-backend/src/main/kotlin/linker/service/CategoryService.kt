@@ -23,14 +23,14 @@ class CategoryService(
 
     fun findAll(): List<Category> = categoryRepository.findAll().sortedBy { it.order }
 
-    fun newColumn(createCategoryCommand: CreateCategoryCommand): Category {
+    fun newCategory(createCategoryCommand: CreateCategoryCommand): Category {
         val user = userService.findByEmail(createCategoryCommand.email)
         val order = categoryRepository.findAll().size + 1
         return categoryRepository.save(createCategoryCommand.toDomain(userDto = UserDto.fromDomain(user), order = order))
     }
 
     @Transactional
-    fun reorderColumn(categories: List<CategoryDto>): List<Category> {
+    fun reorderCategories(categories: List<CategoryDto>): List<Category> {
         categories.forEach {
             val order = it.order
             val category = findById(it.id)
@@ -39,5 +39,13 @@ class CategoryService(
         }
 
         return findAll()
+    }
+
+    @Transactional
+    fun updateCategory(updateCategoryCommand: UpdateCategoryCommand): Category {
+        val category = this.findById(updateCategoryCommand.id)
+        category.title = updateCategoryCommand.title
+        categoryRepository.save(category)
+        return category
     }
 }
