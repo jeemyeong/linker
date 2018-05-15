@@ -1,52 +1,64 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { grid } from 'app/components/linker/Board/constants';
 import { LinkModel } from 'app/models';
+import { ellipseStr } from 'app/helper/ellipse-str';
 
-const Avatar = styled.img`
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  margin-right: ${grid}px;
-  flex-shrink: 0;
-  flex-grow: 0;
-`;
-
-const Content = styled.div`
-/* flex child */
-flex-grow: 1;
-/* Needed to wrap text in ie11 */
-/* https://stackoverflow.com/questions/35111090/why-ie11-doesnt-wrap-the-text-in-flexbox */
-flex-basis: 100%
-/* flex parent */
-display: flex;
-flex-direction: column;
-`;
-
-const BlockItem = styled.div`
-  &::before {
-    content: open-item;
-  }
-  &::after {
-    content: close-item;
-  }
-`;
-
-const Footer = styled.div`
+const Card = styled.div`
+  width: 250px;
+  background: white;
+  text-decoration: none;
+  color: #444;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   display: flex;
-  margin-top: ${grid}px;
+  flex-direction: column;
+  min-height: 100%;
+  
+  // sets up hover state
+  position: relative;
+  top: 0;
+  transition: all .1s ease-in;
+    
+  &:hover {
+    top: -2px;
+    box-shadow: 0 4px 5px rgba(0,0,0,0.2);
+  }
 `;
 
-const ItemId = styled.small`
-  flex-grow: 0;
-  margin: 0;
+const Thumb = styled.div`
+  padding-bottom: 60%;
+  background-size: cover;
+  background-position: center center;
+  background-image: ${({backgroundImage}: {backgroundImage}) => `url(${backgroundImage})`}
 `;
 
-const Attribution = styled.small`
+const Article = styled.article`
+  padding: 20px;
+  flex: 1;
+  
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+`;
+
+const H1 = styled.h1`
+  font-size: 20px;
   margin: 0;
-  margin-left: ${grid}px;
-  text-align: right;
-  flex-grow: 1;
+  color: #333;
+`;
+
+const Span = styled.span`
+  font-size: 12px;
+  font-weight: bold;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  margin: 2em 0 0 0;
+`;
+
+const PlaceHolder = styled.svg`
+  max-width: 100%;
+  background: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiIgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiBmaWxsPSJ3aGl0ZSI+CiAgPHBhdGggZD0iTTAgNCBMMCAyOCBMMzIgMjggTDMyIDQgeiBNNCAyNCBMMTAgMTAgTDE1IDE4IEwxOCAxNCBMMjQgMjR6IE0yNSA3IEE0IDQgMCAwIDEgMjUgMTUgQTQgNCAwIDAgMSAyNSA3Ij48L3BhdGg+Cjwvc3ZnPg==") no-repeat center hsl(0, 0%, 80%);
+  background-size: calc(100%/3);
 `;
 
 interface LinkProps {
@@ -55,16 +67,19 @@ interface LinkProps {
 }
 
 export const Link = ({ link, deleteLink }: LinkProps) => (
-  <div>
-    {link.ogImage && <Avatar src={link.ogImage} alt={link.content} /> }
-    <Content>
-      <BlockItem>{link.url}</BlockItem>
-      <Footer>
-        <ItemId>(id: {link.id})</ItemId>
-        <ItemId>(order: {link.order})</ItemId>
-        <Attribution>{link.content}</Attribution>
-      </Footer>
-      <button onClick={() => deleteLink({link})}>X</button>
-    </Content>
-  </div>
+  <Card>
+    <a href={link.url} target="_blank">
+      {link.ogImage ? <Thumb backgroundImage={link.ogImage}/> : <PlaceHolder/>}
+    </a>
+    <Article>
+      <H1>{link.ogTitle || ellipseStr(link.url, 20)}</H1>
+
+      <h3>{link.content}</h3>
+      <p>(id: {link.id})</p>
+      <p>(order: {link.order})</p>
+      <Span>
+        <button onClick={() => deleteLink({link})}>DELETE</button>
+      </Span>
+    </Article>
+  </Card>
 );

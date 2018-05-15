@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { DraggableProvided } from 'react-beautiful-dnd';
 import { RenderItemToJSXElement } from 'app/components/linker/Board/board';
 
-const Container = styled.a`
+const Container = styled.div`
   border-radius: ${borderRadius}px;
   border: 1px solid grey;
   background-color: ${({ isDragging }: { isDragging? }) =>
