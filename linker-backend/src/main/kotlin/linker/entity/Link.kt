@@ -1,6 +1,5 @@
 package linker.entity
 
-import org.hibernate.validator.constraints.URL
 import javax.persistence.*
 
 /**
@@ -16,7 +15,6 @@ data class Link(
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         var id: Long = 0,
         @field:Column(nullable = false)
-        @field:URL
         val url: String,
         @field:Column(nullable = false)
         val content: String,

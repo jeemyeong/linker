@@ -28,9 +28,10 @@ export default class AddLink extends React.Component<
     const order = rootStore[STORE_LINK].links.filter(link => link.category.id == category.id).length + 1
     const link: LinkModel = new LinkModel({url, category, order});
 
-    this.props.addLink({ link }).then(
-      () => this.setState({url: '', opened: false}, () => console.log("Add Link Success"))
-    );
+    this.setState({url: '', opened: false}, () => this.props.addLink({ link }).then(
+      () => console.log("Add Link Success")
+    ))
+
 
   };
 
