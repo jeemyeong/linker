@@ -24,14 +24,14 @@ class PageParser(val restTemplate: RestTemplate) {
                 println(parsedUrl)
             }
 
-
             val doc = Jsoup.connect(parsedUrl).get()
             val ogTitle = doc.select("meta[property=og:title]").attr("content") ?: doc.title()
             val ogImage = doc.select("meta[property=og:image]").attr("content")
-            PageHeaderInfo(ogTitle = ogTitle, ogImage = ogImage, url = parsedUrl)
+            val ogDescription = doc.select("meta[property=og:description]").attr("content")
+            PageHeaderInfo(ogTitle = ogTitle, ogImage = ogImage, url = parsedUrl, ogDescription = ogDescription)
         } catch (e: Exception) {
             println(e)
-            PageHeaderInfo(ogTitle = null, ogImage = null, url = url)
+            PageHeaderInfo(ogTitle = null, ogImage = null, url = url, ogDescription = null)
         }
     }
 }

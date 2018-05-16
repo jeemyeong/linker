@@ -74,7 +74,8 @@ export const Link = ({ link, deleteLink }: LinkProps) => (
     <Article>
       <H1>{link.ogTitle || ellipseStr(link.url, 20)}</H1>
 
-      <h3>{link.content}</h3>
+      {link.content && <h3>{link.content}</h3> }
+      {link.ogDescription && <h4>{ellipseStr(link.ogDescription, 60)}</h4> }
       <p>(id: {link.id})</p>
       <p>(order: {link.order})</p>
       <Span>

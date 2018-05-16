@@ -9,5 +9,6 @@ package linker.pojo
 data class PageHeaderInfo (
     val url: String,
     val ogTitle: String?,
-    val ogImage: String?
+    val ogImage: String?,
+    val ogDescription: String?
 )

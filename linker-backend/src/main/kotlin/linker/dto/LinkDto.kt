@@ -15,7 +15,8 @@ data class LinkDto(
         var category: CategoryDto,
         var order: Int,
         var ogImage: String?,
-        var ogTitle: String?
+        var ogTitle: String?,
+        var ogDescription: String?
 ) {
     companion object
 }
@@ -27,7 +28,8 @@ fun LinkDto.toDomain(): Link = Link(
         category = category.toDomain(),
         order = order,
         ogTitle = ogTitle,
-        ogImage = ogImage
+        ogImage = ogImage,
+        ogDescription = ogDescription
 )
 fun LinkDto.Companion.fromDomain(link: Link): LinkDto = LinkDto(
         id = link.id,
@@ -36,5 +38,6 @@ fun LinkDto.Companion.fromDomain(link: Link): LinkDto = LinkDto(
         category = CategoryDto.fromDomain(link.category),
         order = link.order,
         ogTitle = link.ogTitle,
-        ogImage = link.ogImage
+        ogImage = link.ogImage,
+        ogDescription = link.ogDescription
 )

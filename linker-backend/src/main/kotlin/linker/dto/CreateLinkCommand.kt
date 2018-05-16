@@ -20,5 +20,6 @@ fun CreateLinkCommand.toDomain(order: Int, pageHeaderInfo: PageHeaderInfo): Link
         category = link.category.toDomain(),
         ogTitle = pageHeaderInfo.ogTitle,
         ogImage = pageHeaderInfo.ogImage,
+        ogDescription= pageHeaderInfo.ogDescription,
         order = order
 )

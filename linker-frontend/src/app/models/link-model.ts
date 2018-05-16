@@ -9,6 +9,7 @@ export interface LinkModelProps {
   url?: string
   ogImage?: string
   ogTitle?: string
+  ogDescription?: string
 }
 
 export class LinkModel {
@@ -19,6 +20,7 @@ export class LinkModel {
   @observable public url: string;
   @observable public ogImage: string;
   @observable public ogTitle: string;
+  @observable public ogDescription: string;
 
 
   constructor({
@@ -28,7 +30,8 @@ export class LinkModel {
     url = '',
     order = 0,
     ogImage = '',
-    ogTitle = ''
+    ogTitle = '',
+    ogDescription = ''
   } : LinkModelProps) {
     this.id = id;
     this.content = content;
@@ -37,5 +40,6 @@ export class LinkModel {
     this.order = order;
     this.ogImage = ogImage;
     this.ogTitle = ogTitle;
+    this.ogDescription = ogDescription;
   }
 }

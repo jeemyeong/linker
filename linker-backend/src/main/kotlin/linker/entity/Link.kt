@@ -26,5 +26,7 @@ data class Link(
         @field:Column(nullable = true)
         val ogTitle: String?,
         @field:Column(nullable = true)
-        val ogImage: String?
+        val ogImage: String?,
+        @field:Column(nullable = true)
+        val ogDescription: String?
 )
