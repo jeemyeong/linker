@@ -4,6 +4,7 @@ import axios from 'axios';
 import config from '../../config';
 import { rootStore } from '../../main';
 import { STORE_CATEGORY } from 'app/constants';
+import * as R from 'ramda';
 
 export class LinkStore {
   constructor(fixtures: LinkModel[] = []) {
@@ -109,6 +110,13 @@ export class LinkStore {
       originLink.category = newCategory;
       originLink.order = newOrder;
     }
+
+    const forEachIndexed = R.addIndex(R.forEach);
+    R.pipe(
+      R.groupBy((link: LinkModel,) => link.category.id.toString()),
+      R.forEachObjIndexed(forEachIndexed((link: LinkModel, index) => link.order = index + 1)),
+    )(this.links);
+
     this.updateLinks(this.links);
 
     return axios
