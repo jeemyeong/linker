@@ -5,6 +5,8 @@ import { ellipseStr } from 'app/helper/ellipse-str';
 
 const Card = styled.div`
   width: 250px;
+  max-height: 250px;
+  overflow-y: auto;
   background: white;
   text-decoration: none;
   color: #444;
