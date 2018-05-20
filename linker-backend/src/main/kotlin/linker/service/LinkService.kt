@@ -62,7 +62,7 @@ class LinkService(
     fun deleteLink(linkId: Long): Link {
         val link = findById(linkId)
         linkRepository.deleteById(linkId)
-        val links = this.findAll()
+        val links = this.linkRepository.findByCategory(link.category)
         links.filter { it.order > link.order }.forEach { it.order -= 1; linkRepository.save(it) }
         return link
     }
