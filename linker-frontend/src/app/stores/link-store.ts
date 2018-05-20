@@ -110,13 +110,12 @@ export class LinkStore {
       originLink.category = newCategory;
       originLink.order = newOrder;
     }
-
     const forEachIndexed = R.addIndex(R.forEach);
     R.pipe(
       R.groupBy((link: LinkModel,) => link.category.id.toString()),
       R.forEachObjIndexed(forEachIndexed((link: LinkModel, index) => link.order = index + 1)),
-    )(this.links);
-
+    )(this.links.sort((a, b) => a.order - b.order));
+    
     this.updateLinks(this.links);
 
     return axios
