@@ -14,7 +14,7 @@ import { RenderAddItemToJSXElement } from 'app/components/linker/Board/board';
 
 const Wrapper: any = styled.div`
   background-color: ${({ isDraggingOver }: DroppableStateSnapshot) =>
-    isDraggingOver ? colors.blue.lighter : colors.blue.light};
+    isDraggingOver ? colors.red.lighter : colors.red.light};
   display: flex;
   flex-direction: column;
   opacity: ${({ isDropDisabled }: { isDropDisabled? }) =>
@@ -24,7 +24,6 @@ const Wrapper: any = styled.div`
   padding-bottom: 0;
   transition: background-color 0.1s ease, opacity 0.1s ease;
   user-select: none;
-  width: 250px;
 `;
 
 const DropZone = styled.div`

@@ -4,85 +4,190 @@ import { LinkModel } from 'app/models';
 import { ellipseStr } from 'app/helper/ellipse-str';
 
 const Card = styled.div`
-  width: 250px;
-  max-height: 250px;
-  overflow-y: auto;
-  background: white;
-  text-decoration: none;
-  color: #444;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  display: flex;
-  flex-direction: column;
-  min-height: 100%;
-  
-  // sets up hover state
   position: relative;
-  top: 0;
-  transition: all .1s ease-in;
-    
-  &:hover {
-    top: -2px;
-    box-shadow: 0 4px 5px rgba(0,0,0,0.2);
+  transition: 0.6s;
+  transform-style: preserve-3d;
+  width: 450px;
+  height: 270px;
+  &:before {
+    width: 100%;
+    height: 100%;
+    content: "Hello World";
+    color: #000;
   }
 `;
 
-const Thumb = styled.div`
-  padding-bottom: 60%;
-  background-size: cover;
-  background-position: center center;
-  background-image: ${({backgroundImage}: {backgroundImage}) => `url(${backgroundImage})`}
-`;
-
-const Article = styled.article`
-  padding: 20px;
-  flex: 1;
+const Figure = styled.figure`
+  background: #fff;
+  color: #fff;
+  backface-visibility: hidden;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: 0.6s;
+  transform-style: preserve-3d;
+  box-shadow: 0 1px 5px rgba(0,0,0,0.9);
+  transform: rotateY(0deg);
+  z-index: 2;
   
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  &:hover h2 {
+    color: #fff;
+    background: transparent;
+    -webkit-transform: translate3d(0,-50%,0) translate3d(0,-40px,0);
+    transform: translate3d(0,-50%,0) translate3d(0,-40px,0);
+  }
+  
+  &:hover div.overlay{
+    opacity: 1;
+    transform: translate3d(0,0,0);
+  }  
+  
+  &:hover h2:after {
+    transform: translate3d(0,0,0);
+  }
+  
+  &:hover p {
+    opacity: 1;
+    transform: translate3d(0,0,0);
+  }
 `;
 
-const H1 = styled.h1`
-  font-size: 20px;
-  margin: 0;
-  color: #333;
+const Img = styled.img`
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  opacity: 1;
+  object-fit: none;
+  overflow: hidden;
 `;
 
-const Span = styled.span`
-  font-size: 12px;
-  font-weight: bold;
-  color: #999;
+const Caption = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   text-transform: uppercase;
-  letter-spacing: .05em;
-  margin: 2em 0 0 0;
+  backface-visibility: hidden;
+  font-size: 1.25em;
 `;
 
-const PlaceHolder = styled.svg`
-  max-width: 100%;
-  background: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiIgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiBmaWxsPSJ3aGl0ZSI+CiAgPHBhdGggZD0iTTAgNCBMMCAyOCBMMzIgMjggTDMyIDQgeiBNNCAyNCBMMTAgMTAgTDE1IDE4IEwxOCAxNCBMMjQgMjR6IE0yNSA3IEE0IDQgMCAwIDEgMjUgMTUgQTQgNCAwIDAgMSAyNSA3Ij48L3BhdGg+Cjwvc3ZnPg==") no-repeat center hsl(0, 0%, 80%);
-  background-size: calc(100%/3);
+const Overlay = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  content: '';
+  opacity: 0;
+  background: linear-gradient(rgba(72,76,97,0) 0%, rgba(72,76,97,0.8) 80%);
+  transform: translate3d(0,50%,0);
+  transition: opacity 0.35s, transform 0.35s;
+`;
+
+const H2 = styled.h2`
+  word-spacing: -0.15em;
+  font-weight: 300;
+  font-size: 1.6em;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  color: #272833;
+  transition: transform 0.35s, color 0.35s;
+  transform: translate3d(0,-50%,0);
+  font-weight: bold;
+  background: rgba(256,256,256,1);
+  padding: 0.5em;
+  word-spacing: 3px;
+  line-height: 1em;
+
+  &:after{
+    position: absolute;
+    bottom: -10px;
+    left: 70px;
+    right: 70px;
+    height: 2px;
+    background: #fff;
+    content: '';
+    transition: transform 0.35s;
+    transform: translate3d(-130%,0,0);
+  }
+`;
+
+const DeleteButton = styled.button`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  text-align: right;
+  
+  &:after {
+    content: '✖';
+  }
+`;
+
+const P = styled.p`
+  letter-spacing: 1px;
+  font-size: 68.5%;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding: 2em;
+  width: 100%;
+  opacity: 0;
+  transform: translate3d(0,10px,0);
+  transition: opacity 0.35s, transform 0.35s;
+`;
+
+const A = styled.a`
+  color: inherit;
+  text-decoration: inherit;
 `;
 
 interface LinkProps {
   link: LinkModel
-  deleteLink: { ({ link }): Promise<void> };
+  deleteLink: { ({ targetLink: LinkModel }): Promise<void> };
 }
 
-export const LinkCard = ({ link, deleteLink }: LinkProps) => (
-  <Card>
-    <a href={link.url} target="_blank">
-      {link.ogImage ? <Thumb backgroundImage={link.ogImage}/> : <PlaceHolder/>}
-    </a>
-    <Article>
-      <H1>{link.ogTitle || ellipseStr(link.url, 20)}</H1>
+export const LinkCard = ({link, deleteLink}: LinkProps) => {
+  const title = link.ogTitle ? link.ogTitle + ": " + link.url.replace(/^.*\/\//, "") : link.url.replace(/^.*\/\//, "").replace(/^www./, "");
+  const ellipsedTitle= ellipseStr(title, 25);
+  return (
+    <Card>
+      <Figure>
+        <Img src={link.ogImage? link.ogImage : "https://placeimg.com/640/480/any"} alt="card image"/>
+        <Caption>
+          <Overlay className="overlay">
+            <DeleteButton onClick={() => confirm("Do you want to remove this link really?") && deleteLink({targetLink: link})}/>
+          </Overlay>
 
-      {link.content && <h3>{link.content}</h3> }
-      {link.ogDescription && <h4>{ellipseStr(link.ogDescription, 60)}</h4> }
-      <p>(id: {link.id})</p>
-      <p>(order: {link.order})</p>
-      <Span>
-        <button onClick={() => deleteLink({link})}>DELETE</button>
-      </Span>
-    </Article>
-  </Card>
-);
+          <H2><A href={link.url} target="_blank">{ellipsedTitle}</A></H2>
+          <P>{ellipseStr(`${title} ${link.ogDescription ? link.ogDescription : ""}`, 140)}</P>
+        </Caption>
+      </Figure>
+
+
+      {/*<a href={link.url} target="_blank">*/}
+      {/*{link.ogImage ? <Thumb backgroundImage={link.ogImage}/> : <PlaceHolder/>}*/}
+      {/*</a>*/}
+      {/*<Article>*/}
+      {/*<H1>{link.ogTitle || ellipseStr(link.url, 20)}</H1>*/}
+
+      {/*{link.content && <h3>{link.content}</h3> }*/}
+      {/*{link.ogDescription && <h4>{ellipseStr(link.ogDescription, 60)}</h4> }*/}
+      {/*<p>(id: {link.id})</p>*/}
+      {/*<p>(order: {link.order})</p>*/}
+      {/*<Span>*/}
+      {/*<button onClick={() => deleteLink({link})}>DELETE</button>*/}
+      {/*</Span>*/}
+      {/*</Article>*/}
+    </Card>
+  );
+};

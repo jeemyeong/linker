@@ -8,13 +8,16 @@ import { rootStore } from '../../../../main';
 import { STORE_CATEGORY } from 'app/constants';
 import * as R from 'ramda';
 
-const Container = styled.div`
+const Title = styled.h2`
   display: flex;
   flex-direction: column;
-  height: 100%;
+  height: 50px;
+  font-size: 2em;
+  text-align: center;
+  margin: 20px 0 0 0;
 `;
 
-const Title = styled.h3`
+const Container = styled.div`
   height: 100%;
   transition: background-color ease 0.2s;
   flex-grow: 1;
@@ -67,12 +70,12 @@ export default class ColumnTitle extends React.Component<
   render() {
     const { category, dragHandleProps } = this.props;
     return (
-      <Title {...dragHandleProps}>
+      <Container {...dragHandleProps}>
         {this.state.editing
           ? <input type="text" defaultValue={this.state.title} onChange={e => this.onInputChange(e)} onKeyDown={this.onKeyDown}/>
-          : <Container onDoubleClick={this.onDoubleClick}>{category.title}</Container>
+          : <Title onDoubleClick={this.onDoubleClick}>{category.title}</Title>
         }
-      </Title>
+      </Container>
     )
   }
 }

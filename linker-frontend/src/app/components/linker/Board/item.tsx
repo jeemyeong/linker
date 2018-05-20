@@ -1,17 +1,14 @@
 import * as React from 'react';
-import { borderRadius, colors, grid } from './constants';
+import { colors, grid } from './constants';
 import styled from 'styled-components';
 import { DraggableProvided } from 'react-beautiful-dnd';
 import { RenderItemToJSXElement } from 'app/components/linker/Board/board';
 
 const Container = styled.div`
-  border-radius: ${borderRadius}px;
-  border: 1px solid grey;
   background-color: ${({ isDragging }: { isDragging? }) =>
     isDragging ? colors.green : colors.white};
   box-shadow: ${({ isDragging }: { isDragging? }) =>
     isDragging ? `2px 2px 1px ${colors.shadow}` : 'none'};
-  padding: ${grid}px;
   min-height: 40px;
   margin-bottom: ${grid}px;
   user-select: none;

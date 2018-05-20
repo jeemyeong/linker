@@ -23,7 +23,7 @@ const Header = styled.div`
   border-top-left-radius: ${borderRadius}px;
   border-top-right-radius: ${borderRadius}px;
   background-color: ${({ isDragging }: DraggableStateSnapshot) =>
-    isDragging ? colors.apricot : colors.blue.light};
+    isDragging ? colors.apricot : colors.red.light};
   transition: background-color 0.1s ease;
   &:hover {
     background-color: ${colors.apricot};

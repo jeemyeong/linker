@@ -55,9 +55,9 @@ export class LinkStore {
 
   // TODO: throttling delete
   @action
-  deleteLink = ({link}: {link: LinkModel}): Promise<void> => {
-    this.updateLinks(this.links.filter(value => value.id !== link.id))
-    return axios.delete(`${config.API_URL}/links/${link.id}`).then(this.getLinks)
+  deleteLink = ({targetLink}: {targetLink: LinkModel}): Promise<void> => {
+    this.updateLinks(this.links.filter(link => link.id !== targetLink.id));
+    return axios.delete(`${config.API_URL}/links/${targetLink.id}`).then(this.getLinks)
   };
 
   // TODO: throttling reorder
@@ -115,7 +115,7 @@ export class LinkStore {
       R.groupBy((link: LinkModel,) => link.category.id.toString()),
       R.forEachObjIndexed(forEachIndexed((link: LinkModel, index) => link.order = index + 1)),
     )(this.links.sort((a, b) => a.order - b.order));
-    
+
     this.updateLinks(this.links);
 
     return axios
