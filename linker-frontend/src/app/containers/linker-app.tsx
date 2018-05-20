@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import { inject, observer } from 'mobx-react';
 import { STORE_CATEGORY, STORE_LINK } from 'app/constants/index';
 import { CategoryStore, LinkStore } from 'app/stores/index';
-import { Link } from 'app/components/linker/Link/link';
+import { LinkCard } from 'app/components/linker/Link/link-card';
 import AddLink from 'app/components/linker/Link/add-link';
 import ColumnTitle from 'app/components/linker/ColumnTitle/column-title';
 
@@ -53,7 +53,7 @@ export class LinkerApp extends React.Component<LinkerAppProps, LinkerAppState> {
             columns={categories}
             reorderColumn={categoryStore.reorderCategories}
             reorderItem={linkStore.reorderLink}
-            renderItem={(item) => <Link link={item} deleteLink={linkStore.deleteLink} />}
+            renderItem={(item) => <LinkCard link={item} deleteLink={linkStore.deleteLink} />}
             renderColumnTitle={(column, isDragging, dragHandleProps) => <ColumnTitle category={column} isDragging={isDragging} dragHandleProps={dragHandleProps} />}
             renderAddItem={(listId: number) => (
               <AddLink addLink={linkStore.addLink} listId={listId} />

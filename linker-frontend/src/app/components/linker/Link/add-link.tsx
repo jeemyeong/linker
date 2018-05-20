@@ -29,7 +29,7 @@ export default class AddLink extends React.Component<
     const link: LinkModel = new LinkModel({url, category, order});
 
     this.setState({url: '', opened: false}, () => this.props.addLink({ link }).then(
-      () => console.log("Add Link Success")
+      () => console.log("Add LinkCard Success")
     ))
 
 

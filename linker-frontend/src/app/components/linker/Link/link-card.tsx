@@ -66,7 +66,7 @@ interface LinkProps {
   deleteLink: { ({ link }): Promise<void> };
 }
 
-export const Link = ({ link, deleteLink }: LinkProps) => (
+export const LinkCard = ({ link, deleteLink }: LinkProps) => (
   <Card>
     <a href={link.url} target="_blank">
       {link.ogImage ? <Thumb backgroundImage={link.ogImage}/> : <PlaceHolder/>}
