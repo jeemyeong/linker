@@ -142,6 +142,7 @@ const P = styled.p`
   padding: 2em;
   width: 100%;
   opacity: 0;
+  font-weight: bold;
   transform: translate3d(0,10px,0);
   transition: opacity 0.35s, transform 0.35s;
 `;
@@ -168,26 +169,12 @@ export const LinkCard = ({link, deleteLink}: LinkProps) => {
             <DeleteButton onClick={() => confirm("Do you want to remove this link really?") && deleteLink({targetLink: link})}/>
           </Overlay>
 
-          <H2><A href={link.url} target="_blank">{ellipsedTitle}</A></H2>
-          <P>{ellipseStr(`${title} ${link.ogDescription ? link.ogDescription : ""}`, 140)}</P>
+          <A href={link.url} target="_blank">
+            <H2>{ellipsedTitle}</H2>
+            <P>{ellipseStr(`${title} ${link.ogDescription ? link.ogDescription : ""}`, 160)}</P>
+          </A>
         </Caption>
       </Figure>
-
-
-      {/*<a href={link.url} target="_blank">*/}
-      {/*{link.ogImage ? <Thumb backgroundImage={link.ogImage}/> : <PlaceHolder/>}*/}
-      {/*</a>*/}
-      {/*<Article>*/}
-      {/*<H1>{link.ogTitle || ellipseStr(link.url, 20)}</H1>*/}
-
-      {/*{link.content && <h3>{link.content}</h3> }*/}
-      {/*{link.ogDescription && <h4>{ellipseStr(link.ogDescription, 60)}</h4> }*/}
-      {/*<p>(id: {link.id})</p>*/}
-      {/*<p>(order: {link.order})</p>*/}
-      {/*<Span>*/}
-      {/*<button onClick={() => deleteLink({link})}>DELETE</button>*/}
-      {/*</Span>*/}
-      {/*</Article>*/}
     </Card>
   );
 };
