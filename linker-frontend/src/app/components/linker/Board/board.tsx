@@ -43,7 +43,7 @@ export interface BoardProps<T, K> {
   items: Array<T>;
   columns: Array<K>;
   renderItem: RenderItemToJSXElement<T>;
-  renderAddItem: RenderAddItemToJSXElement;
+  renderAddItemButton: RenderAddItemToJSXElement;
   renderColumnTitle: RenderColumnTitleToJSXElement<K>;
   reorderColumn: {
     (
@@ -105,7 +105,7 @@ export class Board<
 
   render() {
     const { columns, items } = this.props;
-    const { containerHeight, renderItem, renderAddItem, renderColumnTitle } = this.props;
+    const { containerHeight, renderItem, renderAddItemButton, renderColumnTitle } = this.props;
     const board = (
       <Droppable droppableId="board" type="COLUMN" direction="horizontal">
         {(provided) => (
@@ -117,7 +117,7 @@ export class Board<
                 index={index}
                 items={items.filter(item => item["category"].id == column.id)}
                 renderItem={renderItem}
-                renderAddItem={renderAddItem}
+                renderAddItemButton={renderAddItemButton}
                 renderColumnTitle={renderColumnTitle}
               />
             ))}

@@ -33,7 +33,6 @@ const Figure = styled.figure`
   transform-style: preserve-3d;
   box-shadow: 0 1px 5px rgba(0,0,0,0.9);
   transform: rotateY(0deg);
-  z-index: 2;
   
   &:hover h2 {
     color: #fff;
@@ -148,7 +147,7 @@ const P = styled.p`
   transition: opacity 0.35s, transform 0.35s;
 `;
 
-const A = styled.a`
+const A = styled.a` 
   cursor: pointer;
   color: inherit;
   text-decoration: inherit;

@@ -32,7 +32,7 @@ const Header = styled.div`
 
 export interface ColumnProps<T, K> {
   renderItem: RenderItemToJSXElement<T>;
-  renderAddItem: RenderAddItemToJSXElement;
+  renderAddItemButton: RenderAddItemToJSXElement;
   renderColumnTitle: RenderColumnTitleToJSXElement<K>;
   index: number;
   items: Array<T>;
@@ -47,7 +47,7 @@ export class Column<T extends BoardItem, K extends BoardColumn> extends React.Co
 > {
 
   render() {
-    const { items, index, renderColumnTitle, column, renderAddItem } = this.props;
+    const { items, index, renderColumnTitle, column, renderAddItemButton } = this.props;
     return (
       <Draggable draggableId={column.id.toString()} index={index}>
         {(provided, snapshot) => (
@@ -55,7 +55,7 @@ export class Column<T extends BoardItem, K extends BoardColumn> extends React.Co
             <Header isDragging={snapshot.isDragging}>
               {renderColumnTitle(column, snapshot.isDragging, provided.dragHandleProps)}
             </Header>
-            {renderAddItem(column.id)}
+            {renderAddItemButton(column.id)}
             <ItemList
               listId={column.id}
               listType="ITEM"

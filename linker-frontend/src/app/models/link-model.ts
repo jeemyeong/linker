@@ -22,7 +22,6 @@ export class LinkModel {
   @observable public ogTitle: string;
   @observable public ogDescription: string;
 
-
   constructor({
     id = 0,
     content = '',

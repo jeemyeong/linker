@@ -14,6 +14,7 @@
   "devDependencies": {
     "@types/classnames": "^2.2.3",
     "@types/node": "^9.4.6",
+    "@types/ramda": "^0.25.29",
     "@types/react": "^16.0.40",
     "@types/react-dom": "^16.0.4",
     "@types/react-router": "^4.0.22",
@@ -34,7 +35,7 @@
     "postcss-reporter": "^5.0.0",
     "postcss-url": "^7.3.1",
     "prettier": "^1.11.1",
-    "react-hot-loader": "^4.0.0",
+    "react-hot-loader": "^4.2.0",
     "style-loader": "^0.20.2",
     "ts-loader": "^4.0.0",
     "typescript": "^2.7.2",
@@ -46,7 +47,8 @@
     "webpack-hot-middleware": "^2.21.1"
   },
   "dependencies": {
-    "@types/ramda": "^0.25.28",
+    "@material-ui/core": "^1.0.0",
+    "@material-ui/icons": "^1.0.0",
     "@types/react-beautiful-dnd": "^6.0.1",
     "axios": "^0.18.0",
     "classnames": "^2.2.5",
