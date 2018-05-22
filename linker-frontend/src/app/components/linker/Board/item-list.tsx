@@ -10,7 +10,6 @@ import { grid, colors } from './constants';
 import styled from 'styled-components';
 import { BoardItem, RenderItemToJSXElement } from './board';
 import { CategoryId } from 'app/models';
-import { RenderAddItemToJSXElement } from 'app/components/linker/Board/board';
 
 const Wrapper: any = styled.div`
   background-color: ${({ isDraggingOver }: DroppableStateSnapshot) =>
