@@ -9,10 +9,11 @@ export interface HeaderState {
 
 const Title = styled.h4`
   position: absolute;
-  top: 5vh;
+  font-style: italic;
+  top: 1vh;
   width: 100%;
-  font-size: 100px;
-  font-weight: 300;
+  font-size: 3em;
+  font-weight: 600;
   text-align: center;
   color: rgba(175, 47, 47, 0.15);
   -webkit-text-rendering: optimizeLegibility;

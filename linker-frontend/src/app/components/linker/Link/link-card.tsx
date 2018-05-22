@@ -38,8 +38,8 @@ const Figure = styled.figure`
   &:hover h2 {
     color: #fff;
     background: transparent;
-    -webkit-transform: translate3d(0,-50%,0) translate3d(0,-40px,0);
-    transform: translate3d(0,-50%,0) translate3d(0,-40px,0);
+    -webkit-transform: translate3d(0,-40%,0) translate3d(0,-40px,0);
+    transform: translate3d(0,-40%,0) translate3d(0,-40px,0);
   }
   
   &:hover div.overlay{
@@ -149,6 +149,7 @@ const P = styled.p`
 `;
 
 const A = styled.a`
+  cursor: pointer;
   color: inherit;
   text-decoration: inherit;
 `;

@@ -20,10 +20,10 @@ const Wrapper: any = styled.div`
   opacity: ${({ isDropDisabled }: { isDropDisabled? }) =>
     isDropDisabled ? 0.5 : 'inherit'};
   padding: ${grid}px;
-  border: ${grid}px;
   padding-bottom: 0;
   transition: background-color 0.1s ease, opacity 0.1s ease;
   user-select: none;
+  overflow: auto;
 `;
 
 const DropZone = styled.div`
@@ -110,7 +110,6 @@ class InnerList<T extends BoardItem> extends React.Component<
 
 export interface ItemListProps<T> {
   renderItem: RenderItemToJSXElement<T>;
-  renderAddItem: RenderAddItemToJSXElement;
   internalScroll?: boolean;
   isDropDisabled?: boolean;
   listId: CategoryId;
@@ -129,7 +128,6 @@ export default class ItemList<T extends BoardItem> extends React.Component<
   render() {
     const {
       renderItem,
-      renderAddItem,
       internalScroll,
       isDropDisabled,
       listId,
@@ -171,7 +169,6 @@ export default class ItemList<T extends BoardItem> extends React.Component<
                 dropProvided={dropProvided}
               />
             )}
-            {renderAddItem(listId)}
           </Wrapper>
         )}
       </Droppable>

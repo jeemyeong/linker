@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500');
+@import url(https://fonts.googleapis.com/css?family=Raleway:400,300,800);
 
 html,
 body {
@@ -21,10 +21,8 @@ button {
 }
 
 body {
-  font: 14px 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font: 14px 'Raleway', Arial, sans-serif;
   line-height: 1.4em;
-  background: #f5f5f5;
-  max-width: 95vw;
   margin: 0 auto;
   -webkit-font-smoothing: antialiased;
   -moz-font-smoothing: antialiased;
@@ -32,3 +30,22 @@ body {
   font-smoothing: antialiased;
   font-weight: 300;
 }
+
+::-webkit-scrollbar {
+  width: 10px;
+} /* this targets the default scrollbar (compulsory) */
+
+::-webkit-scrollbar-track {
+  background-color: rgba(175, 47, 47, 0.15);
+} /* the new scrollbar will have a flat appearance with the set background color */
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+} /* this will style the thumb, ignoring the track */
+
+::-webkit-scrollbar-button {
+} /* optionally, you can style the top and the bottom buttons (left and right for horizontal bars) */
+
+::-webkit-scrollbar-corner {
+  background-color: black;
+} /* if both the vertical and the horizontal bars appear, then perhaps the right bottom corner also needs to be styled */

@@ -11,18 +11,22 @@ import AddLink from 'app/components/linker/Link/add-link';
 import ColumnTitle from 'app/components/linker/ColumnTitle/column-title';
 
 const Layout = styled.div`
-  margin: 0 0 40px 0;
   position: relative;
   background: #f5f5f5;
 `;
 
 const Header = styled.header`
-  height: 15vh;
+  width: 100%;
+  position: fixed;
+  height: 5vh;
 `;
 
 const Main = styled.main`
+  position: absolute;
+  width: 100%;
+  top: 4vh;
+  height: 94vh;
   background: #fff;
-  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 25px 50px 0 rgba(0, 0, 0, 0.1);
 `;
 
 export interface LinkerAppProps extends RouteComponentProps<any> {
@@ -44,12 +48,11 @@ export class LinkerApp extends React.Component<LinkerAppProps, LinkerAppState> {
     return (
       <Layout>
         <Header>
-          <Banner />
+          <Banner/>
         </Header>
         <Main>
           <Board
             items={links}
-            containerHeight={'80vh'}
             columns={categories}
             reorderColumn={categoryStore.reorderCategories}
             reorderItem={linkStore.reorderLink}

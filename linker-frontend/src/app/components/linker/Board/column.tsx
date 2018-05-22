@@ -11,7 +11,7 @@ import {
 } from 'app/components/linker/Board/board';
 
 const Container = styled.div`
-  margin: ${grid}px;
+  padding: ${grid}px;
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -47,7 +47,7 @@ export class Column<T extends BoardItem, K extends BoardColumn> extends React.Co
 > {
 
   render() {
-    const { items, index, renderColumnTitle, column } = this.props;
+    const { items, index, renderColumnTitle, column, renderAddItem } = this.props;
     return (
       <Draggable draggableId={column.id.toString()} index={index}>
         {(provided, snapshot) => (
@@ -55,12 +55,12 @@ export class Column<T extends BoardItem, K extends BoardColumn> extends React.Co
             <Header isDragging={snapshot.isDragging}>
               {renderColumnTitle(column, snapshot.isDragging, provided.dragHandleProps)}
             </Header>
+            {renderAddItem(column.id)}
             <ItemList
               listId={column.id}
               listType="ITEM"
               items={items}
               renderItem={this.props.renderItem}
-              renderAddItem={this.props.renderAddItem}
             />
           </Container>
         )}

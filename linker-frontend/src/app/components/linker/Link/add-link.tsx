@@ -2,6 +2,12 @@ import * as React from 'react';
 import { LinkModel } from 'app/models';
 import { rootStore } from '../../../../main';
 import { STORE_CATEGORY, STORE_LINK } from 'app/constants';
+import styled from 'styled-components';
+import { colors } from 'app/components/linker/Board/constants';
+
+const Container = styled.div`
+  background: ${colors.red.light}
+`;
 
 interface AddLinkProps {
   addLink: { ({ link }): Promise<void> };
@@ -38,15 +44,15 @@ export default class AddLink extends React.Component<
   render() {
     if (!this.state.opened)
       return (
-        <div>
+        <Container>
           <button onClick={() => this.setState({ opened: !this.state.opened })}>
             Add Item
           </button>
-        </div>
+        </Container>
       );
     // const { addItem } = this.props;
     return (
-      <div>
+      <Container>
         <form onSubmit={this.onSubmit}>
           <input
             type="text"
@@ -59,7 +65,7 @@ export default class AddLink extends React.Component<
             Close Item
           </button>
         </div>
-      </div>
+      </Container>
     );
   }
 }
