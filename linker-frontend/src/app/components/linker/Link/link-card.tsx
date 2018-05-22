@@ -7,8 +7,9 @@ const Card = styled.div`
   position: relative;
   transition: 0.6s;
   transform-style: preserve-3d;
-  width: 450px;
-  height: 270px;
+  width: 300px;
+  height: 180px;
+  font-size: 0.9em;
   &:before {
     width: 100%;
     height: 100%;
@@ -116,7 +117,7 @@ const H2 = styled.h2`
     background: #fff;
     content: '';
     transition: transform 0.35s;
-    transform: translate3d(-130%,0,0);
+    transform: translate3d(-200%,0,0);
   }
 `;
 
@@ -134,8 +135,8 @@ const DeleteButton = styled.button`
 `;
 
 const P = styled.p`
-  letter-spacing: 1px;
-  font-size: 68.5%;
+  font-size: 0.65em;
+  line-height: 1.2;
   position: absolute;
   bottom: 0;
   left: 0;

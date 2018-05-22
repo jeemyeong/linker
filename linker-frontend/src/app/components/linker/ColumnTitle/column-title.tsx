@@ -8,15 +8,6 @@ import { rootStore } from '../../../../main';
 import { STORE_CATEGORY } from 'app/constants';
 import * as R from 'ramda';
 
-const Title = styled.h2`
-  display: flex;
-  flex-direction: column;
-  height: 50px;
-  font-size: 2em;
-  text-align: center;
-  margin: 20px 0 0 0;
-`;
-
 const Container = styled.div`
   height: 100%;
   transition: background-color ease 0.2s;
@@ -27,6 +18,15 @@ const Container = styled.div`
     outline: 2px solid ${colors.purple};
     outline-offset: 2px;
   }
+`;
+
+const Title = styled.h2`
+  display: flex;
+  flex-direction: column;
+  height: 50px;
+  font-size: 2em;
+  text-align: center;
+  margin: 20px 0 0 0;
 `;
 
 interface ColumnTitleProps {
