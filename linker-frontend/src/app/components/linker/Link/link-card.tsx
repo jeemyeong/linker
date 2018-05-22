@@ -173,7 +173,7 @@ export const LinkCard = ({link, deleteLink}: LinkProps) => {
 
           <A href={link.url} target="_blank">
             <H2>{ellipsedTitle}</H2>
-            <P>{ellipseStr(`${title} ${link.ogDescription ? link.ogDescription : ""}`, 160)}</P>
+            <P>{ellipseStr(`${title} ${link.ogDescription ? link.ogDescription : ""}`, 120)}</P>
           </A>
         </Caption>
       </Figure>
