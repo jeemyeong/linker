@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DragDropContext, Droppable } from 'react-beautiful-dnd';
+import { DragDropContext, DraggableProvidedDragHandleProps, Droppable } from 'react-beautiful-dnd';
 import { Column } from './column';
 import styled from 'styled-components';
 
@@ -10,47 +10,66 @@ const ParentContainer = styled.div`
 `;
 
 const Container = styled.div`
-  min-height: 100vh;
+  height: 100%;
   /* like display:flex but will allow bleeding over the window width */
-  min-width: 100vw;
+  width: 95vw;
   display: inline-flex;
 `;
 
 export interface BoardItem {
-  id: number
+  id: number;
 }
 
-export interface ColumnModel {
-  id: number
-  title: string
+export interface BoardColumn {
+  id: number;
+  title: string;
 }
 
 export interface RenderItemToJSXElement<T> {
-  (item: T): JSX.Element
+  (item: T): JSX.Element;
 }
 
-export interface ColumnItemMap<T> {
-  [key: string] : Array<T>
+export interface RenderAddItemToJSXElement {
+  (listId: number): JSX.Element;
+}
+
+
+export interface RenderColumnTitleToJSXElement<K> {
+  (column: K, isDragging, dragHandleProps: DraggableProvidedDragHandleProps): JSX.Element;
 }
 
 export interface BoardProps<T, K> {
-  containerHeight?: string
-  columnItemMap: ColumnItemMap<T>
-  columns: Array<K>
-  render: RenderItemToJSXElement<T>
-  reorderColumn: { ({ originIndex, newIndex }: { originIndex: number, newIndex: number}): void }
-  reorderItem: { ({ itemId, newColumnId, newIndex }: {itemId: number, newColumnId: number, newIndex: number}): void }
-  addItem: { ({ item, columnId }: { item: T, columnId: number}): void }
+  containerHeight?: string;
+  items: Array<T>;
+  columns: Array<K>;
+  renderItem: RenderItemToJSXElement<T>;
+  renderAddItemButton: RenderAddItemToJSXElement;
+  renderColumnTitle: RenderColumnTitleToJSXElement<K>;
+  reorderColumn: {
+    (
+      { originIndex, newIndex }: { originIndex: number; newIndex: number }
+    ): void;
+  };
+  reorderItem: {
+    (
+      {
+        itemId,
+        newColumnId,
+        newIndex
+      }: { itemId: number; newColumnId: number; newIndex: number }
+    ): void;
+  };
 }
 
 export interface BoardState<T> {
-  columnItemMap: ColumnItemMap<T>
-  ordered: Array<string>
+  ordered: Array<string>;
 }
 
-export class Board<T extends BoardItem, K extends ColumnModel> extends React.Component<BoardProps<T, K>, BoardState<T>> {
-  onDragStart = (initial) => {
-  };
+export class Board<
+  T extends BoardItem,
+  K extends BoardColumn
+> extends React.Component<BoardProps<T, K>, BoardState<T>> {
+  onDragStart = (initial) => {};
 
   onDragEnd = (result) => {
     if (!result.destination) {
@@ -78,17 +97,15 @@ export class Board<T extends BoardItem, K extends ColumnModel> extends React.Com
       return;
     }
     this.props.reorderItem({
-      itemId: this.props.columnItemMap[source.droppableId][source.index].id,
+      itemId: this.props.items.filter(item => item["category"].id == source.droppableId)[source.index].id,
       newColumnId: destination.droppableId,
       newIndex: destination.index
     });
   };
 
   render() {
-    const columnItemMap = this.props.columnItemMap;
-    const columns = this.props.columns;
-    const addItem = this.props.addItem;
-    const { containerHeight, render } = this.props;
+    const { columns, items } = this.props;
+    const { containerHeight, renderItem, renderAddItemButton, renderColumnTitle } = this.props;
     const board = (
       <Droppable droppableId="board" type="COLUMN" direction="horizontal">
         {(provided) => (
@@ -96,12 +113,12 @@ export class Board<T extends BoardItem, K extends ColumnModel> extends React.Com
             {columns.map((column: K, index: number) => (
               <Column
                 key={column.id}
-                columnId={column.id}
+                column={column}
                 index={index}
-                title={column.title}
-                items={columnItemMap[column.id]}
-                render={render}
-                addItem={addItem}
+                items={items.filter(item => item["category"].id == column.id)}
+                renderItem={renderItem}
+                renderAddItemButton={renderAddItemButton}
+                renderColumnTitle={renderColumnTitle}
               />
             ))}
           </Container>

@@ -2,19 +2,19 @@ import * as React from 'react';
 import { Draggable, DraggableStateSnapshot } from 'react-beautiful-dnd';
 import ItemList from './item-list';
 import styled from 'styled-components';
-import {
-  borderRadius,
-  colors,
-  grid
-} from './constants';
+import { borderRadius, colors, grid } from './constants';
 import { BoardItem } from './board';
-import { RenderItemToJSXElement } from 'app/components/linker/Board/board';
-import { ColumnId } from 'app/models';
+import {
+  BoardColumn,
+  RenderAddItemToJSXElement, RenderColumnTitleToJSXElement,
+  RenderItemToJSXElement
+} from 'app/components/linker/Board/board';
 
 const Container = styled.div`
-  margin: ${grid}px;
+  padding: ${grid}px;
   display: flex;
   flex-direction: column;
+  height: 100%;
 `;
 const Header = styled.div`
   display: flex;
@@ -23,61 +23,44 @@ const Header = styled.div`
   border-top-left-radius: ${borderRadius}px;
   border-top-right-radius: ${borderRadius}px;
   background-color: ${({ isDragging }: DraggableStateSnapshot) =>
-    isDragging ? colors.apricot : colors.blue.light};
+    isDragging ? colors.apricot : colors.red.light};
   transition: background-color 0.1s ease;
   &:hover {
     background-color: ${colors.apricot};
   }
 `;
-const Title = styled.h4`
-  padding: ${grid}px;
-  transition: background-color ease 0.2s;
-  flex-grow: 1;
-  user-select: none;
-  position: relative;
-  &:focus {
-    outline: 2px solid ${colors.purple};
-    outline-offset: 2px;
-  }
-`;
 
-export interface ColumnProps<T> {
-  render: RenderItemToJSXElement<T>
-  index: number
-  title: string
-  items: Array<T>
-  columnId: ColumnId
-  addItem: { ({ item, columnId }: { item: T, columnId: number}): void }
+export interface ColumnProps<T, K> {
+  renderItem: RenderItemToJSXElement<T>;
+  renderAddItemButton: RenderAddItemToJSXElement;
+  renderColumnTitle: RenderColumnTitleToJSXElement<K>;
+  index: number;
+  items: Array<T>;
+  column: K
 }
 
-export interface ColumnState {
+export interface ColumnState {}
 
-}
+export class Column<T extends BoardItem, K extends BoardColumn> extends React.Component<
+  ColumnProps<T, K>,
+  ColumnState
+> {
 
-export class Column<T extends BoardItem> extends React.Component<ColumnProps<T>, ColumnState> {
   render() {
-    const title: string = this.props.title;
-    const items = this.props.items;
-    const index: number = this.props.index;
-    const columnId = this.props.columnId;
+    const { items, index, renderColumnTitle, column, renderAddItemButton } = this.props;
     return (
-      <Draggable draggableId={title} index={index}>
+      <Draggable draggableId={column.id.toString()} index={index}>
         {(provided, snapshot) => (
           <Container innerRef={provided.innerRef} {...provided.draggableProps}>
             <Header isDragging={snapshot.isDragging}>
-              <Title
-                // isDragging={snapshot.isDragging}
-                {...provided.dragHandleProps}
-              >
-                {title}
-              </Title>
+              {renderColumnTitle(column, snapshot.isDragging, provided.dragHandleProps)}
             </Header>
+            {renderAddItemButton(column.id)}
             <ItemList
-              listId={columnId}
+              listId={column.id}
               listType="ITEM"
               items={items}
-              render={this.props.render}
-              addItem={this.props.addItem}
+              renderItem={this.props.renderItem}
             />
           </Container>
         )}

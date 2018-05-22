@@ -1,18 +1,44 @@
 import { observable } from 'mobx';
-import { LinkColumnModel } from 'app/models/link-column-model';
+import { CategoryModel } from 'app/models/category-model';
+
+export interface LinkModelProps {
+  id?: number
+  order?: number
+  content?: string
+  category: CategoryModel
+  url?: string
+  ogImage?: string
+  ogTitle?: string
+  ogDescription?: string
+}
 
 export class LinkModel {
   @observable public id: number;
   @observable public order: number;
   @observable public content: string;
-  @observable public linkColumn: LinkColumnModel;
+  @observable public category: CategoryModel;
   @observable public url: string;
+  @observable public ogImage: string;
+  @observable public ogTitle: string;
+  @observable public ogDescription: string;
 
-  constructor({id, content, linkColumn, url, order}: LinkModel) {
+  constructor({
+    id = 0,
+    content = '',
+    category,
+    url = '',
+    order = 0,
+    ogImage = '',
+    ogTitle = '',
+    ogDescription = ''
+  } : LinkModelProps) {
     this.id = id;
     this.content = content;
-    this.linkColumn = linkColumn;
+    this.category = category;
     this.url = url;
     this.order = order;
+    this.ogImage = ogImage;
+    this.ogTitle = ogTitle;
+    this.ogDescription = ogDescription;
   }
 }

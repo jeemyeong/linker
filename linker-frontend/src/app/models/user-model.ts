@@ -4,7 +4,7 @@ export class UserModel {
   @observable public id: number;
   @observable public email: string;
 
-  constructor({id, email}: UserModel) {
+  constructor({ id, email }: UserModel) {
     this.id = id;
     this.email = email;
   }

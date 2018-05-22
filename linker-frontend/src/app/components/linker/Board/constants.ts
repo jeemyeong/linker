@@ -14,11 +14,18 @@ export const colors = {
   white: 'white',
   purple: '#6C5B7B',
   apricot: '#F8B195',
-  red: '#F67280',
-  wine: '#C06C84'
+  red: {
+    lighter: 'rgba(175, 47, 47, 0.1)',
+    light: 'rgba(175, 47, 47, 0.15)',
+    soft: '#F67280'
+  },
+  wine: {
+    soft: '#C06C84'
+  }
+
 
 };
 
-export const grid: number = 8;
+export const grid: number = 12;
 
 export const borderRadius: number = 2;

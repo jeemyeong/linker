@@ -1,9 +1,10 @@
 import { observable, action } from 'mobx';
-import { LinkModel, UserModel } from 'app/models';
+import { LinkModel } from 'app/models';
 import axios from 'axios';
 import config from '../../config';
 import { rootStore } from '../../main';
-import { STORE_COLUMN } from 'app/constants';
+import { STORE_CATEGORY } from 'app/constants';
+import * as R from 'ramda';
 
 export class LinkStore {
   constructor(fixtures: LinkModel[] = []) {
@@ -12,27 +13,32 @@ export class LinkStore {
 
   @observable public links: Array<LinkModel>;
 
+  // TODO: throttling add
   @action
-  addLink = ({item, columnId}: {item: LinkModel, columnId: number}): void => {
-    const link = item;
-    const linkColumnId = columnId;
-    axios.post(`${config.API_URL}/links`, {
-        "url": link.url,
-        "content": link.content,
-        linkColumnId,
-        "email": "jeemyeong@gmail.com"
-      }).then(this.getLinks)
-  };
+  addLink = ({
+    link,
+  }: {
+    link: LinkModel;
+  }): Promise<void> =>
+    axios
+      .post(`${config.API_URL}/links/`, {
+        link: link,
+        email: 'jeemyeong@gmail.com'
+      })
+      .then(() => this.updateLinks([...this.links, link]))
+      .then(this.getLinks);
 
   @action
-  getLinks = (): void => {
-    axios.get<{ user: UserModel, links: LinkModel[] }>(`${config.API_URL}/users/jeemyeong@gmail.com/links`)
-      .then(res => {
-        const { links } = res.data;
-        action(() => {
-          this.links = links;
-        })()
-      });
+  getLinks = (): Promise<void> =>
+    axios
+      .get<Array<LinkModel>>(
+        `${config.API_URL}/users/jeemyeong@gmail.com/links`
+      )
+      .then(this.updateLinksFromResponse);
+
+  @action
+  updateLinks = (links: LinkModel[]): void => {
+    this.links = [...links].sort((a, b) => a.order - b.order);
   };
 
   @action
@@ -47,50 +53,78 @@ export class LinkStore {
     });
   };
 
+  // TODO: throttling delete
   @action
-  deleteLink = (id: number): void => {
-    this.links = this.links.filter((link) => link.id !== id);
+  deleteLink = ({targetLink}: {targetLink: LinkModel}): Promise<void> => {
+    this.updateLinks(this.links.filter(link => link.id !== targetLink.id));
+    return axios.delete(`${config.API_URL}/links/${targetLink.id}`).then(this.getLinks)
   };
 
+  // TODO: throttling reorder
   @action
-  reorderLink = ({ itemId, newColumnId, newIndex }) => {
-    const originLink = this.links.find(link => link.id === itemId);
+  reorderLink = ({ itemId, newColumnId, newIndex }): Promise<void> => {
+    const originLink = this.links.find((link) => link.id === itemId);
     const originOrder = originLink.order;
-    const newOrder = newIndex;
-    const originColumn = originLink.linkColumn;
-    const newColumn = rootStore[STORE_COLUMN].linkColumns.find(linkColumn => linkColumn.id == newColumnId);
+    const newOrder = newIndex + 1;
+    const originCategory = originLink.category;
+    const newCategoryId = newColumnId;
+    const newCategory = rootStore[STORE_CATEGORY].categories.find(
+      (category) => category.id == newCategoryId
+    );
 
-    if (originLink.linkColumn.id == newColumnId) {
-      const linksInSameColumn = this.links.filter(link => link.linkColumn.id == originColumn.id);
+    if (originLink.category.id == newCategoryId) {
+      const linksInSameCategory = this.links.filter(
+        (link) => link.category.id == originCategory.id
+      );
       if (originOrder > newOrder) {
-        linksInSameColumn.filter(link => link.order >= newOrder && link.order < originOrder).forEach(link => { link.order += 1})
+        linksInSameCategory
+          .filter((link) => link.order >= newOrder && link.order < originOrder)
+          .forEach((link) => {
+            link.order += 1;
+          });
       } else {
-        linksInSameColumn.filter(link => link.order > originOrder && link.order <= newOrder).forEach(link => { link.order -= 1})
+        linksInSameCategory
+          .filter((link) => link.order > originOrder && link.order <= newOrder)
+          .forEach((link) => {
+            link.order -= 1;
+          });
       }
       originLink.order = newOrder;
-      this.updateLinks();
     } else {
-      const linksInColumnOriginToGo = this.links.filter(link => link.linkColumn.id == newColumn.id);
-      const linksInColumnOriginFrom = this.links.filter(link => link.linkColumn.id == originColumn.id);
-      linksInColumnOriginToGo.filter(link => link.order >= newOrder).forEach(link => { link.order += 1 });
-      linksInColumnOriginFrom.filter(link => link.order > originOrder).forEach(link => { link.order -= 1 });
-      originLink.linkColumn = newColumn;
+      const linksInCategoryOriginToGo = this.links.filter(
+        (link) => link.category.id == newCategory.id
+      );
+      const linksInCategoryOriginFrom = this.links.filter(
+        (link) => link.category.id == originCategory.id
+      );
+      linksInCategoryOriginToGo
+        .filter((link) => link.order >= newOrder)
+        .forEach((link) => {
+          link.order += 1;
+        });
+      linksInCategoryOriginFrom
+        .filter((link) => link.order > originOrder)
+        .forEach((link) => {
+          link.order -= 1;
+        });
+      originLink.category = newCategory;
       originLink.order = newOrder;
-      this.updateLinks();
     }
+    const forEachIndexed = R.addIndex(R.forEach);
+    R.pipe(
+      R.groupBy((link: LinkModel,) => link.category.id.toString()),
+      R.forEachObjIndexed(forEachIndexed((link: LinkModel, index) => link.order = index + 1)),
+    )(this.links.sort((a, b) => a.order - b.order));
 
-    axios.post<Array<LinkModel>>(`${config.API_URL}/links/reorder/${itemId}`, {
-      newColumnId: newColumnId,
-      newOrder: newIndex
-    }).then(res => action(() => {
-      this.links = res.data;
-    })())
+    this.updateLinks(this.links);
+
+    return axios
+      .post<Array<LinkModel>>(`${config.API_URL}/links/reorder`, this.links)
+      .then(this.updateLinksFromResponse);
   };
 
-  @action
-  updateLinks = () => {
-    this.links = [...this.links].sort((a, b) => a.order - b.order);
-  }
+  updateLinksFromResponse = ({ data: links }: { data: Array<LinkModel> }) =>
+    this.updateLinks(links);
 }
 
 export default LinkStore;
