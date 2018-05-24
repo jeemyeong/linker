@@ -20,10 +20,10 @@ import org.springframework.web.bind.annotation.*
 class CategoryController(val categoryService: CategoryService) {
 
     @GetMapping("/{id}")
-    fun getOne(@PathVariable id: Long) = categoryService.findById(id = id)
+    fun getOne(@PathVariable id: Long) = categoryService.findById(id = id).let { CategoryDto.fromDomain(it) }
 
     @GetMapping("/all")
-    fun all() = categoryService.findAll().sortedBy { it.order }
+    fun all() = categoryService.findAll().map { category -> CategoryDto.fromDomain(category = category) }.sortedBy { it.order }
 
     @PostMapping("/")
     fun new(@RequestBody createCategoryCommand: CreateCategoryCommand) =
@@ -39,4 +39,5 @@ class CategoryController(val categoryService: CategoryService) {
     fun update(@RequestBody updateCategoryCommand: UpdateCategoryCommand) =
             categoryService.updateCategory(updateCategoryCommand = updateCategoryCommand)
                     .let { CategoryDto.fromDomain(it) }
+
 }

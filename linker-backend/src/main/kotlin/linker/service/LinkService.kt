@@ -32,9 +32,9 @@ class LinkService(
 
     fun findAll(): List<Link> = linkRepository.findAll().sortedBy { it.order }
 
-    fun findAllLinkByUser(email: String): List<LinkDto> {
+    fun findAllLinkByUser(email: String): List<Link> {
         val user = userService.findByEmail(email)
-        return linkRepository.findAllLinksByUser(user).map { LinkDto.fromDomain(it) }.sortedBy { it.order }
+        return linkRepository.findAllLinksByUser(user)
     }
 
     @Transactional

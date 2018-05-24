@@ -5,7 +5,6 @@ import linker.dto.toDomain
 import linker.entity.User
 import linker.repository.UserRepository
 import org.springframework.stereotype.Service
-import java.util.*
 
 /**
  * Created by Jeemyeong.
@@ -23,14 +22,13 @@ class UserService(val userRepository: UserRepository) {
         return userRepository.findByEmail(email).firstOrNull() ?: throw IllegalArgumentException("Cannot find by email: $email")
     }
 
-    fun findById(id: Long): Optional<User> {
-        return userRepository.findById(id)
+    fun findById(id: Long): User {
+        return userRepository.findById(id).orElseThrow { throw IllegalArgumentException("Cannot find by userId: $id") }
     }
 
     fun signUp(signUpCommand: SignUpCommand): User {
-        userRepository.findByEmail(signUpCommand.email).isNotEmpty().let {
+        userRepository.findByEmail(signUpCommand.email).firstOrNull()?.let {
             throw IllegalArgumentException("Already Signed Email: ${signUpCommand.email}")
-        }
-        return userRepository.save(signUpCommand.toDomain())
+        } ?: return userRepository.save(signUpCommand.toDomain())
     }
 }

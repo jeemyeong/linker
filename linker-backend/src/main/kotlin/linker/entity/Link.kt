@@ -18,7 +18,7 @@ data class Link(
         val url: String,
         @field:Column(nullable = false)
         val content: String,
-        @field:ManyToOne(targetEntity = Category::class, fetch = FetchType.LAZY)
+        @field:ManyToOne(targetEntity = Category::class)
         @field:JoinColumn(name = "category_id")
         var category: Category,
         @field:Column(name = "`order`")

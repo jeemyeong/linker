@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/links")
 class LinkController(val linkService: LinkService) {
 
-
     @GetMapping("/{id}")
     fun getOne(@PathVariable id: Long) =
             linkService.findById(id = id)
