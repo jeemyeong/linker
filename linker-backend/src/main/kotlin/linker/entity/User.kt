@@ -17,5 +17,8 @@ data class User(
         var id: Long = 0,
         @field:Column(nullable = false)
         @field:Email
-        val email: String
+        val email: String,
+        @field:OneToMany(targetEntity = Board::class)
+        @field:JoinColumn(name = "user_id")
+        val boards: List<Board>
 )

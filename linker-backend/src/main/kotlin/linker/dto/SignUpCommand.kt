@@ -1,5 +1,6 @@
 package linker.dto
 
+import linker.entity.Board
 import linker.entity.User
 
 /**
@@ -8,6 +9,6 @@ import linker.entity.User
  * Date: 12/05/2018
  * Time: 10:43 PM
  */
-data class SignUpCommand(val email: String)
-
-fun SignUpCommand.toDomain(): User = User(email = email)
+data class SignUpCommand(val email: String) {
+    fun toDomain(boards: List<Board>): User = User(email = email, boards = boards)
+}

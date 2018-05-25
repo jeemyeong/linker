@@ -10,12 +10,15 @@ import javax.persistence.*
  */
 @Entity
 @Table(name = "boards")
-data class Board (
+data class Board(
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         var id: Long = 0,
         var title: String,
         @field:ManyToOne(targetEntity = User::class)
         @field:JoinColumn(name = "user_id")
-        var user: User
+        var user: User,
+        @field:OneToMany(targetEntity = Category::class)
+        @field:JoinColumn(name = "board_id")
+        var categories: List<Category>
 )

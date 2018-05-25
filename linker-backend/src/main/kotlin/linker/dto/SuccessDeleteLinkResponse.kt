@@ -11,7 +11,7 @@ data class SuccessDeleteLinkResponse (
         val status: Long = 0,
         var link: LinkDto
 ) {
-    companion object
+    companion object {
+        fun fromLinkDto(link: LinkDto): SuccessDeleteLinkResponse = SuccessDeleteLinkResponse(link = link)
+    }
 }
-
-fun SuccessDeleteLinkResponse.Companion.fromLinkDto(link: LinkDto): SuccessDeleteLinkResponse = SuccessDeleteLinkResponse(link = link)

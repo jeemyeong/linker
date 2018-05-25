@@ -1,5 +1,6 @@
 package linker.dto
 
+import com.fasterxml.jackson.annotation.JsonInclude
 import linker.entity.Category
 import linker.entity.Link
 import linker.entity.User
@@ -10,6 +11,7 @@ import linker.entity.User
  * Date: 12/05/2018
  * Time: 10:41 PM
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 data class LinkDto(
         var id: Long,
         var url: String,
@@ -17,10 +19,10 @@ data class LinkDto(
         var order: Int,
         var ogImage: String?,
         var ogTitle: String?,
-        var ogDescription: String?
+        var ogDescription: String?,
+        var category :CategoryDto? = null,
+        var user :UserDto? = null
 ) {
-    var category :CategoryDto? = null
-    var user :UserDto? = null
     fun toDomain(category: Category, user: User): Link = Link(
             id = id,
             url = url,
@@ -33,14 +35,16 @@ data class LinkDto(
             ogDescription = ogDescription
     )
     companion object {
-        fun fromDomain(link: Link): LinkDto = LinkDto(
+        fun fromDomain(link: Link, category: CategoryDto? = null, user: UserDto? = null): LinkDto = LinkDto(
                 id = link.id,
                 url = link.url,
                 content = link.content,
                 order = link.order,
                 ogTitle = link.ogTitle,
                 ogImage = link.ogImage,
-                ogDescription = link.ogDescription
+                ogDescription = link.ogDescription,
+                category = category,
+                user = user
         )
     }
 }

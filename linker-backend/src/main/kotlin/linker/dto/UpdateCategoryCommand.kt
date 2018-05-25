@@ -2,6 +2,7 @@ package linker.dto
 
 import linker.entity.Board
 import linker.entity.Category
+import linker.entity.Link
 
 /**
  * Created by Jeemyeong.
@@ -14,11 +15,12 @@ data class UpdateCategoryCommand(
         val title: String,
         val boardId: Long,
         val order: Int
-)
-
-fun UpdateCategoryCommand.toDomain(board: Board): Category = Category(
-        id = id,
-        title = title,
-        board = board,
-        order = order
-)
+) {
+    fun toDomain(board: Board, links: List<Link>): Category = Category(
+            id = id,
+            title = title,
+            board = board,
+            order = order,
+            links = links
+    )
+}

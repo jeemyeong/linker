@@ -1,5 +1,6 @@
 package linker.dto
 
+import com.fasterxml.jackson.annotation.JsonInclude
 import linker.entity.Board
 import linker.entity.User
 
@@ -9,19 +10,22 @@ import linker.entity.User
  * Date: 12/05/2018
  * Time: 10:43 PM
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 data class UserDto(
         var id: Long,
-        var email: String
+        var email: String,
+        var boards: Collection<Board>? = null
 ) {
-    var boards: Collection<Board>? = null
     fun toDomain(boards: List<Board>): User = User(
             id = id,
-            email = email
+            email = email,
+            boards = boards
     )
     companion object {
-        fun fromDomain (user: User): UserDto = UserDto(
+        fun fromDomain (user: User, boards: List<Board>? = null): UserDto = UserDto(
                 id = user.id,
-                email = user.email
+                email = user.email,
+                boards = boards
         )
     }
 }

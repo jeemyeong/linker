@@ -21,5 +21,8 @@ data class Category(
         var order: Int,
         @field:ManyToOne(targetEntity = Board::class)
         @field:JoinColumn(name = "board_id")
-        var board: Board
+        var board: Board,
+        @field:OneToMany(targetEntity = Link::class)
+        @field:JoinColumn(name = "category_id")
+        var links: List<Link>
 )

@@ -1,7 +1,6 @@
 package linker.service
 
 import linker.dto.SignUpCommand
-import linker.dto.toDomain
 import linker.entity.User
 import linker.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -33,6 +32,6 @@ class UserService {
     fun signUp(signUpCommand: SignUpCommand): User {
         userRepository.findByEmail(signUpCommand.email).firstOrNull()?.let {
             throw IllegalArgumentException("Already Signed Email: ${signUpCommand.email}")
-        } ?: return userRepository.save(signUpCommand.toDomain())
+        } ?: return userRepository.save(signUpCommand.toDomain(boards = emptyList()))
     }
 }

@@ -3,7 +3,6 @@ package linker.service
 import linker.dto.CategoryDto
 import linker.dto.CreateCategoryCommand
 import linker.dto.UpdateCategoryCommand
-import linker.dto.toDomain
 import linker.entity.Category
 import linker.repository.CategoryRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -34,7 +33,7 @@ class CategoryService {
     fun newCategory(createCategoryCommand: CreateCategoryCommand): Category {
         val board = boardService.findBoardById(createCategoryCommand.boardId)
         val order = categoryRepository.findAll().size + 1
-        return categoryRepository.save(createCategoryCommand.toDomain(board = board, order = order))
+        return categoryRepository.save(createCategoryCommand.toDomain(board = board, order = order, links = emptyList()))
     }
 
     @Transactional
