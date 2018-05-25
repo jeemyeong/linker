@@ -34,8 +34,8 @@ class LinkController(val linkService: LinkService) {
                     .let { link -> LinkDto.fromDomain(link = link) }
 
     @PostMapping("/reorder")
-    fun reorder(@RequestBody links: List<LinkDto>) =
-            linkService.reorderLink(links = links)
+    fun reorder(@RequestBody reorderLinkCommand: ReorderLinkCommand) =
+            linkService.reorderLink(reorderLinkCommand = reorderLinkCommand)
                     .map { link -> let { LinkDto.fromDomain(link = link) } }
 
 

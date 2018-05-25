@@ -17,8 +17,5 @@ data class User(
         var id: Long = 0,
         @field:Column(nullable = false)
         @field:Email
-        val email: String,
-        @field:OneToMany(targetEntity = Category::class, fetch = FetchType.LAZY)
-        @field:JoinColumn(name = "user_id")
-        var categories: Collection<Category> = emptyList()
+        val email: String
 )

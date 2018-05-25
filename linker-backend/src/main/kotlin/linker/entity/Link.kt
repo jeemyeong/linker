@@ -18,9 +18,6 @@ data class Link(
         val url: String,
         @field:Column(nullable = false)
         val content: String,
-        @field:ManyToOne(targetEntity = Category::class)
-        @field:JoinColumn(name = "category_id")
-        var category: Category,
         @field:Column(name = "`order`")
         var order: Int,
         @field:Column(nullable = true)
@@ -28,5 +25,11 @@ data class Link(
         @field:Column(nullable = true)
         val ogImage: String?,
         @field:Column(nullable = true)
-        val ogDescription: String?
+        val ogDescription: String?,
+        @field:ManyToOne(targetEntity = Category::class)
+        @field:JoinColumn(name = "category_id")
+        var category: Category,
+        @field:ManyToOne(targetEntity = User::class)
+        @field:JoinColumn(name = "user_id")
+        var user: User
 )

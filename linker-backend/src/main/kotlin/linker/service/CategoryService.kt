@@ -1,8 +1,12 @@
 package linker.service
 
-import linker.dto.*
+import linker.dto.CategoryDto
+import linker.dto.CreateCategoryCommand
+import linker.dto.UpdateCategoryCommand
+import linker.dto.toDomain
 import linker.entity.Category
 import linker.repository.CategoryRepository
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -14,19 +18,23 @@ import org.springframework.transaction.annotation.Transactional
  */
 
 @Service
-class CategoryService(
-        val categoryRepository: CategoryRepository,
-        val userService: UserService
-) {
+class CategoryService {
+    @Autowired
+    lateinit var categoryRepository: CategoryRepository
+    @Autowired
+    lateinit var userService: UserService
+    @Autowired
+    lateinit var boardService: BoardService
+
     fun findById(id: Long): Category =
             categoryRepository.findById(id).orElseThrow { throw IllegalArgumentException("Cannot find by categoryId: $id") }
 
     fun findAll(): List<Category> = categoryRepository.findAll().sortedBy { it.order }
 
     fun newCategory(createCategoryCommand: CreateCategoryCommand): Category {
-        val user = userService.findByEmail(createCategoryCommand.email)
+        val board = boardService.findBoardById(createCategoryCommand.boardId)
         val order = categoryRepository.findAll().size + 1
-        return categoryRepository.save(createCategoryCommand.toDomain(userDto = UserDto.fromDomain(user), order = order))
+        return categoryRepository.save(createCategoryCommand.toDomain(board = board, order = order))
     }
 
     @Transactional
@@ -48,4 +56,7 @@ class CategoryService(
         categoryRepository.save(category)
         return category
     }
+
+    @Transactional
+    fun findByBoardId(id: Long): Collection<Category> = categoryRepository.findByBoardId(id)
 }

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Repository
 @Repository
 interface LinkRepository : JpaRepository<Link, Long> {
     fun findByCategory(category: Category): List<Link>
+    fun findByCategoryId(categoryId: Long): List<Link>
     @Query(value = "select * from links l left join categories c on l.category_id = c.id WHERE c.user_id = ?1", nativeQuery = true)
     fun findAllLinksByUser(user: User): List<Link>
 }

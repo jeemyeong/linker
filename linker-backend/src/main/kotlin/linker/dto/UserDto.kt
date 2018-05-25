@@ -1,5 +1,6 @@
 package linker.dto
 
+import linker.entity.Board
 import linker.entity.User
 
 /**
@@ -12,14 +13,15 @@ data class UserDto(
         var id: Long,
         var email: String
 ) {
-    companion object
+    var boards: Collection<Board>? = null
+    fun toDomain(boards: List<Board>): User = User(
+            id = id,
+            email = email
+    )
+    companion object {
+        fun fromDomain (user: User): UserDto = UserDto(
+                id = user.id,
+                email = user.email
+        )
+    }
 }
-
-fun UserDto.toDomain(): User = User(
-        id = id,
-        email = email
-)
-fun UserDto.Companion.fromDomain (user: User): UserDto = UserDto(
-        id = user.id,
-        email = user.email
-)

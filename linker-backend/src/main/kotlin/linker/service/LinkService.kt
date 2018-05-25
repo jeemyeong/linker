@@ -1,14 +1,13 @@
 package linker.service
 
 import linker.dto.CreateLinkCommand
-import linker.dto.LinkDto
-import linker.dto.fromDomain
-import linker.dto.toDomain
+import linker.dto.ReorderLinkCommand
 import linker.entity.Link
 import linker.helper.PageParser
 import linker.pojo.PageHeaderInfo
 import linker.repository.LinkRepository
 import org.hibernate.validator.constraints.URL
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -20,13 +19,16 @@ import org.springframework.transaction.annotation.Transactional
  */
 @Transactional
 @Service
-class LinkService(
-        val linkRepository: LinkRepository,
-        val userService: UserService,
-        val categoryService: CategoryService,
-        val pageParser: PageParser
+class LinkService {
+    @Autowired
+    lateinit var userService: UserService
+    @Autowired
+    lateinit var categoryService: CategoryService
+    @Autowired
+    lateinit var pageParser: PageParser
+    @Autowired
+    lateinit var linkRepository: LinkRepository
 
-) {
     fun findById(id: Long): Link =
             linkRepository.findById(id).orElseThrow { throw IllegalArgumentException("Cannot find by linkId: $id") }
 
@@ -39,16 +41,17 @@ class LinkService(
 
     @Transactional
     fun newLink(createLinkCommand: CreateLinkCommand): Link {
-        val category = categoryService.findById(createLinkCommand.link.category.id)
+        val category = categoryService.findById(createLinkCommand.categoryId)
         val order = linkRepository.findByCategory(category).size + 1
-        val pageHeaderInfo = pageParser.parsePageHeaderInfo(createLinkCommand.link.url)
-        return linkRepository.save(createLinkCommand.toDomain(order, pageHeaderInfo))
+        val pageHeaderInfo = pageParser.parsePageHeaderInfo(createLinkCommand.url)
+        val user = userService.findByEmail(createLinkCommand.email)
+        return linkRepository.save(createLinkCommand.toDomain(category = category, order = order, pageHeaderInfo = pageHeaderInfo, user = user))
     }
 
     @Transactional
-    fun reorderLink(links: List<LinkDto>): List<Link> {
-        links.forEach {
-            val category = categoryService.findById(it.category.id)
+    fun reorderLink(reorderLinkCommand: ReorderLinkCommand): List<Link> {
+        reorderLinkCommand.links.forEach {
+            val category = categoryService.findById(it.categoryId)
             val link = this.findById(it.id)
             link.category = category
             link.order = it.order
@@ -57,6 +60,8 @@ class LinkService(
 
         return findAll()
     }
+
+    fun findByCategoryId(id: Long): List<Link> = linkRepository.findByCategoryId(id)
 
     @Transactional
     fun deleteLink(linkId: Long): Link {

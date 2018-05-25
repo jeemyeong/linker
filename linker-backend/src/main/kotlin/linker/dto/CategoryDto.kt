@@ -1,5 +1,6 @@
 package linker.dto
 
+import linker.entity.Board
 import linker.entity.Category
 
 /**
@@ -11,22 +12,21 @@ import linker.entity.Category
 data class CategoryDto(
         var id: Long,
         var title: String,
-        var user: UserDto,
         val order: Int
 ) {
-    companion object
+    var links: Collection<LinkDto>? = null
+    var board: BoardDto? = null
+    fun toDomain(board: Board): Category = Category(
+            id = id,
+            title = title,
+            order = order,
+            board = board
+    )
+    companion object {
+        fun fromDomain(category: Category): CategoryDto = CategoryDto(
+                id = category.id,
+                title = category.title,
+                order = category.order
+        )
+    }
 }
-
-fun CategoryDto.toDomain(): Category = Category(
-        id = id,
-        title = title,
-        user = user.toDomain(),
-        order = order
-)
-
-fun CategoryDto.Companion.fromDomain(category: Category): CategoryDto = CategoryDto(
-        id = category.id,
-        title = category.title,
-        user = UserDto.fromDomain(category.user),
-        order = category.order
-)

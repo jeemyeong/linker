@@ -4,6 +4,7 @@ import linker.dto.SignUpCommand
 import linker.dto.toDomain
 import linker.entity.User
 import linker.repository.UserRepository
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 /**
@@ -13,7 +14,10 @@ import org.springframework.stereotype.Service
  * Time: 10:42 PM
  */
 @Service
-class UserService(val userRepository: UserRepository) {
+class UserService {
+    @Autowired
+    lateinit var userRepository: UserRepository
+
     fun findAllUser(): MutableIterable<User> {
         return userRepository.findAll()
     }

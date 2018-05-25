@@ -1,6 +1,8 @@
 package linker.dto
 
+import linker.entity.Category
 import linker.entity.Link
+import linker.entity.User
 import linker.pojo.PageHeaderInfo
 
 /**
@@ -10,16 +12,20 @@ import linker.pojo.PageHeaderInfo
  * Time: 10:45 PM
  */
 data class CreateLinkCommand(
-        val link: LinkDto,
+        var url: String,
+        var content: String,
+        var order: Int,
+        val categoryId: Long,
         val email: String
-)
-
-fun CreateLinkCommand.toDomain(order: Int, pageHeaderInfo: PageHeaderInfo): Link = Link(
-        url = link.url,
-        content = link.content,
-        category = link.category.toDomain(),
+) {
+    fun toDomain(category: Category, order: Int, pageHeaderInfo: PageHeaderInfo, user: User): Link = Link(
+        url = url,
+        content = content,
+        category = category,
         ogTitle = pageHeaderInfo.ogTitle,
         ogImage = pageHeaderInfo.ogImage,
         ogDescription= pageHeaderInfo.ogDescription,
-        order = order
-)
+        order = order,
+        user = user
+    )
+}

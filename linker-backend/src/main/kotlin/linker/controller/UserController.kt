@@ -3,7 +3,6 @@ package linker.controller
 import linker.dto.LinkDto
 import linker.dto.SignUpCommand
 import linker.dto.UserDto
-import linker.dto.fromDomain
 import linker.service.LinkService
 import linker.service.UserService
 import org.springframework.web.bind.annotation.*
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.*
  * Date: 01/05/2018
  * Time: 11:38 PM
  */
-
 
 @CrossOrigin
 @RestController
@@ -32,4 +30,7 @@ class UserController(val userService: UserService, val linkService: LinkService)
 
     @GetMapping("/{userEmail}/links")
     fun getListIPost(@PathVariable userEmail: String): List<LinkDto> = linkService.findAllLinkByUser(email = userEmail).map { LinkDto.fromDomain(it) }.sortedBy { it.order }
+
+    @GetMapping("/{id}/categories")
+    fun getCategories(@PathVariable id: Long) = userService.findById(id = id)
 }

@@ -3,7 +3,6 @@ package linker.controller;
 import linker.dto.CategoryDto
 import linker.dto.CreateCategoryCommand
 import linker.dto.UpdateCategoryCommand
-import linker.dto.fromDomain
 import linker.service.CategoryService
 import org.springframework.web.bind.annotation.*
 
