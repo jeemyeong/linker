@@ -1,4 +1,4 @@
-package linker.pojo
+package linker.exception
 
 import org.springframework.http.HttpStatus
 

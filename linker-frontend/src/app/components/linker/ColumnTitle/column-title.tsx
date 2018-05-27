@@ -5,7 +5,7 @@ import { colors } from 'app/components/linker/Board/constants';
 import { DraggableProvidedDragHandleProps } from 'react-beautiful-dnd';
 import { ChangeEvent } from 'react';
 import { rootStore } from '../../../../main';
-import { STORE_CATEGORY } from 'app/constants';
+import { STORE_BOARD } from 'app/constants';
 import * as R from 'ramda';
 
 const Container = styled.div`
@@ -58,11 +58,9 @@ export default class ColumnTitle extends React.Component<
     if (event.key === 'Enter') {
       event.preventDefault();
       event.stopPropagation();
-      this.props.category.title = this.state.title;
-      rootStore[STORE_CATEGORY].updateCategoryToServer(this.props.category).then(() => this.setState({editing: false}))
+      rootStore[STORE_BOARD].updateCategory({category: this.props.category, title: this.state.title})//.then(() => this.setState({editing: false}))
     }
   };
-
   shouldComponentUpdate(nextProp, nextState) {
     return !(R.equals(this.props, nextProp) && R.equals(this.state, nextState))
   }

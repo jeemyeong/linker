@@ -14,7 +14,7 @@ import linker.entity.User
 data class UserDto(
         var id: Long,
         var email: String,
-        var boards: Collection<Board>? = null
+        var boards: Collection<BoardDto>? = null
 ) {
     fun toDomain(boards: List<Board>): User = User(
             id = id,
@@ -22,7 +22,7 @@ data class UserDto(
             boards = boards
     )
     companion object {
-        fun fromDomain (user: User, boards: List<Board>? = null): UserDto = UserDto(
+        fun fromDomain (user: User, boards: List<BoardDto>? = null): UserDto = UserDto(
                 id = user.id,
                 email = user.email,
                 boards = boards

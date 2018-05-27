@@ -1,8 +1,6 @@
 package linker.controller
 
-import linker.dto.LinkDto
-import linker.dto.SignUpCommand
-import linker.dto.UserDto
+import linker.dto.*
 import linker.service.LinkService
 import linker.service.UserService
 import org.springframework.web.bind.annotation.*
@@ -20,17 +18,32 @@ import org.springframework.web.bind.annotation.*
 class UserController(val userService: UserService, val linkService: LinkService) {
 
     @GetMapping("/{id}/info")
-    fun getMyInformation(@PathVariable id: Long) = userService.findById(id = id).let { user -> UserDto.fromDomain(user = user) }
+    fun getMyInformation(@PathVariable id: Long): UserResponse =
+            userService.findById(id = id)
+                    .let { user -> UserDto.fromDomain(user = user) }
+                    .let { user -> UserResponse(user = user) }
 
     @GetMapping("/all")
-    fun all(): List<UserDto> = userService.findAllUser().map { user -> UserDto.fromDomain(user = user) }
+    fun all(): UserListResponse =
+            userService.findAllUser()
+                    .map { user -> UserDto.fromDomain(user = user) }
+                    .let { list -> UserListResponse(users = list) }
 
     @PostMapping("/")
-    fun new(@RequestBody signUpCommand: SignUpCommand): UserDto = userService.signUp(signUpCommand = signUpCommand).let { user -> UserDto.fromDomain(user = user) }
+    fun new(@RequestBody signUpCommand: SignUpCommand): UserResponse =
+            userService.signUp(signUpCommand = signUpCommand)
+                    .let { user -> UserDto.fromDomain(user = user) }
+                    .let { user -> UserResponse(user = user) }
 
     @GetMapping("/{userEmail}/links")
-    fun getListIPost(@PathVariable userEmail: String): List<LinkDto> = linkService.findAllLinkByUser(email = userEmail).map { LinkDto.fromDomain(it) }.sortedBy { it.order }
+    fun getListIPost(@PathVariable userEmail: String): LinkListResponse =
+            linkService.findAllLinkByUser(email = userEmail)
+                    .map { LinkDto.fromDomain(it) }.sortedBy { it.order }
+                    .let { list -> LinkListResponse(links = list) }
 
     @GetMapping("/{id}/categories")
-    fun getCategories(@PathVariable id: Long) = userService.findById(id = id)
+    fun getCategories(@PathVariable id: Long): UserResponse =
+            userService.findById(id = id)
+                    .let { user -> UserDto.fromDomain(user) }
+                    .let { user -> UserResponse(user = user) }
 }

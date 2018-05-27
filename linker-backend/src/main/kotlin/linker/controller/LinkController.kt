@@ -2,7 +2,6 @@ package linker.controller
 
 import linker.dto.*
 import linker.service.LinkService
-import org.jetbrains.annotations.TestOnly
 import org.springframework.web.bind.annotation.*
 
 
@@ -19,34 +18,34 @@ import org.springframework.web.bind.annotation.*
 class LinkController(val linkService: LinkService) {
 
     @GetMapping("/{id}")
-    fun getOne(@PathVariable id: Long) =
+    fun getOne(@PathVariable id: Long): LinkResponse =
             linkService.findById(id = id)
                     .let { link -> LinkDto.fromDomain(link = link) }
+                    .let { link -> LinkResponse(link = link) }
 
     @GetMapping("/all")
-    fun all() =
+    fun all(): LinkListResponse =
             linkService.findAll()
-            .map { link -> let { LinkDto.fromDomain(link = link) } }
+                    .map { link -> let { LinkDto.fromDomain(link = link) } }
+                    .let { list -> LinkListResponse(links = list) }
 
     @PostMapping("/")
-    fun new(@RequestBody createLinkCommand: CreateLinkCommand) =
+    fun new(@RequestBody createLinkCommand: CreateLinkCommand): LinkResponse =
             linkService.newLink(createLinkCommand)
                     .let { link -> LinkDto.fromDomain(link = link) }
+                    .let { link -> LinkResponse(link = link) }
 
     @PostMapping("/reorder")
-    fun reorder(@RequestBody reorderLinkCommand: ReorderLinkCommand) =
+    fun reorder(@RequestBody reorderLinkCommand: ReorderLinkCommand): LinkListResponse =
             linkService.reorderLink(reorderLinkCommand = reorderLinkCommand)
                     .map { link -> let { LinkDto.fromDomain(link = link) } }
+                    .let { list -> LinkListResponse(links = list) }
 
 
     @DeleteMapping("/{id}")
     fun delete(@PathVariable id: Long) =
             linkService.deleteLink(linkId = id)
-            .let { link -> LinkDto.fromDomain(link = link) }
-            .let { linkDto -> SuccessDeleteLinkResponse.fromLinkDto(linkDto) }
-
-    @TestOnly
-    @GetMapping("/testCrawl")
-    fun testCrawl() = linkService.testCrawler("https://www.naver.com/")
+                    .let { link -> LinkDto.fromDomain(link = link) }
+                    .let { link -> DeleteLinkResponse(link = link) }
 }
 

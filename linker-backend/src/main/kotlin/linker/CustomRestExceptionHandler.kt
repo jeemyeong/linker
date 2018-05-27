@@ -1,6 +1,6 @@
 package linker
 
-import linker.pojo.ApiError
+import linker.exception.ApiError
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity

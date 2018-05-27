@@ -1,8 +1,6 @@
 package linker.controller;
 
-import linker.dto.CategoryDto
-import linker.dto.CreateCategoryCommand
-import linker.dto.UpdateCategoryCommand
+import linker.dto.*
 import linker.service.CategoryService
 import org.springframework.web.bind.annotation.*
 
@@ -19,24 +17,33 @@ import org.springframework.web.bind.annotation.*
 class CategoryController(val categoryService: CategoryService) {
 
     @GetMapping("/{id}")
-    fun getOne(@PathVariable id: Long) = categoryService.findById(id = id).let { CategoryDto.fromDomain(it) }
+    fun getOne(@PathVariable id: Long): CategoryResponse =
+            categoryService.findById(id = id)
+                    .let { category ->CategoryDto.fromDomain(category) }
+                    .let { category -> CategoryResponse(category = category) }
 
     @GetMapping("/all")
-    fun all() = categoryService.findAll().map { category -> CategoryDto.fromDomain(category = category) }.sortedBy { it.order }
+    fun all(): CategoryListResponse =
+            categoryService.findAll()
+                    .map { category -> CategoryDto.fromDomain(category = category) }.sortedBy { it.order }
+                    .let { list -> CategoryListResponse(categories = list) }
 
     @PostMapping("/")
-    fun new(@RequestBody createCategoryCommand: CreateCategoryCommand) =
+    fun new(@RequestBody createCategoryCommand: CreateCategoryCommand): CategoryResponse =
             categoryService.newCategory(createCategoryCommand = createCategoryCommand)
-                    .let { CategoryDto.fromDomain(it) }
+                    .let { category ->  CategoryDto.fromDomain(category) }
+                    .let { category -> CategoryResponse(category = category) }
 
     @PostMapping("/reorder")
-    fun reorder(@RequestBody categories: List<CategoryDto>) =
+    fun reorder(@RequestBody categories: List<CategoryDto>): CategoryListResponse =
             categoryService.reorderCategories(categories = categories)
-                    .map { CategoryDto.fromDomain(it) }
+                    .map { category -> CategoryDto.fromDomain(category = category) }
+                    .let { list -> CategoryListResponse(categories = list) }
 
     @PutMapping("/{id}")
-    fun update(@RequestBody updateCategoryCommand: UpdateCategoryCommand) =
+    fun update(@RequestBody updateCategoryCommand: UpdateCategoryCommand): CategoryResponse =
             categoryService.updateCategory(updateCategoryCommand = updateCategoryCommand)
-                    .let { CategoryDto.fromDomain(it) }
+                    .let { category -> CategoryDto.fromDomain(category = category) }
+                    .let { category -> CategoryResponse(category = category) }
 
 }

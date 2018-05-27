@@ -4,20 +4,20 @@ import { Board } from 'app/components/linker/Board/board';
 import Banner from 'app/components/linker/Banner/banner';
 import styled from 'styled-components';
 import { inject, observer } from 'mobx-react';
-import { STORE_CATEGORY, STORE_LINK } from 'app/constants/index';
-import { CategoryStore, LinkStore } from 'app/stores/index';
 import { LinkCard } from 'app/components/linker/Link/link-card';
 import ColumnTitle from 'app/components/linker/ColumnTitle/column-title';
-import { STORE_UI } from 'app/constants';
+import { STORE_BOARD, STORE_UI } from 'app/constants';
 import UiStore from 'app/stores/ui-store';
 import { AddLinkButton } from 'app/components/linker/Link/add-link-button';
-import { CategoryModel, LinkModel } from 'app/models';
-import { rootStore } from '../../main';
+import { LinkModel } from 'app/models';
 import * as R from 'ramda';
 import AddLinkDialog from 'app/components/linker/Link/add-link-dialog';
 import { DialogModal } from 'app/components/linker/Dialog/dialog-modal';
 import { Loader } from 'app/components/linker/ui/loader';
 import { Snackbar } from 'app/components/linker/ui/snackbar';
+import BoardStore from 'app/stores/board-store';
+import { CategoryData } from 'app/type/category-data';
+import { LinkData } from 'app/type/link-data';
 
 const Layout = styled.div`
   position: relative;
@@ -46,55 +46,63 @@ export interface LinkerAppProps extends RouteComponentProps<any> {
 
 export interface LinkerAppState {}
 
-@inject(STORE_LINK, STORE_CATEGORY, STORE_UI)
+@inject(STORE_UI, STORE_BOARD)
 @observer
 export class LinkerApp extends React.Component<LinkerAppProps, LinkerAppState> {
 
-  renderColumnTitle= (column, isDragging, dragHandleProps) => (
+  renderColumnTitle = (column, isDragging, dragHandleProps) => (
     <ColumnTitle category={column}
       isDragging={isDragging}
       dragHandleProps={dragHandleProps}/>
   );
 
-  renderAddItemButton = (listId: number) => {
+  openAddLinkModal = (category: CategoryData) => {
     const uiStore = this.props[STORE_UI] as UiStore;
-    const categoryStore = this.props[STORE_CATEGORY] as CategoryStore;
-    const category = categoryStore.categories.find(category => category.id === listId);
+    return uiStore.openDialog({
+      DialogComponent: (
+        <AddLinkDialog
+          onSubmit={({url}) => {
+            return R.pipe(uiStore.openLoader, () => this.newLink({category, url}).then(R.pipe(uiStore.closeDialog, uiStore.closeLoader, R.always({message: "Link has been saved"}), uiStore.openSnackbar)))(true)
+          }}
+          closeModal={uiStore.closeDialog}
+        />
+      )
+    })
+  };
 
+  renderAddItemButton = (index: number) => {
+    const boardStore = this.props[STORE_BOARD] as BoardStore;
+    const category = boardStore.board.categories[index];
     return (
       <AddLinkButton
         category={category}
-        openAddLinkModal={(category) => uiStore.openDialog({
-          DialogComponent: (
-            <AddLinkDialog
-              onSubmit={({url}) => {
-                const link = this.newLink({url: url, category: category});
-                return R.pipe(uiStore.openLoader, () => this.submitLink({link}).then(R.pipe(uiStore.closeDialog, uiStore.closeLoader, R.always({message: "Link has been saved"}), uiStore.openSnackbar)))(true)
-              }}
-              closeModal={uiStore.closeDialog}
-            />
-          )
-        })}
+        openAddLinkModal={this.openAddLinkModal}
       />
     )
   };
 
-  submitLink = ({link}: {link: LinkModel}) => {
-    const linkStore = this.props[STORE_LINK] as LinkStore;
-    return linkStore.addLink({link})
+  newLink = ({category, url}: {category: CategoryData, url: string}) => {
+    const boardStore = this.props[STORE_BOARD] as BoardStore;
+    const link: LinkData = {
+      id: 0,
+      url,
+      content: '',
+      order: 0,
+    };
+    return boardStore.addLink({link, category})
   };
 
-  newLink = ({url, category}: {url: string, category: CategoryModel}) => {
-    const order = R.countBy((link: LinkModel) => link.category.id)(rootStore[STORE_LINK].links)[category.id] + 1;
-    return new LinkModel({url, category, order})
+  renderItem = (item: LinkModel) => {
+    const boardStore = this.props[STORE_BOARD] as BoardStore;
+    return <LinkCard link={item} deleteLink={boardStore.deleteLink}/>
   };
 
   render() {
-    const linkStore = this.props[STORE_LINK] as LinkStore;
-    const categoryStore = this.props[STORE_CATEGORY] as CategoryStore;
+    const boardStore = this.props[STORE_BOARD] as BoardStore;
     const uiStore = this.props[STORE_UI] as UiStore;
-    const links = linkStore.links;
-    const categories = categoryStore.categories;
+    const board = boardStore.board;
+    board.categories.forEach(category => category["items"] = category.links);
+
     return (
       <Layout>
         {
@@ -117,11 +125,10 @@ export class LinkerApp extends React.Component<LinkerAppProps, LinkerAppState> {
         </Header>
         <Main>
           <Board
-            items={links}
-            columns={categories}
-            reorderColumn={categoryStore.reorderCategories}
-            reorderItem={linkStore.reorderLink}
-            renderItem={(item) => <LinkCard link={item} deleteLink={linkStore.deleteLink}/>}
+            board={board}
+            reorderColumn={boardStore.reorderCategories}
+            reorderItem={boardStore.reorderLink}
+            renderItem={this.renderItem}
             renderColumnTitle={this.renderColumnTitle}
             renderAddItemButton={this.renderAddItemButton}
           />

@@ -20,9 +20,10 @@ export interface BoardItem {
   id: number;
 }
 
-export interface BoardColumn {
+export interface BoardColumn<T> {
   id: number;
   title: string;
+  items?: Array<T>
 }
 
 export interface RenderItemToJSXElement<T> {
@@ -30,7 +31,7 @@ export interface RenderItemToJSXElement<T> {
 }
 
 export interface RenderAddItemToJSXElement {
-  (listId: number): JSX.Element;
+  (index: number): JSX.Element;
 }
 
 
@@ -40,8 +41,11 @@ export interface RenderColumnTitleToJSXElement<K> {
 
 export interface BoardProps<T, K> {
   containerHeight?: string;
-  items: Array<T>;
-  columns: Array<K>;
+  board: {
+    id: number
+    title: string
+    categories?: Array<K>
+  };
   renderItem: RenderItemToJSXElement<T>;
   renderAddItemButton: RenderAddItemToJSXElement;
   renderColumnTitle: RenderColumnTitleToJSXElement<K>;
@@ -53,10 +57,11 @@ export interface BoardProps<T, K> {
   reorderItem: {
     (
       {
-        itemId,
-        newColumnId,
+        originColumnIndex,
+        originIndex,
+        newColumnIndex,
         newIndex
-      }: { itemId: number; newColumnId: number; newIndex: number }
+      }: { originColumnIndex: number; originIndex: number; newColumnIndex: number; newIndex: number }
     ): void;
   };
 }
@@ -67,7 +72,7 @@ export interface BoardState<T> {
 
 export class Board<
   T extends BoardItem,
-  K extends BoardColumn
+  K extends BoardColumn<T>
 > extends React.Component<BoardProps<T, K>, BoardState<T>> {
   onDragStart = (initial) => {};
 
@@ -97,25 +102,26 @@ export class Board<
       return;
     }
     this.props.reorderItem({
-      itemId: this.props.items.filter(item => item["category"].id == source.droppableId)[source.index].id,
-      newColumnId: destination.droppableId,
+      originColumnIndex: source.droppableId,
+      originIndex: source.index,
+      newColumnIndex: destination.droppableId,
       newIndex: destination.index
     });
   };
 
   render() {
-    const { columns, items } = this.props;
+    const { categories } = this.props.board;
     const { containerHeight, renderItem, renderAddItemButton, renderColumnTitle } = this.props;
     const board = (
       <Droppable droppableId="board" type="COLUMN" direction="horizontal">
         {(provided) => (
           <Container innerRef={provided.innerRef} {...provided.droppableProps}>
-            {columns.map((column: K, index: number) => (
+            {categories.map((column: K, index: number) => (
               <Column
                 key={column.id}
                 column={column}
                 index={index}
-                items={items.filter(item => item["category"].id == column.id)}
+                items={column.items}
                 renderItem={renderItem}
                 renderAddItemButton={renderAddItemButton}
                 renderColumnTitle={renderColumnTitle}

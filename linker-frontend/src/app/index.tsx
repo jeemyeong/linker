@@ -2,7 +2,6 @@ import * as React from 'react';
 import { hot } from 'react-hot-loader';
 import { Router, Route, Switch } from 'react-router';
 import { Root } from 'app/containers/Root';
-import { TodoApp } from 'app/containers/TodoApp';
 import { LinkerApp } from 'app/containers/linker-app';
 
 // render react DOM
@@ -11,7 +10,6 @@ export const App = hot(module)(({ history }) => (
     <Router history={history}>
       <Switch>
         <Route exact path="/" component={LinkerApp} />
-        <Route path="/todos" component={TodoApp} />
       </Switch>
     </Router>
   </Root>

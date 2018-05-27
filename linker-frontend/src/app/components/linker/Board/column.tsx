@@ -36,28 +36,28 @@ export interface ColumnProps<T, K> {
   renderColumnTitle: RenderColumnTitleToJSXElement<K>;
   index: number;
   items: Array<T>;
-  column: K
+  column: K,
 }
 
 export interface ColumnState {}
 
-export class Column<T extends BoardItem, K extends BoardColumn> extends React.Component<
+export class Column<T extends BoardItem, K extends BoardColumn<T>> extends React.Component<
   ColumnProps<T, K>,
   ColumnState
 > {
 
   render() {
-    const { items, index, renderColumnTitle, column, renderAddItemButton } = this.props;
+    const { items, index, renderColumnTitle, column, renderAddItemButton} = this.props;
     return (
-      <Draggable draggableId={column.id.toString()} index={index}>
+      <Draggable draggableId={column.title} index={index}>
         {(provided, snapshot) => (
           <Container innerRef={provided.innerRef} {...provided.draggableProps}>
             <Header isDragging={snapshot.isDragging}>
               {renderColumnTitle(column, snapshot.isDragging, provided.dragHandleProps)}
             </Header>
-            {renderAddItemButton(column.id)}
+            {renderAddItemButton(index)}
             <ItemList
-              listId={column.id}
+              droppableId={index.toString()}
               listType="ITEM"
               items={items}
               renderItem={this.props.renderItem}

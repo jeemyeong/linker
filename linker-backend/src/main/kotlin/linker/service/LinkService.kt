@@ -4,9 +4,7 @@ import linker.dto.CreateLinkCommand
 import linker.dto.ReorderLinkCommand
 import linker.entity.Link
 import linker.helper.PageParser
-import linker.pojo.PageHeaderInfo
 import linker.repository.LinkRepository
-import org.hibernate.validator.constraints.URL
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -53,7 +51,7 @@ class LinkService {
         reorderLinkCommand.links.forEach {
             val category = categoryService.findById(it.categoryId)
             val link = this.findById(it.id)
-            link.category = category
+            // link.category = category
             link.order = it.order
             linkRepository.save(link)
         }
@@ -67,14 +65,8 @@ class LinkService {
     fun deleteLink(linkId: Long): Link {
         val link = findById(linkId)
         linkRepository.deleteById(linkId)
-        val links = this.linkRepository.findByCategory(link.category)
-        links.filter { it.order > link.order }.forEach { it.order -= 1; linkRepository.save(it) }
+        //  val links = this.linkRepository.findByCategory(link.category)
+        //  links.filter { it.order > link.order }.forEach { it.order -= 1; linkRepository.save(it) }
         return link
-    }
-
-    fun testCrawler(
-            @URL url: String
-    ): PageHeaderInfo {
-        return pageParser.parsePageHeaderInfo(url = url)
     }
 }

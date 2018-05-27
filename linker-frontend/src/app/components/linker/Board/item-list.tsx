@@ -9,7 +9,6 @@ import Item from './item';
 import { grid, colors } from './constants';
 import styled from 'styled-components';
 import { BoardItem, RenderItemToJSXElement } from './board';
-import { CategoryId } from 'app/models';
 
 const Wrapper: any = styled.div`
   background-color: ${({ isDraggingOver }: DroppableStateSnapshot) =>
@@ -53,13 +52,6 @@ class InnerItemList<T extends BoardItem> extends React.Component<
   InnerItemListProps<T>,
   InnerItemListState
 > {
-  shouldComponentUpdate(nextProps) {
-    if (nextProps.items !== this.props.items) {
-      return true;
-    }
-
-    return false;
-  }
 
   render() {
     return this.props.items.map((item, index) => (
@@ -111,7 +103,7 @@ export interface ItemListProps<T> {
   renderItem: RenderItemToJSXElement<T>;
   internalScroll?: boolean;
   isDropDisabled?: boolean;
-  listId: CategoryId;
+  droppableId: string;
   listType?: string;
   items: Array<T>;
   title?: string;
@@ -129,7 +121,7 @@ export default class ItemList<T extends BoardItem> extends React.Component<
       renderItem,
       internalScroll,
       isDropDisabled,
-      listId,
+      droppableId,
       listType,
       items,
       title,
@@ -138,7 +130,7 @@ export default class ItemList<T extends BoardItem> extends React.Component<
 
     return (
       <Droppable
-        droppableId={'' + listId}
+        droppableId={droppableId}
         type={listType}
         direction="vertical"
         isDropDisabled={false}

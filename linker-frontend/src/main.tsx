@@ -6,7 +6,7 @@ import { Provider } from 'mobx-react';
 import { createBrowserHistory } from 'history';
 import { App } from 'app';
 import { createStores } from 'app/stores';
-import { STORE_CATEGORY, STORE_LINK } from 'app/constants';
+import { STORE_BOARD } from 'app/constants';
 
 // enable MobX strict mode
 useStrict(true);
@@ -16,8 +16,7 @@ const history = createBrowserHistory();
 export const rootStore = createStores(history);
 
 Promise.all([
-  rootStore[STORE_CATEGORY].getAllCategories(),
-  rootStore[STORE_LINK].getLinks()
+  rootStore[STORE_BOARD].getBoard(1)
 ])
   .then(() =>
     // render react DOM
