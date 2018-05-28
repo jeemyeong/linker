@@ -13,17 +13,17 @@ import linker.entity.Link
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class CategoryDto(
-        var id: Long,
-        var title: String,
-        val order: Int,
+        var id: Long?,
+        var title: String?,
+        val order: Int?,
         var links: Collection<LinkDto>? = null,
         var board: BoardDto? = null
 ) {
     fun toDomain(board: Board, links: List<Link>): Category = Category(
-            id = id,
+            id = id ?: 0,
             title = title,
             order = order,
-            board = board,
+            boardId = board.id,
             links = links
     )
     companion object {

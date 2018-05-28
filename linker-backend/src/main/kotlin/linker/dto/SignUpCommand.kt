@@ -10,5 +10,5 @@ import linker.entity.User
  * Time: 10:43 PM
  */
 data class SignUpCommand(val email: String) {
-    fun toDomain(boards: List<Board>): User = User(email = email, boards = boards)
+    fun toDomain(boards: List<Board>): User = User(email = email)
 }

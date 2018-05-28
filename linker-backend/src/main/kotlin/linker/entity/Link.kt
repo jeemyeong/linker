@@ -15,21 +15,19 @@ data class Link(
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         var id: Long = 0,
         @field:Column(nullable = false)
-        val url: String,
+        val url: String?,
         @field:Column(nullable = false)
-        val content: String,
+        val content: String?,
         @field:Column(name = "`order`")
-        var order: Int,
+        var order: Int?,
         @field:Column(nullable = true)
         val ogTitle: String?,
         @field:Column(nullable = true)
         val ogImage: String?,
         @field:Column(nullable = true)
         val ogDescription: String?,
-        @field:ManyToOne(targetEntity = Category::class)
-        @field:JoinColumn(name = "category_id")
-        var category: Category,
-        @field:ManyToOne(targetEntity = User::class)
-        @field:JoinColumn(name = "user_id")
-        var user: User
+        @field:Column(name = "category_id")
+        var categoryId: Long?,
+        @field:Column(name = "user_id")
+        var userId: Long?
 )

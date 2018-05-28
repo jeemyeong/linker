@@ -40,7 +40,7 @@ class CategoryService {
     fun reorderCategories(categories: List<CategoryDto>): List<Category> {
         categories.forEach {
             val order = it.order
-            val category = findById(it.id)
+            val category = findById(it.id!!)
             category.order = order
             categoryRepository.save(category)
         }

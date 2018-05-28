@@ -14,11 +14,10 @@ data class Board(
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         var id: Long = 0,
-        var title: String,
-        @field:ManyToOne(targetEntity = User::class)
-        @field:JoinColumn(name = "user_id")
-        var user: User,
+        var title: String?,
+        @field:Column(name = "user_id")
+        var userId: Long?,
         @field:OneToMany(targetEntity = Category::class)
         @field:JoinColumn(name = "board_id")
-        var categories: List<Category>
+        var categories: List<Category>?
 )

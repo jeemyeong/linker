@@ -16,7 +16,7 @@ data class CreateCategoryCommand(
 ) {
     fun toDomain(board: Board, order: Int, links: List<Link>): Category = Category(
             title = title,
-            board = board,
+            boardId = board.id,
             order = order,
             links = links
     )

@@ -21,11 +21,11 @@ data class CreateLinkCommand(
     fun toDomain(category: Category, order: Int, pageHeaderInfo: PageHeaderInfo, user: User): Link = Link(
         url = url,
         content = content,
-        category = category,
+        categoryId = category.id,
         ogTitle = pageHeaderInfo.ogTitle,
         ogImage = pageHeaderInfo.ogImage,
         ogDescription= pageHeaderInfo.ogDescription,
         order = order,
-        user = user
+        userId = user.id
     )
 }

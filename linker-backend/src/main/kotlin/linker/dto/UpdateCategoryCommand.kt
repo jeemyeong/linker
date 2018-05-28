@@ -19,7 +19,7 @@ data class UpdateCategoryCommand(
     fun toDomain(board: Board, links: List<Link>): Category = Category(
             id = id,
             title = title,
-            board = board,
+            boardId = board.id,
             order = order,
             links = links
     )

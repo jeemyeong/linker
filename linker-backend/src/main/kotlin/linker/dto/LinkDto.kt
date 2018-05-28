@@ -13,22 +13,22 @@ import linker.entity.User
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class LinkDto(
-        var id: Long,
-        var url: String,
-        var content: String,
-        var order: Int,
+        var id: Long?,
+        var url: String?,
+        var content: String?,
+        var order: Int?,
         var ogImage: String?,
         var ogTitle: String?,
         var ogDescription: String?,
-        var category :CategoryDto? = null,
-        var user :UserDto? = null
+        var category :CategoryDto?,
+        var user :UserDto?
 ) {
     fun toDomain(category: Category, user: User): Link = Link(
-            id = id,
+            id = id ?: 0,
             url = url,
             content = content,
-            category = category,
-            user = user,
+            categoryId = category.id,
+            userId = user.id,
             order = order,
             ogTitle = ogTitle,
             ogImage = ogImage,

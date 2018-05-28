@@ -40,7 +40,7 @@ class LinkService {
     @Transactional
     fun newLink(createLinkCommand: CreateLinkCommand): Link {
         val category = categoryService.findById(createLinkCommand.categoryId)
-        val order = linkRepository.findByCategory(category).size + 1
+        val order = linkRepository.findByCategoryId(category.id).size + 1
         val pageHeaderInfo = pageParser.parsePageHeaderInfo(createLinkCommand.url)
         val user = userService.findByEmail(createLinkCommand.email)
         return linkRepository.save(createLinkCommand.toDomain(category = category, order = order, pageHeaderInfo = pageHeaderInfo, user = user))
