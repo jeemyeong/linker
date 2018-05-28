@@ -1,7 +1,7 @@
 package linker.app.board
 
-import linker.entity.Board
-import linker.repository.BoardRepository
+import linker.domain.board.Board
+import linker.infra.board.BoardRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.*
@@ -14,12 +14,12 @@ import java.util.*
  */
 
 interface BoardService {
-    fun getBoard(id: Long): Optional<Board>
+    fun findBoardById(id: Long): Optional<Board>
 }
 
 @Service
 class BoardServiceImpl: BoardService {
     @Autowired
     lateinit var boardRepository: BoardRepository
-    override fun getBoard(id: Long): Optional<Board> = boardRepository.findById(id)
+    override fun findBoardById(id: Long): Optional<Board> = boardRepository.findById(id)
 }

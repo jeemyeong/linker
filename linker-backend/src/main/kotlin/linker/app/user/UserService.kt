@@ -1,7 +1,7 @@
 package linker.app.user
 
-import linker.entity.User
-import linker.repository.UserRepository
+import linker.domain.user.User
+import linker.infra.user.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.*
@@ -10,7 +10,7 @@ import java.util.*
  * Created by Jeemyeong.
  * User: jeemyeonglee
  * Date: 29/05/2018
- * Time: 1:27 AM
+ * Time: 2:29 AM
  */
 
 interface UserService {
@@ -21,8 +21,5 @@ interface UserService {
 class UserServiceImpl: UserService {
     @Autowired
     lateinit var userRepository: UserRepository
-
     override fun findUserById(id: Long): Optional<User> = userRepository.findById(id)
-
 }
-
