@@ -25,14 +25,12 @@ data class BoardVO(
     data class CategoryVO(
             var id: Long,
             var title: String,
-            var order: Int,
             var links: List<LinkVO>
     ) {
         data class LinkVO(
                 var id: Long,
                 var url: String,
                 var content: String,
-                var order: Int,
                 var ogTitle: String?,
                 var ogImage: String?,
                 var ogDescription: String?,
@@ -42,7 +40,7 @@ data class BoardVO(
                     id = id,
                     url = url,
                     content = content,
-                    order = order,
+                    order = 0,
                     ogTitle = ogTitle,
                     ogImage = ogImage,
                     ogDescription = ogDescription,
@@ -54,7 +52,7 @@ data class BoardVO(
         fun toDomain(board: BoardVO, user: User): Category = Category(
                 id = id,
                 title = title,
-                order = order,
+                order = 0,
                 boardId = board.id,
                 links = links.map { it.toDomain(this, user) }
         )

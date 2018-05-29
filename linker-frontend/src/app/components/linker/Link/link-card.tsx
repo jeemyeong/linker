@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { LinkModel } from 'app/models';
-import { ellipseStr } from 'app/helper/ellipse-str';
+import { ellipseStr } from 'app/util/ellipse-str';
+import { LinkData } from 'app/type/link-data';
 
 const Card = styled.div`
   position: relative;
@@ -153,7 +153,7 @@ const A = styled.a`
 `;
 
 interface LinkProps {
-  link: LinkModel
+  link: LinkData
   deleteLink: { ({ targetLink: LinkModel }): Promise<void> };
 }
 

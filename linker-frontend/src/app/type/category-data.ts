@@ -4,7 +4,6 @@ import { LinkData } from 'app/type/link-data';
 export interface CategoryData {
   id: number
   title: string
-  order: number
-  links?: Array<LinkData>
+  links: Array<LinkData>
   board?: BoardData
 }

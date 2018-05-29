@@ -6,43 +6,45 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import Button from '@material-ui/core/Button';
 
-interface AddLinkProps {
-  onSubmit: { ({url} : {url: string}): Promise<void> }
+interface AddContentProps {
+  onSubmit: { ({content} : {content: string}): Promise<void> }
   closeModal: { (): void }
+  msg: string
+  title: string
 }
 
-interface AddLinkState {
-  url: string;
+interface AddContentState {
+  content: string;
 }
 
-export class AddLinkDialog extends React.Component<AddLinkProps, AddLinkState> {
+export class AddContentDialog extends React.Component<AddContentProps, AddContentState> {
   state = {
-    url: ''
+    content: ''
   };
 
   _handleKeyPress = (e) => {
     return (e.key === 'Enter') && this.onSubmit()
   };
 
-  onSubmit = () => this.props.onSubmit({url: this.state.url})
+  onSubmit = () => this.props.onSubmit({content: this.state.content})
 
   render() {
-    const { closeModal } = this.props;
+    const { closeModal, msg, title } = this.props;
     return (
       <div>
-        <DialogTitle>Add Link</DialogTitle>
+        <DialogTitle>{title}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            You can add link with type URL in this box.
+            {msg}
           </DialogContentText>
           <TextField
             autoFocus
             margin="dense"
             id="name"
             label="URL"
-            type="url"
+            type="content"
             fullWidth
-            onChange={(e) => this.setState({ url: e.target.value })}
+            onChange={(e) => this.setState({ content: e.target.value })}
             onKeyPress={this._handleKeyPress}
           />
         </DialogContent>
@@ -59,4 +61,4 @@ export class AddLinkDialog extends React.Component<AddLinkProps, AddLinkState> {
   }
 }
 
-export default AddLinkDialog;
+export default AddContentDialog;

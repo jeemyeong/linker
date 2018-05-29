@@ -8,6 +8,10 @@ import * as R from 'ramda';
 const Container = styled.div`
   background: ${colors.red.light}
 `;
+
+const ButtonWrapper = styled.div`
+  float: right;
+`;
 interface AddLinkButtonProps {
   category: CategoryData,
   openAddLinkModal: {(category: CategoryData): void}
@@ -22,9 +26,11 @@ export class AddLinkButton extends React.Component<AddLinkButtonProps, {}> {
   render() {
     return (
       <Container>
-        <Button onClick={() => this.props.openAddLinkModal(this.props.category)}>
-          Add Link
-        </Button>
+        <ButtonWrapper>
+          <Button onClick={() => this.props.openAddLinkModal(this.props.category)}>
+            Add Link
+          </Button>
+        </ButtonWrapper>
       </Container>
     );
   }

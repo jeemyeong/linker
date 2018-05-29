@@ -5,7 +5,6 @@ export interface LinkData {
   id: number
   url: string
   content: string
-  order: number
   ogImage?: string
   ogTitle?: string
   ogDescription?: string

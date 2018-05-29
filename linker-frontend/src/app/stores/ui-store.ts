@@ -13,6 +13,9 @@ interface UiSate {
     isOpen: boolean,
     message: null | string
   }
+  floatingButton: {
+    isOpen: boolean
+  }
 }
 
 export class UiStore {
@@ -27,6 +30,9 @@ export class UiStore {
     snackbar: {
       isOpen: false,
       message: null
+    },
+    floatingButton: {
+      isOpen: false
     }
   };
 
@@ -50,8 +56,7 @@ export class UiStore {
         Component: null
       }
     }
-  }
-
+  };
 
   @action
   openLoader = () => {
@@ -82,7 +87,7 @@ export class UiStore {
         message
       }
     }
-  }
+  };
 
   @action
   closeSnackbar = () => {
@@ -93,7 +98,7 @@ export class UiStore {
         message: null
       }
     }
-  }
+  };
 }
 
 export default UiStore;

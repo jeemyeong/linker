@@ -64,7 +64,12 @@ export class BoardStore {
   };
 
   @action
-  addLink = ({link, category}: {link: LinkData, category: CategoryData}): Promise<void> => {
+  addLink = ({url, category}: {url: string, category: CategoryData}): Promise<void> => {
+    const link: LinkData = {
+      id: 0,
+      url,
+      content: '',
+    };
     const categories = [...this.board.categories];
     categories.find(c => c.id == category.id).links.push(link);
 
@@ -86,6 +91,21 @@ export class BoardStore {
     this.board = {
       ...this.board,
       categories: categories
+    };
+
+    return this.update()
+  };
+
+  @action
+  addCategory = ({title}: {title: string}): Promise<void> => {
+    const category: CategoryData = {
+      id: 0,
+      title,
+      links: []
+    };
+    this.board = {
+      ...this.board,
+      categories: [...this.board.categories, category]
     };
 
     return this.update()
