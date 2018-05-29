@@ -2,7 +2,7 @@ import { action, observable } from 'mobx';
 import { BoardData } from 'app/type/board-data';
 import ApiCall from 'app/network/api-call';
 import { LinkData } from 'app/type/link-data';
-import { ReorderBoardCommand } from 'app/type/reorder-board-command';
+import { UpdateBoardCommand } from 'app/type/update-board-command';
 import { CategoryData } from 'app/type/category-data';
 import * as R from 'ramda';
 
@@ -15,9 +15,9 @@ export class BoardStore {
 
   @action
   getBoard = (id: number): Promise<void> =>
-    ApiCall.getBoard({id: 1})
-      .then(data => action(() =>{
-        this.board = data.board
+    ApiCall.getBoard({id})
+      .then(board => action(() =>{
+        this.board = board
       })());
 
   reorder = <T>({list, originIndex, newIndex}: {list: T[], originIndex: number, newIndex: number}): T[] => {
@@ -27,10 +27,10 @@ export class BoardStore {
     return result;
   };
 
-  update = (): Promise<void> => ApiCall.updateBoard({id: 1, reorderBoardCommand: new ReorderBoardCommand({categories: this.board.categories, email: 'jeemyeong@gmail.com'})})
-    .then(data => action(() => {
-      this.board = data.board
-    })())
+  update = (): Promise<void> => ApiCall.updateBoard({id: 1, updateBoardCommand: new UpdateBoardCommand({board: this.board})})
+    .then(board => action(() => {
+      this.board = board
+    })());
 
   @action
   reorderCategories = ({originIndex, newIndex}): Promise<void> => {
@@ -48,7 +48,7 @@ export class BoardStore {
     // moving to same list
     if (originColumnIndex === newColumnIndex) {
       this.board.categories[originColumnIndex].links = this.reorder<LinkData>({list: current, originIndex, newIndex});
-      return;
+      return this.update()
     }
 
     // moving to different list
