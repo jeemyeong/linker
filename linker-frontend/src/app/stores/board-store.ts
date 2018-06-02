@@ -7,18 +7,29 @@ import { CategoryData } from 'app/type/category-data';
 import * as R from 'ramda';
 
 export class BoardStore {
-  constructor(board: BoardData = undefined) {
+  constructor(board: BoardData = null) {
     this.board = board;
+    this.isLoading = true;
   }
 
   @observable public board?: BoardData;
+  @observable public isLoading: boolean;
 
   @action
-  getBoard = (id: number): Promise<void> =>
-    ApiCall.getBoard({id})
+  getBoard = (id: number): Promise<void> => {
+    this.isLoading = true;
+    return ApiCall.getBoard({id})
       .then(board => action(() =>{
-        this.board = board
+        this.board = board;
+        this.isLoading = false
+      })())
+      .catch(() => action(() => {
+        this.board = null;
+        this.isLoading = false
       })());
+  };
+
+
 
   reorder = <T>({list, originIndex, newIndex}: {list: T[], originIndex: number, newIndex: number}): T[] => {
     const result = Array.from(list);

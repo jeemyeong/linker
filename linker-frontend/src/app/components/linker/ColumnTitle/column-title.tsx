@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { CategoryModel } from 'app/models';
 import styled from 'styled-components';
 import { colors } from 'app/components/linker/Board/constants';
 import { DraggableProvidedDragHandleProps } from 'react-beautiful-dnd';
@@ -7,6 +6,7 @@ import { ChangeEvent } from 'react';
 import { rootStore } from '../../../../main';
 import { STORE_BOARD } from 'app/constants';
 import * as R from 'ramda';
+import {CategoryData} from "app/type/category-data";
 
 const Container = styled.div`
   height: 100%;
@@ -30,7 +30,7 @@ const Title = styled.h2`
 `;
 
 interface ColumnTitleProps {
-  category: CategoryModel;
+  category: CategoryData;
   isDragging: boolean;
   dragHandleProps: DraggableProvidedDragHandleProps;
 }

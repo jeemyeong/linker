@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import { inject, observer } from 'mobx-react';
 import { LinkCard } from 'app/components/linker/Link/link-card';
 import ColumnTitle from 'app/components/linker/ColumnTitle/column-title';
-import { STORE_BOARD, STORE_UI } from 'app/constants';
+import {STORE_BOARD, STORE_ROUTER, STORE_UI} from 'app/constants';
 import UiStore from 'app/stores/ui-store';
 import { AddLinkButton } from 'app/components/linker/Link/add-link-button';
 import * as R from 'ramda';
@@ -18,6 +18,8 @@ import BoardStore from 'app/stores/board-store';
 import { CategoryData } from 'app/type/category-data';
 import { LinkData } from 'app/type/link-data';
 import { FloatingButton } from 'app/components/linker/ui/floating-button';
+import { EmptyBoard } from 'app/components/linker/ui/empty-board';
+import { Overlay } from "app/components/linker/ui/overlay";
 
 const Layout = styled.div`
   position: relative;
@@ -46,9 +48,9 @@ export interface LinkerAppProps extends RouteComponentProps<any> {
 
 export interface LinkerAppState {}
 
-@inject(STORE_UI, STORE_BOARD)
+@inject(STORE_UI, STORE_BOARD, STORE_ROUTER)
 @observer
-export class LinkerApp extends React.Component<LinkerAppProps, LinkerAppState> {
+export class BoardContainer extends React.Component<LinkerAppProps, LinkerAppState> {
 
   renderColumnTitle = (column, isDragging, dragHandleProps) => (
     <ColumnTitle category={column}
@@ -114,10 +116,24 @@ export class LinkerApp extends React.Component<LinkerAppProps, LinkerAppState> {
     return <LinkCard link={item} deleteLink={boardStore.deleteLink}/>
   };
 
+  componentDidMount() {
+    const boardStore = this.props[STORE_BOARD] as BoardStore;
+    const boardId = this.props.match.params.boardId
+    boardStore.getBoard(boardId);
+  };
+
   render() {
     const boardStore = this.props[STORE_BOARD] as BoardStore;
     const uiStore = this.props[STORE_UI] as UiStore;
     const board = boardStore.board;
+    const isLoading = boardStore.isLoading;
+    if (isLoading) {
+      return <Loader/>
+    }
+    if (!board) {
+      return <EmptyBoard/>
+    }
+
     board.categories.forEach(category => category["items"] = category.links);
 
     return (
@@ -126,7 +142,7 @@ export class LinkerApp extends React.Component<LinkerAppProps, LinkerAppState> {
           uiStore.state.snackbar.isOpen && <Snackbar message={uiStore.state.snackbar.message} handleClose={uiStore.closeSnackbar}/>
         }
         {
-          uiStore.state.loader.isOpen && <Loader/>
+          uiStore.state.loader.isOpen && <Overlay><Loader/></Overlay>
         }
         {
           <FloatingButton handleClick={this.openAddCategoryModal}/>
