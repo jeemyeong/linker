@@ -1,5 +1,5 @@
-@import url(https://fonts.googleapis.com/css?family=Roboto:300,400,500);
-@import url(https://fonts.googleapis.com/css?family=Raleway:400,300,800);
+@import url(https://fonts.googleapis.com/css?family=Martel+Sans);
+@import url(https://fonts.googleapis.com/css?family=Noto+Sans);
 
 html,
 body {
@@ -22,7 +22,8 @@ button {
 }
 
 body {
-  font: 14px 'Raleway', Arial, sans-serif;
+  font: 14px PT Sans, Noto Sans, sans-serif;
+  font-weight: 300;
   line-height: 1.4em;
   margin: 0 auto;
   -webkit-font-smoothing: antialiased;
@@ -33,7 +34,7 @@ body {
 }
 
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 0.5vw;
 } /* this targets the default scrollbar (compulsory) */
 
 ::-webkit-scrollbar-track {

@@ -12,7 +12,6 @@ const ParentContainer = styled.div`
 const Container = styled.div`
   height: 100%;
   /* like display:flex but will allow bleeding over the window width */
-  width: 95vw;
   display: inline-flex;
 `;
 

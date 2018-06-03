@@ -1,28 +1,15 @@
 import * as React from 'react';
-import { colors, grid } from './constants';
 import styled from 'styled-components';
 import { DraggableProvided } from 'react-beautiful-dnd';
-import { RenderItemToJSXElement } from 'app/components/linker/Board/board';
+import { RenderItemToJSXElement } from 'app/libs/board/board';
+import { colors } from 'app/constants/colors';
 
 const Container = styled.div`
-  background-color: ${({ isDragging }: { isDragging? }) =>
-    isDragging ? colors.green : colors.white};
-  box-shadow: ${({ isDragging }: { isDragging? }) =>
-    isDragging ? `2px 2px 1px ${colors.shadow}` : 'none'};
-  min-height: 40px;
-  margin-bottom: ${grid}px;
+  margin: 20px 0px 20px 0px;
   user-select: none;
   transition: background-color 0.1s ease;
   /* anchor overrides */
   color: ${colors.black};
-  &:hover {
-    color: ${colors.black};
-    text-decoration: none;
-  }
-  &:focus {
-    outline: 2px solid ${colors.purple};
-    box-shadow: none;
-  }
   /* flexbox */
   display: flex;
   align-items: center;
@@ -50,12 +37,11 @@ export default class Item<T> extends React.PureComponent<
   }
 
   render() {
-    const { isDragging, provided, item } = this.props;
+    const { provided, item } = this.props;
     return (
       <Container
         // href={item.author.url}
         innerRef={provided.innerRef}
-        isDragging={isDragging}
         {...provided.draggableProps}
         {...provided.dragHandleProps}
       >

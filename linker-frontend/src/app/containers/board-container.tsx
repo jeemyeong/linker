@@ -1,62 +1,42 @@
 import * as React from 'react';
-import { RouteComponentProps } from 'react-router';
-import { Board } from 'app/components/linker/Board/board';
-import Banner from 'app/components/linker/Banner/banner';
+import { Board } from 'app/libs/board/board';
 import styled from 'styled-components';
 import { inject, observer } from 'mobx-react';
-import { LinkCard } from 'app/components/linker/Link/link-card';
-import ColumnTitle from 'app/components/linker/ColumnTitle/column-title';
-import {STORE_BOARD, STORE_ROUTER, STORE_UI} from 'app/constants';
+import { LinkCard } from 'app/components/board/link-card';
+import ColumnTitle from 'app/components/board/column-title';
 import UiStore from 'app/stores/ui-store';
-import { AddLinkButton } from 'app/components/linker/Link/add-link-button';
+import { AddLinkButton } from 'app/components/board/add-link-button';
 import * as R from 'ramda';
-import AddContentDialog from 'app/components/linker/Link/add-content-dialog';
-import { DialogModal } from 'app/components/linker/ui/dialog-modal';
-import { Loader } from 'app/components/linker/ui/loader';
-import { Snackbar } from 'app/components/linker/ui/snackbar';
+import AddContentDialog from 'app/components/board/add-content-dialog';
+import { Loader } from 'app/components/ui/loader';
 import BoardStore from 'app/stores/board-store';
 import { CategoryData } from 'app/type/category-data';
 import { LinkData } from 'app/type/link-data';
-import { FloatingButton } from 'app/components/linker/ui/floating-button';
-import { EmptyBoard } from 'app/components/linker/ui/empty-board';
-import { Overlay } from "app/components/linker/ui/overlay";
+import { EmptyBoard } from 'app/components/ui/empty-board';
+import { RouteComponentProps } from 'react-router';
+import { FloatingButton } from 'app/components/ui/floating-button';
+import { STORE_BOARD, STORE_ROUTER, STORE_UI } from 'app/constants/stores';
 
-const Layout = styled.div`
-  position: relative;
-  background: #f5f5f5;
-`;
+const Container = styled.div``;
 
-const Header = styled.header`
-  width: 100%;
-  position: fixed;
-  height: 5vh;
-`;
+export interface BoardContainerProps extends RouteComponentProps<any> {}
 
-const Main = styled.main`
-  position: absolute;
-  width: 100%;
-  top: 4vh;
-  height: 94vh;
-  background: #fff;
-`;
-
-export interface LinkerAppProps extends RouteComponentProps<any> {
-  /** MobX Stores will be injected via @inject() **/
-  // [STORE_ROUTER]: RouterStore;
-  // [STOURE_TODO]: UserStore;
-}
-
-export interface LinkerAppState {}
+export interface BoardContainerState {}
 
 @inject(STORE_UI, STORE_BOARD, STORE_ROUTER)
 @observer
-export class BoardContainer extends React.Component<LinkerAppProps, LinkerAppState> {
+export class BoardContainer extends React.Component<BoardContainerProps, BoardContainerState> {
 
-  renderColumnTitle = (column, isDragging, dragHandleProps) => (
-    <ColumnTitle category={column}
-      isDragging={isDragging}
-      dragHandleProps={dragHandleProps}/>
-  );
+  renderColumnTitle = (column, isDragging, dragHandleProps) => {
+    const boardStore = this.props[STORE_BOARD] as BoardStore;
+    return (
+      <ColumnTitle
+        updateCategory={boardStore.updateCategory}
+        category={column}
+        isDragging={isDragging}
+        dragHandleProps={dragHandleProps}/>
+    );
+  };
 
   openAddLinkModal = (category: CategoryData) => {
     const uiStore = this.props[STORE_UI] as UiStore;
@@ -118,13 +98,12 @@ export class BoardContainer extends React.Component<LinkerAppProps, LinkerAppSta
 
   componentDidMount() {
     const boardStore = this.props[STORE_BOARD] as BoardStore;
-    const boardId = this.props.match.params.boardId
+    const boardId = this.props.match.params.boardId;
     boardStore.getBoard(boardId);
   };
 
   render() {
     const boardStore = this.props[STORE_BOARD] as BoardStore;
-    const uiStore = this.props[STORE_UI] as UiStore;
     const board = boardStore.board;
     const isLoading = boardStore.isLoading;
     if (isLoading) {
@@ -135,41 +114,20 @@ export class BoardContainer extends React.Component<LinkerAppProps, LinkerAppSta
     }
 
     board.categories.forEach(category => category["items"] = category.links);
-
     return (
-      <Layout>
-        {
-          uiStore.state.snackbar.isOpen && <Snackbar message={uiStore.state.snackbar.message} handleClose={uiStore.closeSnackbar}/>
-        }
-        {
-          uiStore.state.loader.isOpen && <Overlay><Loader/></Overlay>
-        }
+      <Container>
+        <Board
+          board={board}
+          reorderColumn={boardStore.reorderCategories}
+          reorderItem={boardStore.reorderLink}
+          renderItem={this.renderItem}
+          renderColumnTitle={this.renderColumnTitle}
+          renderAddItemButton={this.renderAddItemButton}
+        />
         {
           <FloatingButton handleClick={this.openAddCategoryModal}/>
         }
-        {
-          uiStore.state.dialog.isOpen &&
-          <DialogModal
-            open={uiStore.state.dialog.isOpen}
-            onClose={uiStore.closeDialog}
-          >
-            {uiStore.state.dialog.Component}
-          </DialogModal>
-        }
-        <Header>
-          <Banner/>
-        </Header>
-        <Main>
-          <Board
-            board={board}
-            reorderColumn={boardStore.reorderCategories}
-            reorderItem={boardStore.reorderLink}
-            renderItem={this.renderItem}
-            renderColumnTitle={this.renderColumnTitle}
-            renderAddItemButton={this.renderAddItemButton}
-          />
-        </Main>
-      </Layout>
+      </Container>
     )
   }
 }

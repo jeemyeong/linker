@@ -4,12 +4,12 @@ import { ellipseStr } from 'app/util/ellipse-str';
 import { LinkData } from 'app/type/link-data';
 
 const Card = styled.div`
-  position: relative;
   transition: 0.6s;
   transform-style: preserve-3d;
-  width: 300px;
-  height: 180px;
+  width: 100%;
+  height: 150px;
   font-size: 0.9em;
+  border-radius: 20px;
   &:before {
     width: 100%;
     height: 100%;
@@ -18,8 +18,9 @@ const Card = styled.div`
 `;
 
 const Figure = styled.figure`
-  background: #fff;
+  background-color: rgb(0,0,0,0.2);
   color: #fff;
+  border-radius: 20px;
   backface-visibility: hidden;
   overflow: hidden;
   position: absolute;
@@ -30,7 +31,6 @@ const Figure = styled.figure`
   text-align: center;
   transition: 0.6s;
   transform-style: preserve-3d;
-  box-shadow: 0 1px 5px rgba(0,0,0,0.9);
   transform: rotateY(0deg);
   
   &:hover h2 {
@@ -63,6 +63,7 @@ const Img = styled.img`
   opacity: 1;
   object-fit: none;
   overflow: hidden;
+  border-radius: 20px;
 `;
 
 const Caption = styled.div`

@@ -1,33 +1,20 @@
 import * as React from 'react';
-import { Draggable, DraggableStateSnapshot } from 'react-beautiful-dnd';
+import { Draggable } from 'react-beautiful-dnd';
 import ItemList from './item-list';
 import styled from 'styled-components';
-import { borderRadius, colors, grid } from './constants';
 import { BoardItem } from './board';
 import {
   BoardColumn,
   RenderAddItemToJSXElement, RenderColumnTitleToJSXElement,
   RenderItemToJSXElement
-} from 'app/components/linker/Board/board';
+} from 'app/libs/board/board';
+import { grid } from 'app/constants/colors';
 
 const Container = styled.div`
   padding: ${grid}px;
   display: flex;
   flex-direction: column;
   height: 100%;
-`;
-const Header = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-top-left-radius: ${borderRadius}px;
-  border-top-right-radius: ${borderRadius}px;
-  background-color: ${({ isDragging }: DraggableStateSnapshot) =>
-    isDragging ? colors.apricot : colors.red.light};
-  transition: background-color 0.1s ease;
-  &:hover {
-    background-color: ${colors.apricot};
-  }
 `;
 
 export interface ColumnProps<T, K> {
@@ -52,9 +39,7 @@ export class Column<T extends BoardItem, K extends BoardColumn<T>> extends React
       <Draggable draggableId={column.title} index={index}>
         {(provided, snapshot) => (
           <Container innerRef={provided.innerRef} {...provided.draggableProps}>
-            <Header isDragging={snapshot.isDragging}>
-              {renderColumnTitle(column, snapshot.isDragging, provided.dragHandleProps)}
-            </Header>
+            {renderColumnTitle(column, snapshot.isDragging, provided.dragHandleProps)}
             {renderAddItemButton(index)}
             <ItemList
               droppableId={index.toString()}

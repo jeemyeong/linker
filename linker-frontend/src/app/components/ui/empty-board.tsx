@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { CenterWrapper } from "app/components/linker/ui/center-wrapper";
+import { CenterWrapper } from "app/components/ui/center-wrapper";
 
 export const EmptyBoard = () => (
   <CenterWrapper>

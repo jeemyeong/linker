@@ -1,6 +1,6 @@
 import * as React from 'react';
-import './reset.css';
-import './style.css';
+import '../../assets/reset.css';
+import '../../assets/style.css';
 
 export class Root extends React.Component<any, any> {
   renderDevTool() {

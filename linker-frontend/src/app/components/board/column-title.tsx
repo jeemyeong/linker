@@ -1,38 +1,35 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { colors } from 'app/components/linker/Board/constants';
-import { DraggableProvidedDragHandleProps } from 'react-beautiful-dnd';
+import { DraggableProvidedDragHandleProps, DraggableStateSnapshot } from 'react-beautiful-dnd';
 import { ChangeEvent } from 'react';
-import { rootStore } from '../../../../main';
-import { STORE_BOARD } from 'app/constants';
 import * as R from 'ramda';
 import {CategoryData} from "app/type/category-data";
+import { rootStore } from 'app/app';
+import { STORE_BOARD } from 'app/constants/stores';
+import { borderRadius, colors } from 'app/constants/colors';
 
 const Container = styled.div`
-  height: 100%;
-  transition: background-color ease 0.2s;
-  flex-grow: 1;
-  user-select: none;
-  position: relative;
-  &:focus {
-    outline: 2px solid ${colors.purple};
-    outline-offset: 2px;
+  border-top-left-radius: ${borderRadius}px;
+  border-top-right-radius: ${borderRadius}px;
+  color: ${({ isDragging }: DraggableStateSnapshot) =>
+  isDragging ? colors.apricot : colors.grey.light};
+  transition: background-color 0.1s ease;
+  &:hover {
+    color: ${colors.apricot};
   }
 `;
-
 const Title = styled.h2`
-  display: flex;
-  flex-direction: column;
-  height: 50px;
-  font-size: 2em;
-  text-align: center;
-  margin: 20px 0 0 0;
+  height: 40px;
+  font-size: 2rem;
+  text-align: left;
+  padding: 5px 5px 5px 5px;
 `;
 
 interface ColumnTitleProps {
   category: CategoryData;
   isDragging: boolean;
   dragHandleProps: DraggableProvidedDragHandleProps;
+  updateCategory: {({category, title}): void }
 }
 
 interface ColumnTitleState {
@@ -66,9 +63,9 @@ export default class ColumnTitle extends React.Component<
   }
 
   render() {
-    const { category, dragHandleProps } = this.props;
+    const { category, dragHandleProps, isDragging } = this.props;
     return (
-      <Container {...dragHandleProps}>
+      <Container {...dragHandleProps} isDragging={isDragging}>
         {this.state.editing
           ? <input type="text" defaultValue={this.state.title} onChange={e => this.onInputChange(e)} onKeyDown={this.onKeyDown}/>
           : <Title onDoubleClick={this.onDoubleClick}>{category.title}</Title>

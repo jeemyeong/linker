@@ -3,34 +3,28 @@ import {
   Draggable,
   Droppable,
   DroppableProvided,
-  DroppableStateSnapshot
 } from 'react-beautiful-dnd';
 import Item from './item';
-import { grid, colors } from './constants';
 import styled from 'styled-components';
 import { BoardItem, RenderItemToJSXElement } from './board';
+import { grid } from 'app/constants/colors';
 
 const Wrapper: any = styled.div`
-  background-color: ${({ isDraggingOver }: DroppableStateSnapshot) =>
-    isDraggingOver ? colors.red.lighter : colors.red.light};
+  background-color: 'transparent';
   display: flex;
   flex-direction: column;
-  opacity: ${({ isDropDisabled }: { isDropDisabled? }) =>
-    isDropDisabled ? 0.5 : 'inherit'};
-  padding: ${grid}px;
   padding-bottom: 0;
   transition: background-color 0.1s ease, opacity 0.1s ease;
   user-select: none;
-  overflow: auto;
 `;
 
 const DropZone = styled.div`
   /* stop the list collapsing when empty */
   min-height: 180px;
-  width: 300px;
+  width: 260px;
   /* not relying on the items for a margin-bottom
   as it will collapse when the list is empty */
-  margin-bottom: ${grid}px;
+  margin-bottom: 300px;
 `;
 
 const ScrollContainer = styled.div`
