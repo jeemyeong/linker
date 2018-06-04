@@ -2,12 +2,15 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { ellipseStr } from 'app/util/ellipse-str';
 import { LinkData } from 'app/type/link-data';
+import { colors } from 'app/constants/colors';
+import { sample } from 'app/util/sample';
 
 const Card = styled.div`
+  margin-top: 5px;
+  width: 300px;
   transition: 0.6s;
   transform-style: preserve-3d;
-  width: 100%;
-  height: 150px;
+  height: 160px;
   font-size: 0.9em;
   border-radius: 20px;
   &:before {
@@ -28,7 +31,6 @@ const Figure = styled.figure`
   left: 0;
   width: 100%;
   height: 100%;
-  text-align: center;
   transition: 0.6s;
   transform-style: preserve-3d;
   transform: rotateY(0deg);
@@ -36,14 +38,16 @@ const Figure = styled.figure`
   &:hover h2 {
     color: #fff;
     background: transparent;
-    -webkit-transform: translate3d(0,-40%,0) translate3d(0,-40px,0);
-    transform: translate3d(0,-40%,0) translate3d(0,-40px,0);
   }
   
   &:hover div.overlay{
     opacity: 1;
     transform: translate3d(0,0,0);
-  }  
+  }
+  
+  &:hover button.delete{
+    opacity: 1;
+  }
   
   &:hover h2:after {
     transform: translate3d(0,0,0);
@@ -84,7 +88,7 @@ const Overlay = styled.div`
   width: 100%;
   height: 100%;
   content: '';
-  opacity: 0;
+  opacity: 0.3;
   background: linear-gradient(rgba(72,76,97,0) 0%, rgba(72,76,97,0.8) 80%);
   transform: translate3d(0,50%,0);
   transition: opacity 0.35s, transform 0.35s;
@@ -95,21 +99,20 @@ const H2 = styled.h2`
   font-weight: 300;
   font-size: 1.6em;
   position: absolute;
-  top: 50%;
-  left: 0;
-  width: 100%;
-  color: #272833;
+  top: 25%;
+  left: 10px;
+  width: 90%;
+  color: ${colors.white};
   transition: transform 0.35s, color 0.35s;
   transform: translate3d(0,-50%,0);
   font-weight: bold;
-  background: rgba(256,256,256,1);
   padding: 0.5em;
   word-spacing: 3px;
   line-height: 1em;
 
   &:after{
     position: absolute;
-    bottom: -10px;
+    bottom: 7px;
     left: 70px;
     right: 70px;
     height: 2px;
@@ -121,6 +124,7 @@ const H2 = styled.h2`
 `;
 
 const DeleteButton = styled.button`
+  opacity: 0;
   position: absolute;
   top: 10px;
   right: 10px;
@@ -134,13 +138,14 @@ const DeleteButton = styled.button`
 `;
 
 const P = styled.p`
-  font-size: 0.65em;
+  font-size: 1em;
   line-height: 1.2;
   position: absolute;
   bottom: 0;
   left: 0;
-  padding: 2em;
-  width: 100%;
+  padding: 0.5em;
+  max-height: 60%;
+  width: 80%;
   opacity: 0;
   font-weight: bold;
   transform: translate3d(0,10px,0);
@@ -151,6 +156,47 @@ const A = styled.a`
   cursor: pointer;
   color: inherit;
   text-decoration: inherit;
+`;
+
+const GradientsA = styled.div`
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right, #feac5e, #c779d0, #4bc0c8);
+  background-size: 400% 400%;
+  animation: Gradient 15s ease infinite;
+  
+  @keyframes Gradient {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+`;
+
+
+const GradientsB = styled.div`
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right, #59C173, #F37335, #5D26C1);
+  background-size: 400% 400%;
+  animation: Gradient 15s ease infinite;
+  
+  @keyframes Gradient {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
 `;
 
 interface LinkProps {
@@ -164,10 +210,12 @@ export const LinkCard = ({link, deleteLink}: LinkProps) => {
   return (
     <Card>
       <Figure>
-        <Img src={link.ogImage? link.ogImage : "https://placeimg.com/640/480/any"} alt="card image"/>
+        {link.ogImage ?
+          <Img src={link.ogImage} alt="card image"/> : sample([<GradientsA/>, <GradientsB/>])
+        }
         <Caption>
           <Overlay className="overlay">
-            <DeleteButton onClick={() => confirm("Do you want to remove this link really?") && deleteLink({targetLink: link})}/>
+            <DeleteButton className="delete" onClick={() => confirm("Do you want to remove this link really?") && deleteLink({targetLink: link})}/>
           </Overlay>
 
           <A href={link.url} target="_blank">

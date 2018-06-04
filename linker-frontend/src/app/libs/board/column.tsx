@@ -12,6 +12,7 @@ import { grid } from 'app/constants/colors';
 
 const Container = styled.div`
   padding: ${grid}px;
+  margin: 20px;
   display: flex;
   flex-direction: column;
   height: 100%;

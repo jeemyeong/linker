@@ -34,7 +34,7 @@ body {
 }
 
 ::-webkit-scrollbar {
-  width: 0.5vw;
+  width: 10px;
 } /* this targets the default scrollbar (compulsory) */
 
 ::-webkit-scrollbar-track {

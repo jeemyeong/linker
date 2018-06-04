@@ -42,7 +42,6 @@ interface AddLinkButtonProps {
 }
 export class AddLinkButton extends React.Component<AddLinkButtonProps, {}> {
 
-
   shouldComponentUpdate(nextProps, nextState) {
     return !R.equals(nextProps, this.props)
   }

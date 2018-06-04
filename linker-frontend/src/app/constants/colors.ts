@@ -14,7 +14,14 @@ export const colors = {
   },
   green: '#bfe2be',
   white: '#ffffff',
-  purple: '#6C5B7B',
+  purple: {
+    bright: '#dedcee',
+    lighter: '#A593E0',
+    light: '#6C5B7B',
+    deep: '#7200da',
+    deeper: '#791E94',
+    raspberry: '#f100e5'
+  },
   apricot: '#F8B195',
   red: {
     lighter: 'rgba(175, 47, 47, 0.1)',
@@ -24,6 +31,11 @@ export const colors = {
   wine: {
     soft: '#C06C84'
   },
+  gradient: {
+    a: '#feac5e',
+    b: '#c779d0',
+    c: '#4bc0c8'
+  }
 };
 
 export const grid: number = 12;

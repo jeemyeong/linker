@@ -7,7 +7,6 @@ import {
 import Item from './item';
 import styled from 'styled-components';
 import { BoardItem, RenderItemToJSXElement } from './board';
-import { grid } from 'app/constants/colors';
 
 const Wrapper: any = styled.div`
   background-color: 'transparent';
@@ -21,7 +20,6 @@ const Wrapper: any = styled.div`
 const DropZone = styled.div`
   /* stop the list collapsing when empty */
   min-height: 180px;
-  width: 260px;
   /* not relying on the items for a margin-bottom
   as it will collapse when the list is empty */
   margin-bottom: 300px;

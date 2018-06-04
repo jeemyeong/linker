@@ -10,9 +10,21 @@ import { DialogModal } from 'app/components/ui/dialog-modal';
 import Header from 'app/components/header/header';
 import { Main } from 'app/components/main/main';
 import { STORE_ROUTER, STORE_UI } from 'app/constants/stores';
+import { Nav } from 'app/components/nav/nav';
 
 const Container = styled.div`
-  display: inline-block;
+  display: flex;
+`;
+
+const LeftSide = styled.div`
+  position: relative;
+  width: 330px;
+  height: 100vh;
+`;
+
+const RightSide = styled.div`
+  width: calc(100% - 330px);
+  height: 100%;
 `;
 
 export interface LinkerAppProps extends RouteComponentProps<any> {
@@ -28,7 +40,6 @@ export interface LinkerState {}
 export class Linker extends React.Component<LinkerAppProps, LinkerState> {
   render() {
     const uiStore = this.props[STORE_UI] as UiStore;
-
     return (
       <Container>
         {
@@ -46,11 +57,21 @@ export class Linker extends React.Component<LinkerAppProps, LinkerState> {
             {uiStore.state.dialog.Component}
           </DialogModal>
         }
+        <LeftSide>
+          <Nav/>
+        </LeftSide>
 
-        <Header/>
-        <Main
-          {...this.props}
-        />
+        <RightSide>
+          <Header/>
+          <Main
+            {...this.props}
+          />
+        </RightSide>
+
+
+
+
+
 
       </Container>
     )
