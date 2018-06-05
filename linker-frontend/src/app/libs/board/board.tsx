@@ -48,6 +48,7 @@ export interface BoardProps<T, K> {
     title: string
     categories?: Array<K>
   };
+  itemKey: string;
   renderItem: RenderItemToJSXElement<T>;
   renderAddItemButton: RenderAddItemToJSXElement;
   renderColumnTitle: RenderColumnTitleToJSXElement<K>;
@@ -112,6 +113,7 @@ export class Board<
   };
 
   render() {
+    const { itemKey } = this.props;
     const { categories } = this.props.board;
     const { containerHeight, renderItem, renderAddItemButton, renderColumnTitle } = this.props;
     const board = (
@@ -123,7 +125,7 @@ export class Board<
                 key={column.id}
                 column={column}
                 index={index}
-                items={column.items}
+                items={column[itemKey]}
                 renderItem={renderItem}
                 renderAddItemButton={renderAddItemButton}
                 renderColumnTitle={renderColumnTitle}

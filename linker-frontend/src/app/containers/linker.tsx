@@ -67,12 +67,6 @@ export class Linker extends React.Component<LinkerAppProps, LinkerState> {
             {...this.props}
           />
         </RightSide>
-
-
-
-
-
-
       </Container>
     )
   }

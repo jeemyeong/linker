@@ -27,6 +27,11 @@ export interface BoardContainerState {}
 @observer
 export class BoardContainer extends React.Component<BoardContainerProps, BoardContainerState> {
 
+  componentWillReact() {
+    console.log("Board: I will re-render, since the todo has changed!");
+  }
+
+
   renderColumnTitle = (column, isDragging, dragHandleProps) => {
     const boardStore = this.props[STORE_BOARD] as BoardStore;
     return (
@@ -113,11 +118,11 @@ export class BoardContainer extends React.Component<BoardContainerProps, BoardCo
       return <EmptyBoard/>
     }
 
-    board.categories.forEach(category => category["items"] = category.links);
     return (
       <Container>
         <Board
           board={board}
+          itemKey={"links"}
           reorderColumn={boardStore.reorderCategories}
           reorderItem={boardStore.reorderLink}
           renderItem={this.renderItem}

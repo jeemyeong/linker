@@ -29,12 +29,13 @@ export interface ColumnProps<T, K> {
 
 export interface ColumnState {}
 
-export class Column<T extends BoardItem, K extends BoardColumn<T>> extends React.Component<
+export class Column<T extends BoardItem, K extends BoardColumn<T>> extends React.PureComponent<
   ColumnProps<T, K>,
   ColumnState
 > {
 
   render() {
+    console.log("Column: I am re-rendering, since the todo has changed!");
     const { items, index, renderColumnTitle, column, renderAddItemButton} = this.props;
     return (
       <Draggable draggableId={column.title} index={index}>

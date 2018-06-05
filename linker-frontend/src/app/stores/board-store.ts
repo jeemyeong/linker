@@ -40,12 +40,17 @@ export class BoardStore {
 
   update = (): Promise<void> => ApiCall.updateBoard({id: 1, updateBoardCommand: new UpdateBoardCommand({board: this.board})})
     .then(board => action(() => {
+      // TODO: change only difference of both
       this.board = board
     })());
 
   @action
   reorderCategories = ({originIndex, newIndex}): Promise<void> => {
-    this.board.categories = this.reorder({list: this.board.categories, originIndex, newIndex});
+    const newBoard = {
+      ...this.board,
+      categories: this.reorder({list: this.board.categories, originIndex, newIndex})
+    };
+    this.board = newBoard;
 
     return this.update()
   };
@@ -68,9 +73,14 @@ export class BoardStore {
     // insert into next
     next.splice(newIndex, 0, target);
 
+    const newBoard = {
+      ...this.board,
+
+    };
     this.board.categories[originColumnIndex].links = current;
     this.board.categories[newColumnIndex].links = next;
 
+    this.board = newBoard;
     return this.update()
   };
 
