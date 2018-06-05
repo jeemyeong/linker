@@ -96,6 +96,7 @@ const Overlay = styled.div`
 
 const H2 = styled.h2`
   word-spacing: -0.15em;
+  overflow-wrap: break-word;
   font-weight: 300;
   font-size: 1.6em;
   position: absolute;
@@ -202,16 +203,17 @@ const GradientsB = styled.div`
 interface LinkProps {
   link: LinkData
   deleteLink: { ({ targetLink: LinkModel }): Promise<void> };
+  isDragging: boolean
 }
 
-export const LinkCard = ({link, deleteLink}: LinkProps) => {
+export const LinkCard = ({link, deleteLink, isDragging}: LinkProps) => {
   const title = link.ogTitle ? link.ogTitle + ": " + link.url.replace(/^.*\/\//, "") : link.url.replace(/^.*\/\//, "").replace(/^www./, "");
   const ellipsedTitle= ellipseStr(title, 25);
   return (
     <Card>
       <Figure>
         {link.ogImage ?
-          <Img src={link.ogImage} alt="card image"/> : sample([<GradientsA/>, <GradientsB/>])
+          <Img src={link.ogImage} alt="card image"/> : !isDragging && sample([<GradientsA/>, <GradientsB/>])
         }
         <Caption>
           <Overlay className="overlay">

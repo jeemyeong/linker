@@ -37,7 +37,7 @@ export default class Item<T> extends React.PureComponent<
   }
 
   render() {
-    const { provided, item } = this.props;
+    const { provided, item, isDragging } = this.props;
     return (
       <Container
         // href={item.author.url}
@@ -45,7 +45,7 @@ export default class Item<T> extends React.PureComponent<
         {...provided.draggableProps}
         {...provided.dragHandleProps}
       >
-        {this.props.renderItem(item)}
+        {this.props.renderItem(item, isDragging)}
       </Container>
     );
   }

@@ -1,5 +1,8 @@
 import * as React from 'react';
-import { DragDropContext, DraggableProvidedDragHandleProps, Droppable } from 'react-beautiful-dnd';
+import {
+  DragDropContext, DraggableProvidedDragHandleProps,
+  Droppable
+} from 'react-beautiful-dnd';
 import { Column } from './column';
 import styled from 'styled-components';
 
@@ -26,7 +29,7 @@ export interface BoardColumn<T> {
 }
 
 export interface RenderItemToJSXElement<T> {
-  (item: T): JSX.Element;
+  (item: T, isDragging: boolean): JSX.Element;
 }
 
 export interface RenderAddItemToJSXElement {

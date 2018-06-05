@@ -91,9 +91,9 @@ export class BoardContainer extends React.Component<BoardContainerProps, BoardCo
     return boardStore.addLink({url, category})
   };
 
-  renderItem = (item: LinkData) => {
+  renderItem = (item: LinkData, isDragging: boolean) => {
     const boardStore = this.props[STORE_BOARD] as BoardStore;
-    return <LinkCard link={item} deleteLink={boardStore.deleteLink}/>
+    return <LinkCard isDragging={isDragging} link={item} deleteLink={boardStore.deleteLink}/>
   };
 
   componentDidMount() {
