@@ -46,6 +46,6 @@ class BoardServiceImpl: BoardService {
             category
         }
         boardRepository.save(board)
-        return board
+        return findBoardById(board.id).get()
     }
 }

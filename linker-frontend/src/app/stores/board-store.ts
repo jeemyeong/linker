@@ -16,7 +16,7 @@ export class BoardStore {
   @observable public isLoading: boolean;
 
   @action
-  getBoard = (id: number): Promise<void> => {
+  getBoard = (id: number) => {
     this.isLoading = true;
     return ApiCall.getBoard({id})
       .then(board => action(() =>{
@@ -38,14 +38,10 @@ export class BoardStore {
     return result;
   };
 
-  update = (): Promise<void> => ApiCall.updateBoard({id: 1, updateBoardCommand: new UpdateBoardCommand({board: this.board})})
-    .then(board => action(() => {
-      // TODO: change only difference of both
-      this.board = board
-    })());
+  update = () => ApiCall.updateBoard({id: 1, updateBoardCommand: new UpdateBoardCommand({board: this.board})});
 
   @action
-  reorderCategories = ({originIndex, newIndex}): Promise<void> => {
+  reorderCategories = ({originIndex, newIndex}) => {
     const newBoard = {
       ...this.board,
       categories: this.reorder({list: this.board.categories, originIndex, newIndex})
@@ -56,14 +52,18 @@ export class BoardStore {
   };
 
   @action
-  reorderLink = ({ originColumnIndex, originIndex, newColumnIndex, newIndex }): Promise<void> => {
+  reorderLink = ({ originColumnIndex, originIndex, newColumnIndex, newIndex }) => {
     const current: Array<LinkData> = [...this.board.categories[originColumnIndex].links];
     const next: Array<LinkData> = [...this.board.categories[newColumnIndex].links];
     const target = current[originIndex];
 
     // moving to same list
     if (originColumnIndex === newColumnIndex) {
-      this.board.categories[originColumnIndex].links = this.reorder<LinkData>({list: current, originIndex, newIndex});
+      const newBoard = {
+        ...this.board
+      };
+      newBoard.categories[originColumnIndex].links = this.reorder<LinkData>({list: current, originIndex, newIndex});
+      this.board = newBoard;
       return this.update()
     }
 
@@ -75,17 +75,15 @@ export class BoardStore {
 
     const newBoard = {
       ...this.board,
-
     };
-    this.board.categories[originColumnIndex].links = current;
-    this.board.categories[newColumnIndex].links = next;
-
+    newBoard.categories[originColumnIndex].links = current;
+    newBoard.categories[newColumnIndex].links = next;
     this.board = newBoard;
     return this.update()
   };
 
   @action
-  addLink = ({url, category}: {url: string, category: CategoryData}): Promise<void> => {
+  addLink = ({url, category}: {url: string, category: CategoryData}) => {
     const link: LinkData = {
       id: 0,
       url,
@@ -103,7 +101,7 @@ export class BoardStore {
   };
 
   @action
-  deleteLink = ({ targetLink }: {targetLink: LinkData}): Promise<void> => {
+  deleteLink = ({ targetLink }: {targetLink: LinkData}) => {
     const categories = [...this.board.categories];
 
     const category = R.find(category => R.contains(targetLink, category.links), categories);
@@ -118,7 +116,7 @@ export class BoardStore {
   };
 
   @action
-  addCategory = ({title}: {title: string}): Promise<void> => {
+  addCategory = ({title}: {title: string}) => {
     const category: CategoryData = {
       id: 0,
       title,
@@ -133,7 +131,7 @@ export class BoardStore {
   };
 
   @action
-  updateCategory = ({category, title}: {category: CategoryData, title: string}): Promise<void> => {
+  updateCategory = ({category, title}: {category: CategoryData, title: string}) => {
     const categories = [...this.board.categories];
     categories.find(c => c.id == category.id).title = title;
     this.board = {

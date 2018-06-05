@@ -31,7 +31,6 @@ export class BoardContainer extends React.Component<BoardContainerProps, BoardCo
     console.log("Board: I will re-render, since the todo has changed!");
   }
 
-
   renderColumnTitle = (column, isDragging, dragHandleProps) => {
     const boardStore = this.props[STORE_BOARD] as BoardStore;
     return (

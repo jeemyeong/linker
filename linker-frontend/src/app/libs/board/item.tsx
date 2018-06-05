@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { DraggableProvided } from 'react-beautiful-dnd';
 import { RenderItemToJSXElement } from 'app/libs/board/board';
 import { colors } from 'app/constants/colors';
+import { observer } from 'mobx-react';
 
 const Container = styled.div`
   margin: 20px 0px 20px 0px;
@@ -24,10 +25,12 @@ export interface ItemProps<T> {
 
 export interface ItemState {}
 
-export default class Item<T> extends React.PureComponent<
+@observer
+export default class Item<T> extends React.Component<
   ItemProps<T>,
   ItemState
 > {
+
   componentDidMount() {
     // cdm is called when item is put to another column
   }

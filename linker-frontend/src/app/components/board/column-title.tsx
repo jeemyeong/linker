@@ -14,6 +14,7 @@ const Container = styled.div`
   color: ${({ isDragging }: DraggableStateSnapshot) =>
   isDragging ? colors.apricot : colors.grey.light};
   transition: background-color 0.1s ease;
+  min-width: 300px;
   &:hover {
     color: ${colors.apricot};
   }
