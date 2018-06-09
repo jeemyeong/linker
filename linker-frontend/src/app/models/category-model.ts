@@ -1,5 +1,5 @@
 import { observable } from 'mobx';
-import { UserModel } from 'app/models/user-model';
+import { LinkModel } from 'app/models/link-model';
 
 export type Title = string;
 export type CategoryTitle = Title;
@@ -12,12 +12,12 @@ export class CategoryModel {
   @observable public id: CategoryId;
   @observable public title: CategoryTitle;
   @observable public order: CategoryOrder;
-  @observable public user: UserModel;
+  @observable public links: LinkModel[];
 
-  constructor({ id, title, order, user }: CategoryModel) {
+  constructor({ id, title, order, links }: CategoryModel) {
     this.id = id;
     this.title = title;
     this.order = order;
-    this.user = user;
+    this.links = links.map((link) => new LinkModel(link));
   }
 }

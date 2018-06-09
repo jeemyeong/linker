@@ -51,7 +51,7 @@ class InnerItemList<T extends BoardItem> extends React.Component<
         {(dragProvided, dragSnapshot) => (
           <Item
             renderItem={this.props.renderItem}
-            key={item.id}
+            key={item.id + index}
             item={item}
             isDragging={dragSnapshot.isDragging}
             provided={dragProvided}

@@ -1,18 +1,17 @@
 import { action, observable } from 'mobx';
-import { BoardData } from 'app/type/board-data';
 import ApiCall from 'app/network/api-call';
-import { LinkData } from 'app/type/link-data';
 import { UpdateBoardCommand } from 'app/type/update-board-command';
-import { CategoryData } from 'app/type/category-data';
 import * as R from 'ramda';
+import { BoardModel } from 'app/models/board-model';
+import { CategoryModel, LinkModel } from 'app/models';
 
 export class BoardStore {
-  constructor(board: BoardData = null) {
+  constructor(board: BoardModel = null) {
     this.board = board;
     this.isLoading = true;
   }
 
-  @observable public board?: BoardData;
+  @observable public board?: BoardModel;
   @observable public isLoading: boolean;
 
   @action
@@ -20,7 +19,7 @@ export class BoardStore {
     this.isLoading = true;
     return ApiCall.getBoard({id})
       .then(board => action(() =>{
-        this.board = board;
+        this.board = new BoardModel(board as any);
         this.isLoading = false
       })())
       .catch(() => action(() => {
@@ -28,8 +27,6 @@ export class BoardStore {
         this.isLoading = false
       })());
   };
-
-
 
   reorder = <T>({list, originIndex, newIndex}: {list: T[], originIndex: number, newIndex: number}): T[] => {
     const result = Array.from(list);
@@ -53,8 +50,8 @@ export class BoardStore {
 
   @action
   reorderLink = ({ originColumnIndex, originIndex, newColumnIndex, newIndex }) => {
-    const current: Array<LinkData> = [...this.board.categories[originColumnIndex].links];
-    const next: Array<LinkData> = [...this.board.categories[newColumnIndex].links];
+    const current: Array<LinkModel> = this.board.categories[originColumnIndex].links.slice();
+    const next: Array<LinkModel> = this.board.categories[newColumnIndex].links.slice();
     const target = current[originIndex];
 
     // moving to same list
@@ -62,9 +59,10 @@ export class BoardStore {
       const newBoard = {
         ...this.board
       };
-      newBoard.categories[originColumnIndex].links = this.reorder<LinkData>({list: current, originIndex, newIndex});
+      newBoard.categories[originColumnIndex].links = this.reorder<LinkModel>({list: current, originIndex, newIndex});
       this.board = newBoard;
-      return this.update()
+      // return this.update()
+      return
     }
 
     // moving to different list
@@ -73,36 +71,33 @@ export class BoardStore {
     // insert into next
     next.splice(newIndex, 0, target);
 
-    const newBoard = {
-      ...this.board,
-    };
-    newBoard.categories[originColumnIndex].links = current;
-    newBoard.categories[newColumnIndex].links = next;
-    this.board = newBoard;
-    return this.update()
+    this.board.categories[originColumnIndex].links = current;
+    // this.board.categories[originColumnIndex].links = [];
+    this.board.categories[newColumnIndex].links = next;
+
+    this.board = {
+      ...this.board
+    }
+    // return this.update()
   };
 
   @action
-  addLink = ({url, category}: {url: string, category: CategoryData}) => {
-    const link: LinkData = {
-      id: 0,
-      url,
-      content: '',
-    };
+  addLink = ({url, category}: {url: string, category: CategoryModel}) => {
+    const link: LinkModel = new LinkModel({url});
     const categories = [...this.board.categories];
     categories.find(c => c.id == category.id).links.push(link);
-
     this.board = {
       ...this.board,
       categories: categories
     };
 
-    return this.update()
+    // return this.update()
+    return new Promise((resolve, reject) => {return resolve()})
   };
 
   @action
-  deleteLink = ({ targetLink }: {targetLink: LinkData}) => {
-    const categories = [...this.board.categories];
+  deleteLink = ({ targetLink }: {targetLink: LinkModel}) => {
+    const categories = this.board.categories.slice();
 
     const category = R.find(category => R.contains(targetLink, category.links), categories);
     category.links = category.links.filter(link => link.id != targetLink.id);
@@ -112,16 +107,17 @@ export class BoardStore {
       categories: categories
     };
 
-    return this.update()
+    // return this.update()
   };
 
   @action
   addCategory = ({title}: {title: string}) => {
-    const category: CategoryData = {
+    const category = new CategoryModel({
       id: 0,
-      title,
+      title: title,
+      order: this.board.categories.length + 1,
       links: []
-    };
+    });
     this.board = {
       ...this.board,
       categories: [...this.board.categories, category]
@@ -131,7 +127,7 @@ export class BoardStore {
   };
 
   @action
-  updateCategory = ({category, title}: {category: CategoryData, title: string}) => {
+  updateCategory = ({category, title}: {category: CategoryModel, title: string}) => {
     const categories = [...this.board.categories];
     categories.find(c => c.id == category.id).title = title;
     this.board = {

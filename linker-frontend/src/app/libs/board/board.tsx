@@ -77,6 +77,11 @@ export class Board<
   T extends BoardItem,
   K extends BoardColumn<T>
 > extends React.Component<BoardProps<T, K>, BoardState<T>> {
+
+  componentWillReact() {
+    console.log("Board: I will re-render, since the props has changed!");
+  }
+
   onDragStart = (initial) => {};
 
   onDragEnd = (result) => {
@@ -113,6 +118,7 @@ export class Board<
   };
 
   render() {
+    console.log("Board is rendering")
     const { itemKey } = this.props;
     const { categories } = this.props.board;
     const { containerHeight, renderItem, renderAddItemButton, renderColumnTitle } = this.props;

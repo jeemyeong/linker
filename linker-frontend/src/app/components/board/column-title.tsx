@@ -3,10 +3,10 @@ import styled from 'styled-components';
 import { DraggableProvidedDragHandleProps, DraggableStateSnapshot } from 'react-beautiful-dnd';
 import { ChangeEvent } from 'react';
 import * as R from 'ramda';
-import {CategoryData} from "app/type/category-data";
 import { rootStore } from 'app/app';
 import { STORE_BOARD } from 'app/constants/stores';
 import { borderRadius, colors } from 'app/constants/colors';
+import { CategoryModel } from 'app/models';
 
 const Container = styled.div`
   border-top-left-radius: ${borderRadius}px;
@@ -27,7 +27,7 @@ const Title = styled.h2`
 `;
 
 interface ColumnTitleProps {
-  category: CategoryData;
+  category: CategoryModel;
   isDragging: boolean;
   dragHandleProps: DraggableProvidedDragHandleProps;
   updateCategory: {({category, title}): void }
