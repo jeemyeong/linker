@@ -44,7 +44,6 @@ export default class Item<T> extends React.PureComponent<
 
   render() {
     const { provided, item, isDragging } = this.props;
-    console.log("content: " + item["content"])
     return (
       <Container
         // href={item.author.url}

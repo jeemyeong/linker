@@ -14,7 +14,8 @@ import { EmptyBoard } from 'app/components/ui/empty-board';
 import { RouteComponentProps } from 'react-router';
 import { FloatingButton } from 'app/components/ui/floating-button';
 import { STORE_BOARD, STORE_ROUTER, STORE_UI } from 'app/constants/stores';
-import { CategoryModel, LinkModel } from 'app/models';
+import { CategoryData } from 'app/type/category-data';
+import { LinkData } from 'app/type/link-data';
 
 const Container = styled.div``;
 
@@ -41,7 +42,7 @@ export class BoardContainer extends React.Component<BoardContainerProps, BoardCo
     );
   };
 
-  openAddLinkModal = (category: CategoryModel) => {
+  openAddLinkModal = (category: CategoryData) => {
     const uiStore = this.props[STORE_UI] as UiStore;
     return uiStore.openDialog({
       DialogComponent: (
@@ -89,12 +90,12 @@ export class BoardContainer extends React.Component<BoardContainerProps, BoardCo
     return boardStore.addCategory({title})
   };
 
-  newLink = ({category, url}: {category: CategoryModel, url: string}) => {
+  newLink = ({category, url}: {category: CategoryData, url: string}) => {
     const boardStore = this.props[STORE_BOARD] as BoardStore;
     return boardStore.addLink({url, category})
   };
 
-  renderItem = (item: LinkModel, isDragging: boolean) => {
+  renderItem = (item: LinkData, isDragging: boolean) => {
     const boardStore = this.props[STORE_BOARD] as BoardStore;
     return <LinkCard isDragging={isDragging} link={item} deleteLink={boardStore.deleteLink}/>
   };
@@ -108,6 +109,7 @@ export class BoardContainer extends React.Component<BoardContainerProps, BoardCo
   render() {
     console.log("BoardContainer is rendering");
     const boardStore = this.props[STORE_BOARD] as BoardStore;
+    console.log(boardStore.board)
     const board = boardStore.board;
     const isLoading = boardStore.isLoading;
     if (isLoading) {

@@ -1,15 +1,15 @@
 import { observable, action } from 'mobx';
-import { UserModel } from 'app/models';
+import { UserData } from 'app/type/user-data';
 
 export class UserStore {
-  constructor(fixtures: UserModel[] = []) {
+  constructor(fixtures: UserData[] = []) {
     this.users = fixtures;
   }
 
-  @observable public users: Array<UserModel>;
+  @observable public users: Array<UserData>;
 
   @action
-  addUser = (user: UserModel): void => {
+  addUser = (user: UserData): void => {
     this.users.push(user);
   };
 

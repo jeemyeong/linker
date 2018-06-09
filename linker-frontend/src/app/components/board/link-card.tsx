@@ -202,7 +202,7 @@ const GradientsB = styled.div`
 
 interface LinkProps {
   link: LinkData
-  deleteLink: { ({ targetLink: LinkModel }) };
+  deleteLink: { ({ targetLink }) };
   isDragging: boolean
 }
 

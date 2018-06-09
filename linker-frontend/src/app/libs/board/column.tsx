@@ -29,7 +29,7 @@ export interface ColumnProps<T, K> {
 
 export interface ColumnState {}
 
-export class Column<T extends BoardItem, K extends BoardColumn<T>> extends React.PureComponent<
+export class Column<T extends BoardItem, K extends BoardColumn<T>> extends React.Component<
   ColumnProps<T, K>,
   ColumnState
 > {

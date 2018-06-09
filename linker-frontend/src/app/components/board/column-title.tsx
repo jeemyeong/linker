@@ -6,7 +6,7 @@ import * as R from 'ramda';
 import { rootStore } from 'app/app';
 import { STORE_BOARD } from 'app/constants/stores';
 import { borderRadius, colors } from 'app/constants/colors';
-import { CategoryModel } from 'app/models';
+import { CategoryData } from 'app/type/category-data';
 
 const Container = styled.div`
   border-top-left-radius: ${borderRadius}px;
@@ -27,7 +27,7 @@ const Title = styled.h2`
 `;
 
 interface ColumnTitleProps {
-  category: CategoryModel;
+  category: CategoryData;
   isDragging: boolean;
   dragHandleProps: DraggableProvidedDragHandleProps;
   updateCategory: {({category, title}): void }
