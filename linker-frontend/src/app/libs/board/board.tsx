@@ -5,6 +5,7 @@ import {
 } from 'react-beautiful-dnd';
 import { Column } from './column';
 import styled from 'styled-components';
+import { observer } from "mobx-react";
 
 const ParentContainer = styled.div`
   height: ${({ height }: { height }) => height};
@@ -73,14 +74,11 @@ export interface BoardState {
   ordered: Array<string>;
 }
 
+@observer
 export class Board<
   T extends BoardItem,
   K extends BoardColumn<T>
 > extends React.Component<BoardProps<T, K>, BoardState> {
-
-  componentWillReact() {
-    console.log("Board: I will re-render, since the props has changed!");
-  }
 
   onDragStart = (initial) => {};
 
@@ -131,7 +129,7 @@ export class Board<
                 key={"column|"+column.id}
                 column={column}
                 index={index}
-                items={column[itemKey]}
+                itemKey={itemKey}
                 renderItem={renderItem}
                 renderAddItemButton={renderAddItemButton}
                 renderColumnTitle={renderColumnTitle}

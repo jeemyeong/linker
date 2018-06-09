@@ -206,26 +206,30 @@ interface LinkProps {
   isDragging: boolean
 }
 
-export const LinkCard = ({link, deleteLink, isDragging}: LinkProps) => {
-  const title = link.ogTitle ? link.ogTitle + ": " + link.url.replace(/^.*\/\//, "") : link.url.replace(/^.*\/\//, "").replace(/^www./, "");
-  const ellipsedTitle= ellipseStr(title, 25);
-  return (
-    <Card>
-      <Figure>
-        {link.ogImage ?
-          <Img src={link.ogImage} alt="card image"/> : !isDragging && sample([<GradientsA/>, <GradientsB/>])
-        }
-        <Caption>
-          <Overlay className="overlay">
-            <DeleteButton className="delete" onClick={() => confirm("Do you want to remove this link really?") && deleteLink({targetLink: link})}/>
-          </Overlay>
+export class LinkCard extends React.PureComponent<LinkProps, {}> {
+  render() {
+    const { link, deleteLink, isDragging } = this.props;
+    console.log("LinkCard is rendering", link.content);
+    const title = link.ogTitle ? link.ogTitle + ": " + link.url.replace(/^.*\/\//, "") : link.url.replace(/^.*\/\//, "").replace(/^www./, "");
+    const ellipsedTitle= ellipseStr(title, 25);
+    return (
+      <Card>
+        <Figure>
+          {link.ogImage ?
+            <Img src={link.ogImage} alt="card image"/> : !isDragging && sample([<GradientsA/>, <GradientsB/>])
+          }
+          <Caption>
+            <Overlay className="overlay">
+              <DeleteButton className="delete" onClick={() => confirm("Do you want to remove this link really?") && deleteLink({targetLink: link})}/>
+            </Overlay>
 
-          <A href={link.url} target="_blank">
-            <H2>{ellipsedTitle}</H2>
-            <P>{ellipseStr(`${title} ${link.ogDescription ? link.ogDescription : ""}`, 120)}</P>
-          </A>
-        </Caption>
-      </Figure>
-    </Card>
-  );
+            <A href={link.url} target="_blank">
+              <H2>{ellipsedTitle}</H2>
+              <P>{ellipseStr(`${title} ${link.ogDescription ? link.ogDescription : ""}`, 120)}</P>
+            </A>
+          </Caption>
+        </Figure>
+      </Card>
+    )
+  }
 };

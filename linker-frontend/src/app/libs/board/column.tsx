@@ -9,6 +9,7 @@ import {
   RenderItemToJSXElement
 } from 'app/libs/board/board';
 import { grid } from 'app/constants/colors';
+import { observer } from "mobx-react";
 
 const Container = styled.div`
   padding: ${grid}px;
@@ -23,22 +24,27 @@ export interface ColumnProps<T, K> {
   renderAddItemButton: RenderAddItemToJSXElement;
   renderColumnTitle: RenderColumnTitleToJSXElement<K>;
   index: number;
-  items: Array<T>;
+  itemKey: string;
   column: K,
 }
 
 export interface ColumnState {}
 
+@observer
 export class Column<T extends BoardItem, K extends BoardColumn<T>> extends React.Component<
   ColumnProps<T, K>,
   ColumnState
 > {
+  componentDidMount() {
+    console.log("Column: CDM")
+  }
 
   render() {
-    console.log("Column: I am re-rendering, since the todo has changed!");
-    const { items, index, renderColumnTitle, column, renderAddItemButton} = this.props;
+    console.log("Column: I am rendering");
+    const { index, renderColumnTitle, column, renderAddItemButton, itemKey } = this.props;
+    const items = column[itemKey];
     return (
-      <Draggable draggableId={column.title} index={index}>
+      <Draggable draggableId={column.id.toString()} index={index}>
         {(provided, snapshot) => (
           <Container innerRef={provided.innerRef} {...provided.draggableProps}>
             {renderColumnTitle(column, snapshot.isDragging, provided.dragHandleProps)}

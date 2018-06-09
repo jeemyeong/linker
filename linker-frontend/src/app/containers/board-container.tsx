@@ -109,7 +109,6 @@ export class BoardContainer extends React.Component<BoardContainerProps, BoardCo
   render() {
     console.log("BoardContainer is rendering");
     const boardStore = this.props[STORE_BOARD] as BoardStore;
-    console.log(boardStore.board)
     const board = boardStore.board;
     const isLoading = boardStore.isLoading;
     if (isLoading) {

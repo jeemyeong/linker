@@ -2,11 +2,9 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { DraggableProvidedDragHandleProps, DraggableStateSnapshot } from 'react-beautiful-dnd';
 import { ChangeEvent } from 'react';
-import * as R from 'ramda';
-import { rootStore } from 'app/app';
-import { STORE_BOARD } from 'app/constants/stores';
 import { borderRadius, colors } from 'app/constants/colors';
 import { CategoryData } from 'app/type/category-data';
+import { observer } from "mobx-react";
 
 const Container = styled.div`
   border-top-left-radius: ${borderRadius}px;
@@ -30,7 +28,7 @@ interface ColumnTitleProps {
   category: CategoryData;
   isDragging: boolean;
   dragHandleProps: DraggableProvidedDragHandleProps;
-  updateCategory: {({category, title}): void }
+  updateCategory: {({category, title})}
 }
 
 interface ColumnTitleState {
@@ -38,6 +36,7 @@ interface ColumnTitleState {
   title: string
 }
 
+@observer
 export default class ColumnTitle extends React.Component<
   ColumnTitleProps,
   ColumnTitleState
@@ -56,15 +55,13 @@ export default class ColumnTitle extends React.Component<
     if (event.key === 'Enter') {
       event.preventDefault();
       event.stopPropagation();
-      rootStore[STORE_BOARD].updateCategory({category: this.props.category, title: this.state.title})//.then(() => this.setState({editing: false}))
+      this.props.updateCategory({category: this.props.category, title: this.state.title}).then(() => this.setState({editing: false}))
     }
   };
-  shouldComponentUpdate(nextProp, nextState) {
-    return !(R.equals(this.props, nextProp) && R.equals(this.state, nextState))
-  }
 
   render() {
     const { category, dragHandleProps, isDragging } = this.props;
+    console.log("ColumnTitle: render")
     return (
       <Container {...dragHandleProps} isDragging={isDragging}>
         {this.state.editing
