@@ -29,10 +29,10 @@ class BoardController {
     @RequestMapping(value = ["/{boardId}"], method = [(RequestMethod.PUT)])
     fun updateBoard(@PathVariable boardId: Long, @RequestBody board: BoardVO): ResponseEntity<Any> {
         return boardService.findBoardById(boardId).map {
-            ResponseEntity<Any>(boardService.updateBoard(BoardCommand.UpdateBoard(
+            ResponseEntity<Any>(BoardDto.fromDomain(boardService.updateBoard(BoardCommand.UpdateBoard(
                     id = boardId,
                     board = board
-            )), HttpStatus.OK)
+            ))), HttpStatus.OK)
         }.orElse(ResponseEntity("Board is not present", HttpStatus.BAD_REQUEST))
     }
 

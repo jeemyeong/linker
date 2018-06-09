@@ -48,7 +48,6 @@ export default class Item<T> extends React.Component<
     const { provided, item, isDragging } = this.props;
     return (
       <Container
-        // href={item.author.url}
         innerRef={provided.innerRef}
         {...provided.draggableProps}
         {...provided.dragHandleProps}

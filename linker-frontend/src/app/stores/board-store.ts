@@ -1,4 +1,4 @@
-import { action, observable } from 'mobx';
+import { action, observable, runInAction } from 'mobx';
 import ApiCall from 'app/network/api-call';
 import * as R from 'ramda';
 import { BoardData } from 'app/type/board-data';
@@ -21,16 +21,16 @@ export class BoardStore {
   getBoard = (id: number) => {
     this.isLoading = true;
     return ApiCall.getBoard({id})
-      .then(board => action(() =>{
+      .then(board => runInAction(() =>{
         this.board = board;
         this.isLoading = false;
         this.maxLinkId = Math.max(...R.unnest(this.board.categories.map(category => R.unnest(category.links.map(link => link.id))))) + 1;
         this.maxCategoryId = Math.max(...this.board.categories.map(category => category.id)) + 1;
-      })())
-      .catch(() => action(() => {
+      }))
+      .catch(() => runInAction(() => {
         this.board = null;
         this.isLoading = false;
-      })());
+      }));
   };
 
   private reorder = <T>({list, originIndex, newIndex}: {list: T[], originIndex: number, newIndex: number}): T[] => {
@@ -40,7 +40,14 @@ export class BoardStore {
     return result;
   };
 
-  private update = () => ApiCall.updateBoard({id: 1, updateBoardCommand: new UpdateBoardCommand({board: this.board})});
+  private update = () => ApiCall
+    .updateBoard({id: 1, updateBoardCommand: new UpdateBoardCommand({board: this.board})})
+    .then(board => runInAction(() =>{
+      this.board = board;
+      this.isLoading = false;
+      this.maxLinkId = Math.max(...R.unnest(this.board.categories.map(category => R.unnest(category.links.map(link => link.id))))) + 1;
+      this.maxCategoryId = Math.max(...this.board.categories.map(category => category.id)) + 1;
+    }));
 
   @action
   reorderCategories = ({originIndex, newIndex}) => {

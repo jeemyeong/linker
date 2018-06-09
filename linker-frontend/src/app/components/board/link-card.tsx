@@ -4,6 +4,7 @@ import { ellipseStr } from 'app/util/ellipse-str';
 import { LinkData } from 'app/type/link-data';
 import { colors } from 'app/constants/colors';
 import { sample } from 'app/util/sample';
+import * as R from 'ramda';
 
 const Card = styled.div`
   margin-top: 5px;
@@ -206,7 +207,11 @@ interface LinkProps {
   isDragging: boolean
 }
 
-export class LinkCard extends React.PureComponent<LinkProps, {}> {
+export class LinkCard extends React.Component<LinkProps, {}> {
+  shouldComponentUpdate(nextProps, nextState) {
+    return !R.equals(nextProps, this.props)
+  }
+
   render() {
     const { link, deleteLink, isDragging } = this.props;
     console.log("LinkCard is rendering", link.content);
