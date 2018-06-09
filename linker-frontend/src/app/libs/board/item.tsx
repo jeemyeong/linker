@@ -24,7 +24,7 @@ export interface ItemProps<T> {
 
 export interface ItemState {}
 
-export default class Item<T> extends React.Component<
+export default class Item<T> extends React.PureComponent<
   ItemProps<T>,
   ItemState
 > {

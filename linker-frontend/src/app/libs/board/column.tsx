@@ -33,9 +33,6 @@ export class Column<T extends BoardItem, K extends BoardColumn<T>> extends React
   ColumnProps<T, K>,
   ColumnState
 > {
-  componentWillReact() {
-    console.log("Column: I will re-render, since the props has changed!");
-  }
 
   render() {
     console.log("Column: I am re-rendering, since the todo has changed!");

@@ -69,14 +69,14 @@ export interface BoardProps<T, K> {
   };
 }
 
-export interface BoardState<T> {
+export interface BoardState {
   ordered: Array<string>;
 }
 
 export class Board<
   T extends BoardItem,
   K extends BoardColumn<T>
-> extends React.Component<BoardProps<T, K>, BoardState<T>> {
+> extends React.Component<BoardProps<T, K>, BoardState> {
 
   componentWillReact() {
     console.log("Board: I will re-render, since the props has changed!");
@@ -128,7 +128,7 @@ export class Board<
           <Container innerRef={provided.innerRef} {...provided.droppableProps}>
             {categories.map((column: K, index: number) => (
               <Column
-                key={column.id}
+                key={"column|"+column.id}
                 column={column}
                 index={index}
                 items={column[itemKey]}
