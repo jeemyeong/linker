@@ -39,7 +39,7 @@ data class BoardDto(
                 fun fromDomain(link: Link) = LinkVO(
                         id = link.id,
                         url = link.url,
-                        content = link.url,
+                        content = link.content,
                         order = link.order,
                         ogTitle = link.ogTitle,
                         ogImage = link.ogImage,
