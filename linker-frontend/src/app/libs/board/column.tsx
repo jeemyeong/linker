@@ -8,11 +8,12 @@ import {
   RenderAddItemToJSXElement, RenderColumnTitleToJSXElement,
   RenderItemToJSXElement
 } from 'app/libs/board/board';
-import { grid } from 'app/constants/colors';
 import { observer } from "mobx-react";
+import { sizes } from "app/constants/size";
 
-const Container = styled.div`
-  padding: ${grid}px;
+export const ColumnContainer = styled.div`
+  width: ${sizes.columnWidth};
+  padding: ${sizes.grid}px;
   margin: 20px;
   display: flex;
   flex-direction: column;
@@ -46,7 +47,7 @@ export class Column<T extends BoardItem, K extends BoardColumn<T>> extends React
     return (
       <Draggable draggableId={column.id.toString()} index={index}>
         {(provided, snapshot) => (
-          <Container innerRef={provided.innerRef} {...provided.draggableProps}>
+          <ColumnContainer innerRef={provided.innerRef} {...provided.draggableProps}>
             {renderColumnTitle(column, snapshot.isDragging, provided.dragHandleProps)}
             {renderAddItemButton(index)}
             <ItemList
@@ -55,7 +56,7 @@ export class Column<T extends BoardItem, K extends BoardColumn<T>> extends React
               items={items}
               renderItem={this.props.renderItem}
             />
-          </Container>
+          </ColumnContainer>
         )}
       </Draggable>
     );

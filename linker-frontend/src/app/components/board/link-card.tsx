@@ -8,7 +8,7 @@ import * as R from 'ramda';
 
 const Card = styled.div`
   margin-top: 5px;
-  width: 300px;
+  width: 100%;
   transition: 0.6s;
   transform-style: preserve-3d;
   height: 160px;

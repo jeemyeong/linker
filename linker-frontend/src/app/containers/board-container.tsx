@@ -12,7 +12,6 @@ import { Loader } from 'app/components/ui/loader';
 import BoardStore from 'app/stores/board-store';
 import { EmptyBoard } from 'app/components/ui/empty-board';
 import { RouteComponentProps } from 'react-router';
-import { FloatingButton } from 'app/components/ui/floating-button';
 import { STORE_BOARD, STORE_ROUTER, STORE_UI } from 'app/constants/stores';
 import { CategoryData } from 'app/type/category-data';
 import { LinkData } from 'app/type/link-data';
@@ -63,10 +62,17 @@ export class BoardContainer extends React.Component<BoardContainerProps, BoardCo
     const category = boardStore.board.categories[index];
     return (
       <AddLinkButton
-        category={category}
-        openAddLinkModal={this.openAddLinkModal}
+        onClick={() => this.openAddLinkModal(category)}
       />
     )
+  };
+
+  renderAddCategory = () => {
+    return (
+      <AddLinkButton
+        onClick={console.log}
+      />
+    );
   };
 
   openAddCategoryModal = () => {
@@ -126,12 +132,10 @@ export class BoardContainer extends React.Component<BoardContainerProps, BoardCo
           reorderColumn={boardStore.reorderCategories}
           reorderItem={boardStore.reorderLink}
           renderItem={this.renderItem}
+          renderAddColumn={this.renderAddCategory}
           renderColumnTitle={this.renderColumnTitle}
           renderAddItemButton={this.renderAddItemButton}
         />
-        {
-          <FloatingButton handleClick={this.openAddCategoryModal}/>
-        }
       </Container>
     )
   }

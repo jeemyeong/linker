@@ -1,8 +1,6 @@
 import * as React from 'react';
 import Button from '@material-ui/core/Button';
 import styled from 'styled-components';
-import { CategoryData } from 'app/type/category-data';
-import * as R from 'ramda';
 import { colors } from 'app/constants/colors';
 
 const Container = styled.div`
@@ -18,6 +16,8 @@ const Container = styled.div`
 
 const StyledButton = styled(Button)`
   && {
+    width: 100%;
+    justify-content: flex-start;
     color: ${colors.grey.lighter};
     font-size: 1.4rem;
     font-weight: 600;
@@ -36,23 +36,11 @@ const H1 = styled.div`
   margin-bottom: 7px;
 `;
 
-interface AddLinkButtonProps {
-  category: CategoryData,
-  openAddLinkModal: {(category: CategoryData): void}
-}
-export class AddLinkButton extends React.Component<AddLinkButtonProps, {}> {
 
-  shouldComponentUpdate(nextProps, nextState) {
-    return !R.equals(nextProps, this.props)
-  }
-
-  render() {
-    return (
-      <Container>
-        <StyledButton onClick={() => this.props.openAddLinkModal(this.props.category)}>
-          <H1>+</H1> Add Link...
-        </StyledButton>
-      </Container>
-    );
-  }
-};
+export const AddLinkButton = ({onClick}) => (
+  <Container>
+    <StyledButton onClick={onClick}>
+      <H1>+</H1> Add Link...
+    </StyledButton>
+  </Container>
+);
