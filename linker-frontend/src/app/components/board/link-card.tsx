@@ -4,6 +4,7 @@ import { ellipseStr } from 'app/util/ellipse-str';
 import { LinkData } from 'app/type/link-data';
 import { colors } from 'app/constants/colors';
 import { sample } from 'app/util/sample';
+import * as R from 'ramda';
 
 const Card = styled.div`
   margin-top: 5px;
@@ -202,30 +203,38 @@ const GradientsB = styled.div`
 
 interface LinkProps {
   link: LinkData
-  deleteLink: { ({ targetLink: LinkModel }) };
+  deleteLink: { ({ targetLink }) };
   isDragging: boolean
 }
 
-export const LinkCard = ({link, deleteLink, isDragging}: LinkProps) => {
-  const title = link.ogTitle ? link.ogTitle + ": " + link.url.replace(/^.*\/\//, "") : link.url.replace(/^.*\/\//, "").replace(/^www./, "");
-  const ellipsedTitle= ellipseStr(title, 25);
-  return (
-    <Card>
-      <Figure>
-        {link.ogImage ?
-          <Img src={link.ogImage} alt="card image"/> : !isDragging && sample([<GradientsA/>, <GradientsB/>])
-        }
-        <Caption>
-          <Overlay className="overlay">
-            <DeleteButton className="delete" onClick={() => confirm("Do you want to remove this link really?") && deleteLink({targetLink: link})}/>
-          </Overlay>
+export class LinkCard extends React.Component<LinkProps, {}> {
+  shouldComponentUpdate(nextProps, nextState) {
+    return !R.equals(nextProps, this.props)
+  }
 
-          <A href={link.url} target="_blank">
-            <H2>{ellipsedTitle}</H2>
-            <P>{ellipseStr(`${title} ${link.ogDescription ? link.ogDescription : ""}`, 120)}</P>
-          </A>
-        </Caption>
-      </Figure>
-    </Card>
-  );
+  render() {
+    const { link, deleteLink, isDragging } = this.props;
+    console.log("LinkCard is rendering", link.content);
+    const title = link.ogTitle ? link.ogTitle + ": " + link.url.replace(/^.*\/\//, "") : link.url.replace(/^.*\/\//, "").replace(/^www./, "");
+    const ellipsedTitle= ellipseStr(title, 25);
+    return (
+      <Card>
+        <Figure>
+          {link.ogImage ?
+            <Img src={link.ogImage} alt="card image"/> : !isDragging && sample([<GradientsA/>, <GradientsB/>])
+          }
+          <Caption>
+            <Overlay className="overlay">
+              <DeleteButton className="delete" onClick={() => confirm("Do you want to remove this link really?") && deleteLink({targetLink: link})}/>
+            </Overlay>
+
+            <A href={link.url} target="_blank">
+              <H2>{ellipsedTitle}</H2>
+              <P>{ellipseStr(`${title} ${link.ogDescription ? link.ogDescription : ""}`, 120)}</P>
+            </A>
+          </Caption>
+        </Figure>
+      </Card>
+    )
+  }
 };

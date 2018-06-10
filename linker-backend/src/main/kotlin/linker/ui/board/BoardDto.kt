@@ -1,5 +1,6 @@
 package linker.ui.board
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonInclude
 import linker.domain.board.Board
 import linker.domain.board.Category
@@ -21,7 +22,7 @@ data class BoardDto(
     data class CategoryVO(
             var id: Long,
             var title: String,
-            var order: Int,
+            @JsonIgnore var order: Int,
             var links: List<LinkVO>
     ) {
         @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -29,7 +30,7 @@ data class BoardDto(
                 var id: Long,
                 var url: String,
                 var content: String,
-                var order: Int,
+                @JsonIgnore var order: Int,
                 var ogTitle: String?,
                 var ogImage: String?,
                 var ogDescription: String?

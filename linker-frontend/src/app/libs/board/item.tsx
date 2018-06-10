@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { DraggableProvided } from 'react-beautiful-dnd';
 import { RenderItemToJSXElement } from 'app/libs/board/board';
 import { colors } from 'app/constants/colors';
-import { observer } from 'mobx-react';
+import { observer } from "mobx-react";
 
 const Container = styled.div`
   margin: 20px 0px 20px 0px;
@@ -33,17 +33,21 @@ export default class Item<T> extends React.Component<
 
   componentDidMount() {
     // cdm is called when item is put to another column
+    console.log("CDM / content: " + this.props.item["content"])
   }
 
   componentDidUpdate() {
     // cdu is called when item is put to same column
   }
 
+  componentWillUnmount() {
+    console.log("CWU / content: " + this.props.item["content"])
+  }
+
   render() {
     const { provided, item, isDragging } = this.props;
     return (
       <Container
-        // href={item.author.url}
         innerRef={provided.innerRef}
         {...provided.draggableProps}
         {...provided.dragHandleProps}

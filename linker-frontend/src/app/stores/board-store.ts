@@ -1,10 +1,10 @@
-import { action, observable } from 'mobx';
-import { BoardData } from 'app/type/board-data';
+import { action, observable, runInAction, toJS } from 'mobx';
 import ApiCall from 'app/network/api-call';
-import { LinkData } from 'app/type/link-data';
-import { UpdateBoardCommand } from 'app/type/update-board-command';
-import { CategoryData } from 'app/type/category-data';
 import * as R from 'ramda';
+import { BoardData } from 'app/type/board-data';
+import { LinkData } from 'app/type/link-data';
+import { CategoryData } from 'app/type/category-data';
+import { UpdateBoardCommand } from "app/type/update-board-command";
 
 export class BoardStore {
   constructor(board: BoardData = null) {
@@ -14,56 +14,60 @@ export class BoardStore {
 
   @observable public board?: BoardData;
   @observable public isLoading: boolean;
+  private maxLinkId = 0;
+  private maxCategoryId = 0;
 
   @action
   getBoard = (id: number) => {
     this.isLoading = true;
     return ApiCall.getBoard({id})
-      .then(board => action(() =>{
+      .then(board => runInAction(() =>{
         this.board = board;
-        this.isLoading = false
-      })())
-      .catch(() => action(() => {
+        this.isLoading = false;
+        this.maxLinkId = Math.max(...R.unnest(this.board.categories.map(category => R.unnest(category.links.map(link => link.id))))) + 1;
+        this.maxCategoryId = Math.max(...this.board.categories.map(category => category.id)) + 1;
+      }))
+      .catch(() => runInAction(() => {
         this.board = null;
-        this.isLoading = false
-      })());
+        this.isLoading = false;
+      }));
   };
 
-
-
-  reorder = <T>({list, originIndex, newIndex}: {list: T[], originIndex: number, newIndex: number}): T[] => {
+  private reorder = <T>({list, originIndex, newIndex}: {list: T[], originIndex: number, newIndex: number}): T[] => {
     const result = Array.from(list);
     const [removed] = result.splice(originIndex, 1);
     result.splice(newIndex, 0, removed);
     return result;
   };
 
-  update = () => ApiCall.updateBoard({id: 1, updateBoardCommand: new UpdateBoardCommand({board: this.board})});
+  private update = () => ApiCall
+    .updateBoard({id: 1, updateBoardCommand: new UpdateBoardCommand({board: this.board})})
+    .then(board => runInAction(() =>{
+      if (R.equals(toJS(this.board), board)) {
+        return;
+      }
+      this.board = board;
+      this.isLoading = false;
+      this.maxLinkId = Math.max(...R.unnest(this.board.categories.map(category => R.unnest(category.links.map(link => link.id))))) + 1;
+      this.maxCategoryId = Math.max(...this.board.categories.map(category => category.id)) + 1;
+    }));
 
   @action
   reorderCategories = ({originIndex, newIndex}) => {
-    const newBoard = {
-      ...this.board,
-      categories: this.reorder({list: this.board.categories, originIndex, newIndex})
-    };
-    this.board = newBoard;
+    this.board.categories = this.reorder({list: this.board.categories, originIndex, newIndex});
 
     return this.update()
   };
 
   @action
   reorderLink = ({ originColumnIndex, originIndex, newColumnIndex, newIndex }) => {
-    const current: Array<LinkData> = [...this.board.categories[originColumnIndex].links];
-    const next: Array<LinkData> = [...this.board.categories[newColumnIndex].links];
+    const current: Array<LinkData> = this.board.categories[originColumnIndex].links.slice();
+    const next: Array<LinkData> = this.board.categories[newColumnIndex].links.slice();
     const target = current[originIndex];
 
     // moving to same list
     if (originColumnIndex === newColumnIndex) {
-      const newBoard = {
-        ...this.board
-      };
-      newBoard.categories[originColumnIndex].links = this.reorder<LinkData>({list: current, originIndex, newIndex});
-      this.board = newBoard;
+      this.board.categories[originColumnIndex].links = this.reorder<LinkData>({list: current, originIndex, newIndex});
       return this.update()
     }
 
@@ -73,44 +77,28 @@ export class BoardStore {
     // insert into next
     next.splice(newIndex, 0, target);
 
-    const newBoard = {
-      ...this.board,
-    };
-    newBoard.categories[originColumnIndex].links = current;
-    newBoard.categories[newColumnIndex].links = next;
-    this.board = newBoard;
+    this.board.categories[originColumnIndex].links = current;
+    this.board.categories[newColumnIndex].links = next;
+
     return this.update()
   };
 
   @action
   addLink = ({url, category}: {url: string, category: CategoryData}) => {
     const link: LinkData = {
-      id: 0,
       url,
+      id: this.maxLinkId,
       content: '',
     };
-    const categories = [...this.board.categories];
-    categories.find(c => c.id == category.id).links.push(link);
-
-    this.board = {
-      ...this.board,
-      categories: categories
-    };
-
+    this.maxLinkId += 1;
+    this.board.categories.find(c => c.id == category.id).links.push(link);
     return this.update()
   };
 
   @action
   deleteLink = ({ targetLink }: {targetLink: LinkData}) => {
-    const categories = [...this.board.categories];
-
-    const category = R.find(category => R.contains(targetLink, category.links), categories);
+    const category = R.find(category => R.contains(targetLink, category.links), this.board.categories);
     category.links = category.links.filter(link => link.id != targetLink.id);
-
-    this.board = {
-      ...this.board,
-      categories: categories
-    };
 
     return this.update()
   };
@@ -118,27 +106,18 @@ export class BoardStore {
   @action
   addCategory = ({title}: {title: string}) => {
     const category: CategoryData = {
-      id: 0,
-      title,
+      id: this.maxCategoryId,
+      title: title,
       links: []
     };
-    this.board = {
-      ...this.board,
-      categories: [...this.board.categories, category]
-    };
-
+    this.maxCategoryId += 1;
+    this.board.categories = [...this.board.categories, category]
     return this.update()
   };
 
   @action
   updateCategory = ({category, title}: {category: CategoryData, title: string}) => {
-    const categories = [...this.board.categories];
-    categories.find(c => c.id == category.id).title = title;
-    this.board = {
-      ...this.board,
-      categories: categories
-    };
-
+    this.board.categories.find(c => c.id == category.id).title = title;
     return this.update()
   }
 }

@@ -10,12 +10,12 @@ import * as R from 'ramda';
 import AddContentDialog from 'app/components/board/add-content-dialog';
 import { Loader } from 'app/components/ui/loader';
 import BoardStore from 'app/stores/board-store';
-import { CategoryData } from 'app/type/category-data';
-import { LinkData } from 'app/type/link-data';
 import { EmptyBoard } from 'app/components/ui/empty-board';
 import { RouteComponentProps } from 'react-router';
 import { FloatingButton } from 'app/components/ui/floating-button';
 import { STORE_BOARD, STORE_ROUTER, STORE_UI } from 'app/constants/stores';
+import { CategoryData } from 'app/type/category-data';
+import { LinkData } from 'app/type/link-data';
 
 const Container = styled.div``;
 
@@ -28,7 +28,7 @@ export interface BoardContainerState {}
 export class BoardContainer extends React.Component<BoardContainerProps, BoardContainerState> {
 
   componentWillReact() {
-    console.log("Board: I will re-render, since the todo has changed!");
+    console.log("BoardContainer: I will re-render, since the props has changed!");
   }
 
   renderColumnTitle = (column, isDragging, dragHandleProps) => {
@@ -107,6 +107,7 @@ export class BoardContainer extends React.Component<BoardContainerProps, BoardCo
   };
 
   render() {
+    console.log("BoardContainer is rendering");
     const boardStore = this.props[STORE_BOARD] as BoardStore;
     const board = boardStore.board;
     const isLoading = boardStore.isLoading;

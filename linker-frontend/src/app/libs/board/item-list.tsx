@@ -7,6 +7,7 @@ import {
 import Item from './item';
 import styled from 'styled-components';
 import { BoardItem, RenderItemToJSXElement } from './board';
+import { observer } from "mobx-react";
 
 const Wrapper: any = styled.div`
   background-color: 'transparent';
@@ -40,6 +41,7 @@ export interface InnerItemListProps<T> {
 
 export interface InnerItemListState {}
 
+@observer
 class InnerItemList<T extends BoardItem> extends React.Component<
   InnerItemListProps<T>,
   InnerItemListState
@@ -47,11 +49,11 @@ class InnerItemList<T extends BoardItem> extends React.Component<
 
   render() {
     return this.props.items.map((item, index) => (
-      <Draggable key={item.id} draggableId={item.id.toString()} index={index}>
+      <Draggable key={"item|"+item.id} draggableId={item.id.toString()} index={index}>
         {(dragProvided, dragSnapshot) => (
           <Item
             renderItem={this.props.renderItem}
-            key={item.id}
+            key={"item|"+item.id}
             item={item}
             isDragging={dragSnapshot.isDragging}
             provided={dragProvided}
@@ -108,6 +110,12 @@ export default class ItemList<T extends BoardItem> extends React.Component<
   ItemListProps<T>,
   ItemListState
 > {
+  componentWillUnmount() {
+    console.log("ItemList CWU")
+  }
+  componentDidMount() {
+    console.log("ItemList CDM")
+  }
   render() {
     const {
       renderItem,
