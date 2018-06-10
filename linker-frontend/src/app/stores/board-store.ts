@@ -1,4 +1,4 @@
-import { action, observable, runInAction } from 'mobx';
+import { action, observable, runInAction, toJS } from 'mobx';
 import ApiCall from 'app/network/api-call';
 import * as R from 'ramda';
 import { BoardData } from 'app/type/board-data';
@@ -43,6 +43,9 @@ export class BoardStore {
   private update = () => ApiCall
     .updateBoard({id: 1, updateBoardCommand: new UpdateBoardCommand({board: this.board})})
     .then(board => runInAction(() =>{
+      if (R.equals(toJS(this.board), board)) {
+        return;
+      }
       this.board = board;
       this.isLoading = false;
       this.maxLinkId = Math.max(...R.unnest(this.board.categories.map(category => R.unnest(category.links.map(link => link.id))))) + 1;
