@@ -37,7 +37,3 @@ export const colors = {
     c: '#4bc0c8'
   }
 };
-
-export const grid: number = 12;
-
-export const borderRadius: number = 2;

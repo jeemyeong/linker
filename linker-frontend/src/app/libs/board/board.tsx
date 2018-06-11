@@ -33,10 +33,13 @@ export interface RenderItemToJSXElement<T> {
   (item: T, isDragging: boolean): JSX.Element;
 }
 
+export interface RenderAddColumn {
+  (): JSX.Element;
+}
+
 export interface RenderAddItemToJSXElement {
   (index: number): JSX.Element;
 }
-
 
 export interface RenderColumnTitleToJSXElement<K> {
   (column: K, isDragging, dragHandleProps: DraggableProvidedDragHandleProps): JSX.Element;
@@ -51,6 +54,7 @@ export interface BoardProps<T, K> {
   };
   itemKey: string;
   renderItem: RenderItemToJSXElement<T>;
+  renderAddColumn: RenderAddColumn;
   renderAddItemButton: RenderAddItemToJSXElement;
   renderColumnTitle: RenderColumnTitleToJSXElement<K>;
   reorderColumn: {
@@ -116,14 +120,15 @@ export class Board<
   };
 
   render() {
-    console.log("Board is rendering")
+    console.log("Board is rendering");
     const { itemKey } = this.props;
     const { categories } = this.props.board;
-    const { containerHeight, renderItem, renderAddItemButton, renderColumnTitle } = this.props;
+    const { containerHeight, renderItem, renderAddColumn, renderAddItemButton, renderColumnTitle } = this.props;
     const board = (
       <Droppable droppableId="board" type="COLUMN" direction="horizontal">
         {(provided) => (
           <Container innerRef={provided.innerRef} {...provided.droppableProps}>
+            {renderAddColumn()}
             {categories.map((column: K, index: number) => (
               <Column
                 key={"column|"+column.id}

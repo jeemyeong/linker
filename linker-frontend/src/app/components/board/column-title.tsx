@@ -2,23 +2,26 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { DraggableProvidedDragHandleProps, DraggableStateSnapshot } from 'react-beautiful-dnd';
 import { ChangeEvent } from 'react';
-import { borderRadius, colors } from 'app/constants/colors';
+import { colors } from 'app/constants/colors';
 import { CategoryData } from 'app/type/category-data';
 import { observer } from "mobx-react";
+import { sizes } from "app/constants/size";
 
 const Container = styled.div`
-  border-top-left-radius: ${borderRadius}px;
-  border-top-right-radius: ${borderRadius}px;
+  border-top-left-radius: ${sizes.borderRadius}px;
+  border-top-right-radius: ${sizes.borderRadius}px;
   color: ${({ isDragging }: DraggableStateSnapshot) =>
   isDragging ? colors.apricot : colors.grey.light};
+  height: ${sizes.columnTitleHeight};
   transition: background-color 0.1s ease;
-  min-width: 300px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
   &:hover {
     color: ${colors.apricot};
   }
 `;
 const Title = styled.h2`
-  height: 40px;
   font-size: 2rem;
   text-align: left;
   padding: 5px 5px 5px 5px;
