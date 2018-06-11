@@ -55,7 +55,6 @@ export class BoardStore {
   @action
   reorderCategories = ({originIndex, newIndex}) => {
     this.board.categories = this.reorder({list: this.board.categories, originIndex, newIndex});
-
     return this.update()
   };
 

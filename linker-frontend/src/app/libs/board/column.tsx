@@ -45,7 +45,7 @@ export class Column<T extends BoardItem, K extends BoardColumn<T>> extends React
     const { index, renderColumnTitle, column, renderAddItemButton, itemKey } = this.props;
     const items = column[itemKey];
     return (
-      <Draggable draggableId={column.id.toString()} index={index}>
+      <Draggable draggableId={"column|"+column.id} index={index}>
         {(provided, snapshot) => (
           <ColumnContainer innerRef={provided.innerRef} {...provided.draggableProps}>
             {renderColumnTitle(column, snapshot.isDragging, provided.dragHandleProps)}
