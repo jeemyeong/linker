@@ -7,29 +7,31 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import Button from '@material-ui/core/Button';
 
 interface AddContentProps {
-  onSubmit: { ({content} : {content: string}): Promise<void> }
+  onSubmit: { ({value} : {value: string}): Promise<void> }
   closeModal: { (): void }
   msg: string
   title: string
+  label?: string
+  defaultValue?: string
 }
 
 interface AddContentState {
-  content: string;
+  value: string;
 }
 
 export class AddContentDialog extends React.Component<AddContentProps, AddContentState> {
   state = {
-    content: ''
+    value: this.props.defaultValue || ''
   };
 
   _handleKeyPress = (e) => {
     return (e.key === 'Enter') && this.onSubmit()
   };
 
-  onSubmit = () => this.props.onSubmit({content: this.state.content})
+  onSubmit = () => this.props.onSubmit({value: this.state.value})
 
   render() {
-    const { closeModal, msg, title } = this.props;
+    const { closeModal, msg, title, label } = this.props;
     return (
       <div>
         <DialogTitle>{title}</DialogTitle>
@@ -41,11 +43,13 @@ export class AddContentDialog extends React.Component<AddContentProps, AddConten
             autoFocus
             margin="dense"
             id="name"
-            label="URL"
+            label={label}
             type="content"
             fullWidth
-            onChange={(e) => this.setState({ content: e.target.value })}
+            onChange={(e) => this.setState({ value: e.target.value })}
             onKeyPress={this._handleKeyPress}
+            value={this.state.value}
+            required={true}
           />
         </DialogContent>
         <DialogActions>

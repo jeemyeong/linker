@@ -15,6 +15,8 @@ import { RouteComponentProps } from 'react-router';
 import { STORE_BOARD, STORE_ROUTER, STORE_UI } from 'app/constants/stores';
 import { CategoryData } from 'app/type/category-data';
 import { LinkData } from 'app/type/link-data';
+import { ColumnContainer } from 'app/libs/board/column';
+import { AddCategoryButton } from 'app/components/board/add-category-button';
 
 const Container = styled.div``;
 
@@ -43,12 +45,20 @@ export class BoardContainer extends React.Component<BoardContainerProps, BoardCo
 
   openAddLinkModal = (category: CategoryData) => {
     const uiStore = this.props[STORE_UI] as UiStore;
+    const onSubmit = ({value: url}) =>
+      (R as any).pipeP(() => Promise.resolve(),
+        uiStore.openLoader,
+        () => this.newLink({category, url}),
+        uiStore.closeDialog,
+        uiStore.closeLoader,
+        R.always({message: "Link has been saved"}),
+        uiStore.openSnackbar)();
+
     return uiStore.openDialog({
       DialogComponent: (
         <AddContentDialog
-          onSubmit={({content: url}) => {
-            return R.pipe(uiStore.openLoader, () => this.newLink({category, url}).then(R.pipe(uiStore.closeDialog, uiStore.closeLoader, R.always({message: "Link has been saved"}), uiStore.openSnackbar)))(true)
-          }}
+          label={'URL'}
+          onSubmit={onSubmit}
           closeModal={uiStore.closeDialog}
           title={'Add Link'}
           msg={'You can add link with typing URL in this box.'}
@@ -68,24 +78,67 @@ export class BoardContainer extends React.Component<BoardContainerProps, BoardCo
   };
 
   renderAddCategory = () => {
+    const date = new Date();
+    const defaultCategoryName = `Category for ${date.getUTCMonth()+1}/${date.getDate()}`;
     return (
-      <AddLinkButton
-        onClick={console.log}
-      />
+      <ColumnContainer>
+        <AddCategoryButton
+          defaultCategoryName={defaultCategoryName}
+          onClick={() => this.openAddCategoryModal({defaultCategoryName})}
+        />
+        <AddLinkButton
+          onClick={() =>this.openAddLinkWithDefaultCategory({defaultCategoryName})}
+        />
+      </ColumnContainer>
     );
   };
 
-  openAddCategoryModal = () => {
+  openAddCategoryModal = ({defaultCategoryName}) => {
     const uiStore = this.props[STORE_UI] as UiStore;
+    const onSubmit = ({value: title}) =>
+      (R as any).pipe(() => Promise.resolve(),
+        uiStore.openLoader,
+        () => this.newCategory({title}),
+        uiStore.closeDialog,
+        uiStore.closeLoader,
+        R.always({message: "Category has been saved"}),
+        uiStore.openSnackbar)();
+
     return uiStore.openDialog({
       DialogComponent: (
         <AddContentDialog
-          onSubmit={({content: title}) => {
-            return R.pipe(uiStore.openLoader, () => this.newCategory({title}).then(R.pipe(uiStore.closeDialog, uiStore.closeLoader, R.always({message: "Category has been saved"}), uiStore.openSnackbar)))(true)
-          }}
+          label={'Title'}
+          defaultValue={defaultCategoryName}
+          onSubmit={onSubmit}
           closeModal={uiStore.closeDialog}
           title={'Add Category'}
           msg={'You can add new category with typing title in this box.'}
+        />
+      )
+    })
+  };
+
+  openAddLinkWithDefaultCategory = ({defaultCategoryName}) => {
+    const uiStore = this.props[STORE_UI] as UiStore;
+    const boardStore = this.props[STORE_BOARD] as BoardStore;
+    const onSubmit = ({value: url}) =>
+      (R as any).pipe(() => Promise.resolve(),
+        uiStore.openLoader,
+        () => this.newCategory({title: defaultCategoryName}),
+        () => this.newLink({category: boardStore.board.categories[0], url}),
+        uiStore.closeDialog,
+        uiStore.closeLoader,
+        R.always({message: "Link has been saved"}),
+        uiStore.openSnackbar)();
+
+    return uiStore.openDialog({
+      DialogComponent: (
+        <AddContentDialog
+          label={'Title'}
+          onSubmit={onSubmit}
+          closeModal={uiStore.closeDialog}
+          title={'Add Link'}
+          msg={'You can add link with typing URL in this box.'}
         />
       )
     })

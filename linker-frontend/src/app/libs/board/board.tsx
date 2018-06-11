@@ -3,7 +3,7 @@ import {
   DragDropContext, DraggableProvidedDragHandleProps,
   Droppable
 } from 'react-beautiful-dnd';
-import { Column, ColumnContainer } from './column';
+import { Column } from './column';
 import styled from 'styled-components';
 import { observer } from "mobx-react";
 
@@ -128,9 +128,7 @@ export class Board<
       <Droppable droppableId="board" type="COLUMN" direction="horizontal">
         {(provided) => (
           <Container innerRef={provided.innerRef} {...provided.droppableProps}>
-            <ColumnContainer>
-              {renderAddColumn()}
-            </ColumnContainer>
+            {renderAddColumn()}
             {categories.map((column: K, index: number) => (
               <Column
                 key={"column|"+column.id}

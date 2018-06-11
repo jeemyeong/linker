@@ -3,7 +3,7 @@ import Button from '@material-ui/core/Button';
 import styled from 'styled-components';
 import { colors } from 'app/constants/colors';
 
-const Container = styled.div`
+export const AddButtonContainer = styled.div`
   border-radius: 15px;
   background-color: ${colors.grey.bright};
   margin-top: 10px;
@@ -14,7 +14,7 @@ const Container = styled.div`
   padding: 10px 20px 10px 20px;
 `;
 
-const StyledButton = styled(Button)`
+export const StyledButton = styled(Button)`
   && {
     width: 100%;
     justify-content: flex-start;
@@ -29,7 +29,7 @@ const StyledButton = styled(Button)`
   }
 `;
 
-const H1 = styled.div`
+export const H1 = styled.div`
   font-size: 2rem;
   margin-right: 15px;
   display: inline-block;
@@ -38,9 +38,9 @@ const H1 = styled.div`
 
 
 export const AddLinkButton = ({onClick}) => (
-  <Container>
+  <AddButtonContainer>
     <StyledButton onClick={onClick}>
       <H1>+</H1> Add Link...
     </StyledButton>
-  </Container>
+  </AddButtonContainer>
 );

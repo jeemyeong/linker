@@ -101,7 +101,7 @@ export const getLinks = (count) =>
 
     const custom = {
       id: `link-${idCount++}`,
-      content: random.content,
+      // content: random.value,
       author: random.author
     };
 

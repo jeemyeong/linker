@@ -111,7 +111,7 @@ export class BoardStore {
       links: []
     };
     this.maxCategoryId += 1;
-    this.board.categories = [...this.board.categories, category]
+    this.board.categories = [category, ...this.board.categories];
     return this.update()
   };
 
