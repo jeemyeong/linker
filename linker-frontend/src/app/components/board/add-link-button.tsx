@@ -16,10 +16,10 @@ export const StyledButton = styled(Button)`
   && {
     display: flex;
     align-items: center;
-    font-size: 1em;
+    font-size: ${sizes.rightSide.column.addLinkButton.fontSize};
     width: 100%;
     padding: 10px 20px;
-    height: ${sizes.tab.height};
+    height: ${sizes.rightSide.column.addLinkButton.height};
     border-radius: 10px;
     background-color: ${colors.grey.bright};
     justify-content: flex-start;

@@ -19,12 +19,12 @@ const Container = styled.div`
 
 const LeftSide = styled.div`
   position: relative;
-  width: ${sizes.leftSide};
+  width: ${sizes.leftSide.width};
   height: 100vh;
 `;
 
 const RightSide = styled.div`
-  width: calc(100% - ${sizes.leftSide});
+  width: calc(100% - ${sizes.leftSide.width});
   height: 100%;
 `;
 

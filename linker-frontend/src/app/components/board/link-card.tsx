@@ -5,14 +5,15 @@ import { LinkData } from 'app/type/link-data';
 import { colors } from 'app/constants/colors';
 import { sample } from 'app/util/sample';
 import * as R from 'ramda';
+import { sizes } from 'app/constants/size';
 
 const Card = styled.div`
   margin-top: 5px;
   width: 100%;
   transition: 0.6s;
   transform-style: preserve-3d;
-  height: 100px;
-  font-size: 0.9em;
+  height: ${sizes.rightSide.column.linkCard.height};
+  font-size: 1em;
   border-radius: 20px;
   &:before {
     width: 100%;
@@ -95,11 +96,11 @@ const Overlay = styled.div`
   transition: opacity 0.35s, transform 0.35s;
 `;
 
-const H2 = styled.h2`
+const Title = styled.h2`
   word-spacing: -0.15em;
   overflow-wrap: break-word;
   font-weight: 300;
-  font-size: 1em;
+  font-size: ${sizes.rightSide.column.linkCard.title.fontSize};
   position: absolute;
   top: 25%;
   left: 10px;
@@ -216,7 +217,7 @@ export class LinkCard extends React.Component<LinkProps, {}> {
     const { link, deleteLink, isDragging } = this.props;
     console.log("LinkCard is rendering", link.content);
     const title = link.ogTitle ? link.ogTitle + ": " + link.url.replace(/^.*\/\//, "") : link.url.replace(/^.*\/\//, "").replace(/^www./, "");
-    const ellipsedTitle= ellipseStr(title, 25);
+    const ellipsedTitle= ellipseStr(title, 34);
     return (
       <Card>
         <Figure>
@@ -229,7 +230,7 @@ export class LinkCard extends React.Component<LinkProps, {}> {
             </Overlay>
 
             <A href={link.url} target="_blank">
-              <H2>{ellipsedTitle}</H2>
+              <Title>{ellipsedTitle}</Title>
               <P>{ellipseStr(`${title} ${link.ogDescription ? link.ogDescription : ""}`, 120)}</P>
             </A>
           </Caption>

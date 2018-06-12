@@ -12,7 +12,7 @@ import { observer } from "mobx-react";
 import { sizes } from "app/constants/size";
 
 export const ColumnContainer = styled.div`
-  width: ${sizes.columnWidth};
+  width: ${sizes.rightSide.column.width};
   padding: ${sizes.grid}px;
   margin: 5px;
   display: flex;

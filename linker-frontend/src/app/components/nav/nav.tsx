@@ -17,7 +17,7 @@ const StyledNav = styled.nav`
 const Title = styled.div`
   width: 100%;
   padding-bottom: 30px;
-  font-size: 3.6em;
+  font-size: ${sizes.leftSide.title.fontSize};
   font-weight: 600;
   color: ${colors.black};
   -webkit-text-rendering: optimizeLegibility;
@@ -36,8 +36,8 @@ const Tabs = styled.div`
 const Tab = styled.h3`
   flex:1 1 auto;
   width: 200px;
-  height: ${sizes.tab.height};
-  font-size: 1.7em;
+  height: ${sizes.leftSide.tab.height};
+  font-size: ${sizes.leftSide.tab.fontSize};
   font-weight: 600;
   margin-top: 10px;
   cursor: pointer;
