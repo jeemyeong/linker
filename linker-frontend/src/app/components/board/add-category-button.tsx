@@ -17,7 +17,7 @@ export const StyledButton = styled(Button)`
     width: 100%;
     justify-content: flex-start;
     color: ${colors.grey.lighter};
-    font-size: 1.4em;
+    font-size: 1em;
     font-weight: 600;
     text-transform: none;
     &:hover {

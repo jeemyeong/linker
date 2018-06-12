@@ -3,18 +3,21 @@ import styled from 'styled-components';
 import Button from '@material-ui/core/Button';
 import Settings from '@material-ui/icons/Settings';
 import { colors } from 'app/constants/colors';
+import { sizes } from 'app/constants/size';
 
 const StyledNav = styled.nav`
   position: absolute;
-  padding: 100px 70px 10px 90px;
+  padding: 90px 50px 10px 60px;
+  background-clip: content-box, padding-box;
+
   width: 100%;
   height: 100%;
 `;
 
-const Title = styled.h4`
-  width: 200px;
-  height: 70px;
-  font-size: 5em;
+const Title = styled.div`
+  width: 100%;
+  padding-bottom: 30px;
+  font-size: 3.6em;
   font-weight: 600;
   color: ${colors.black};
   -webkit-text-rendering: optimizeLegibility;
@@ -33,38 +36,43 @@ const Tabs = styled.div`
 const Tab = styled.h3`
   flex:1 1 auto;
   width: 200px;
-  height: 40px;
-  font-size: 2.5em;
+  height: ${sizes.tab.height};
+  font-size: 1.7em;
   font-weight: 600;
-  margin-top: 30px;
+  margin-top: 10px;
   cursor: pointer;
-  color: ${({isSelected}: {isSelected?: boolean}) => isSelected? colors.purple.deep : colors.grey.light};
+  color: ${({isSelected}: {isSelected?: boolean}) => isSelected? colors.main : colors.grey.light};
 `;
 
 const StyledButton = styled(Button)`
   && {
-    font-size: 1.4rem;
+    font-size: 1em;
     font-weight: 600;
+    height: 50px;
+    
     text-transform: none;
-    color: ${colors.purple.deep};
+    color: ${colors.main};
     transition: color 0.3s ease;
     border-radius: 10px;
     background-color: ${colors.purple.bright};
-    padding: 15px 40px;
-    width: 200px;
+    width: 100%;
     cursor: pointer;
     margin-top: 10px;
-    padding: 20px 5px 20px 0px;
+    padding: 5px;
     &:hover {
       background-color: ${colors.purple.bright};
       color: ${colors.purple.raspberry}
+    }
+    & span {
+      height: 100%;
     }
   }
 `;
 
 const StyledSettingsIcon = styled(Settings)`
   && {
-    margin-right: 10px;
+    height: 15px;
+    margin-right: 0px;
     margin-left: 0px;
   }
 `;

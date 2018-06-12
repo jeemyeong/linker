@@ -14,7 +14,7 @@ import { sizes } from "app/constants/size";
 export const ColumnContainer = styled.div`
   width: ${sizes.columnWidth};
   padding: ${sizes.grid}px;
-  margin: 20px;
+  margin: 5px;
   display: flex;
   flex-direction: column;
   height: 100%;

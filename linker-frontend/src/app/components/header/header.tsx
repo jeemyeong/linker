@@ -4,7 +4,7 @@ import Button from '@material-ui/core/Button';
 
 const Container = styled.header`
   width: 100%;
-  height: 240px;
+  height: 200px;
 `;
 
 const StickyContainer = styled.div`

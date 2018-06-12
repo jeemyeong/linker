@@ -6,7 +6,7 @@ import { colors } from 'app/constants/colors';
 import { observer } from "mobx-react";
 
 const Container = styled.div`
-  margin: 20px 0px 20px 0px;
+  margin: 5px 0px 5px 0px;
   user-select: none;
   transition: background-color 0.1s ease;
   /* anchor overrides */

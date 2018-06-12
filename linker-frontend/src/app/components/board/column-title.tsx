@@ -22,7 +22,7 @@ const Container = styled.div`
   }
 `;
 const Title = styled.h2`
-  font-size: 2rem;
+  font-size: 1em;
   text-align: left;
   padding: 5px 5px 5px 5px;
 `;

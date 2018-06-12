@@ -11,7 +11,7 @@ const Card = styled.div`
   width: 100%;
   transition: 0.6s;
   transform-style: preserve-3d;
-  height: 160px;
+  height: 100px;
   font-size: 0.9em;
   border-radius: 20px;
   &:before {
@@ -79,7 +79,7 @@ const Caption = styled.div`
   height: 100%;
   text-transform: uppercase;
   backface-visibility: hidden;
-  font-size: 1.25em;
+  font-size: 1em;
 `;
 
 const Overlay = styled.div`
@@ -99,7 +99,7 @@ const H2 = styled.h2`
   word-spacing: -0.15em;
   overflow-wrap: break-word;
   font-weight: 300;
-  font-size: 1.6em;
+  font-size: 1em;
   position: absolute;
   top: 25%;
   left: 10px;
@@ -121,7 +121,7 @@ const H2 = styled.h2`
     background: #fff;
     content: '';
     transition: transform 0.35s;
-    transform: translate3d(-200%,0,0);
+    transform: translate3d(-600%,0,0);
   }
 `;
 
