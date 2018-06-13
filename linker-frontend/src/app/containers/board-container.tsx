@@ -6,7 +6,6 @@ import { LinkCard } from 'app/components/board/link-card';
 import ColumnTitle from 'app/components/board/column-title';
 import UiStore from 'app/stores/ui-store';
 import { AddLinkButton } from 'app/components/board/add-link-button';
-import * as R from 'ramda';
 import AddContentDialog from 'app/components/board/add-content-dialog';
 import { Loader } from 'app/components/ui/loader';
 import BoardStore from 'app/stores/board-store';
@@ -17,7 +16,7 @@ import { CategoryData } from 'app/type/category-data';
 import { LinkData } from 'app/type/link-data';
 import { ColumnContainer } from 'app/libs/board/column';
 import { AddCategoryButton } from 'app/components/board/add-category-button';
-import { go } from 'app/util/fp';
+import * as R from 'ramda';
 
 const Container = styled.div``;
 
@@ -30,7 +29,7 @@ export interface BoardContainerState {}
 export class BoardContainer extends React.Component<BoardContainerProps, BoardContainerState> {
 
   componentWillReact() {
-    console.log("BoardContainer: I will re-render, since the props has changed!");
+    console.log('BoardContainer: I will re-render, since the props has changed!');
   }
 
   renderColumnTitle = (column, isDragging, dragHandleProps) => {
@@ -47,9 +46,8 @@ export class BoardContainer extends React.Component<BoardContainerProps, BoardCo
   openAddLinkModal = (category: CategoryData) => {
     const uiStore = this.props[STORE_UI] as UiStore;
     const onSubmit = ({value: url}) =>
-      this.onSubmit({category, url, message: "Link has been saved"},
-        this.newLink
-      );
+      uiStore.closeDialogWithActions({category, url, message: 'Link has been saved'},
+        this.newLink);
 
     return uiStore.openDialog(
       <AddContentDialog
@@ -91,7 +89,7 @@ export class BoardContainer extends React.Component<BoardContainerProps, BoardCo
   openAddCategoryModal = ({defaultCategoryName}) => {
     const uiStore = this.props[STORE_UI] as UiStore;
     const onSubmit = ({value: title}) =>
-      this.onSubmit({title, message: "Category has been saved"},
+      uiStore.closeDialogWithActions({title, message: 'Category has been saved'},
         this.newCategory);
 
     return uiStore.openDialog(
@@ -110,9 +108,9 @@ export class BoardContainer extends React.Component<BoardContainerProps, BoardCo
     const uiStore = this.props[STORE_UI] as UiStore;
     const boardStore = this.props[STORE_BOARD] as BoardStore;
     const onSubmit = ({value: url}) =>
-      this.onSubmit({title: defaultCategoryName, category: boardStore.board.categories[0], url, message: "Link has been saved"},
+      uiStore.closeDialogWithActions({title: defaultCategoryName, message: 'Link has been saved'},
         this.newCategory,
-        this.newLink,
+        R.tap(() => this.newLink({category: boardStore.board.categories[0], url})),
       );
 
     return uiStore.openDialog(
@@ -136,17 +134,6 @@ export class BoardContainer extends React.Component<BoardContainerProps, BoardCo
     return boardStore.addLink({url, category})
   };
 
-  onSubmit = (arg: {message: string} & {[key: string]: any}, ...fns) => {
-    const uiStore = this.props[STORE_UI] as UiStore;
-    return go(arg,
-      R.tap(uiStore.openLoader),
-      ...R.map<({})[], ({})[]>(R.tap, fns),
-      R.tap(uiStore.closeDialog),
-      R.tap(uiStore.closeLoader),
-      R.tap(uiStore.openSnackbar)
-    )
-  };
-
   renderItem = (item: LinkData, isDragging: boolean) => {
     const boardStore = this.props[STORE_BOARD] as BoardStore;
     return <LinkCard isDragging={isDragging} link={item} deleteLink={boardStore.deleteLink}/>
@@ -159,7 +146,7 @@ export class BoardContainer extends React.Component<BoardContainerProps, BoardCo
   };
 
   render() {
-    console.log("BoardContainer is rendering");
+    console.log('BoardContainer is rendering');
     const boardStore = this.props[STORE_BOARD] as BoardStore;
     const board = boardStore.board;
     const isLoading = boardStore.isLoading;
@@ -174,7 +161,7 @@ export class BoardContainer extends React.Component<BoardContainerProps, BoardCo
       <Container>
         <Board
           board={board}
-          itemKey={"links"}
+          itemKey={'links'}
           reorderColumn={boardStore.reorderCategories}
           reorderItem={boardStore.reorderLink}
           renderItem={this.renderItem}
