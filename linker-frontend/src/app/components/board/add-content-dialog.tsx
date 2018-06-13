@@ -6,7 +6,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import Button from '@material-ui/core/Button';
 
-interface AddContentProps {
+interface UpdateContentProps {
   onSubmit: { ({value} : {value: string}): Promise<void> }
   closeModal: { (): void }
   msg: string
@@ -15,11 +15,11 @@ interface AddContentProps {
   defaultValue?: string
 }
 
-interface AddContentState {
+interface UpdateContentState {
   value: string;
 }
 
-export class AddContentDialog extends React.Component<AddContentProps, AddContentState> {
+export class UpdateContentDialog extends React.Component<UpdateContentProps, UpdateContentState> {
   state = {
     value: this.props.defaultValue || ''
   };
@@ -65,4 +65,4 @@ export class AddContentDialog extends React.Component<AddContentProps, AddConten
   }
 }
 
-export default AddContentDialog;
+export default UpdateContentDialog;

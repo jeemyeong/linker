@@ -33,13 +33,13 @@ export class BoardContainer extends React.Component<BoardContainerProps, BoardCo
   }
 
   renderColumnTitle = (column, isDragging, dragHandleProps) => {
-    const boardStore = this.props[STORE_BOARD] as BoardStore;
     return (
       <ColumnTitle
-        updateCategory={boardStore.updateCategory}
         category={column}
         isDragging={isDragging}
-        dragHandleProps={dragHandleProps}/>
+        dragHandleProps={dragHandleProps}
+        onDoubleClick={() => this.openEditCategoryModal({category: column})}
+      />
     );
   };
 
@@ -100,6 +100,25 @@ export class BoardContainer extends React.Component<BoardContainerProps, BoardCo
         closeModal={uiStore.closeDialog}
         title={'Add Category'}
         msg={'You can add new category with typing title in this box.'}
+      />
+    )
+  };
+
+  openEditCategoryModal = ({category}) => {
+    const uiStore = this.props[STORE_UI] as UiStore;
+    const boardStore = this.props[STORE_BOARD] as BoardStore;
+    const onSubmit = ({value: title}) =>
+      uiStore.closeDialogWithActions({category, title, message: 'Category has been saved'},
+        boardStore.updateCategory);
+
+    return uiStore.openDialog(
+      <AddContentDialog
+        label={'Title'}
+        defaultValue={category.title}
+        onSubmit={onSubmit}
+        closeModal={uiStore.closeDialog}
+        title={'Edit Category'}
+        msg={'You can edit category with typing title in this box.'}
       />
     )
   };
