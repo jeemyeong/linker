@@ -37,7 +37,7 @@ export class UiStore {
   };
 
   @action
-  openDialog = ({DialogComponent}: {DialogComponent: React.ReactElement<{}>}) => {
+  openDialog = (DialogComponent: React.ReactElement<{}>) => {
     this.state = {
       ...this.state,
       dialog: {
