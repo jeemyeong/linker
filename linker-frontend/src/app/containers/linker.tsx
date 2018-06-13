@@ -11,6 +11,7 @@ import Header from 'app/components/header/header';
 import { Main } from 'app/components/main/main';
 import { STORE_ROUTER, STORE_UI } from 'app/constants/stores';
 import { Nav } from 'app/components/nav/nav';
+import { sizes } from 'app/constants/size';
 
 const Container = styled.div`
   display: flex;
@@ -18,12 +19,12 @@ const Container = styled.div`
 
 const LeftSide = styled.div`
   position: relative;
-  width: 330px;
+  width: ${sizes.leftSide.width};
   height: 100vh;
 `;
 
 const RightSide = styled.div`
-  width: calc(100% - 330px);
+  width: calc(100% - ${sizes.leftSide.width});
   height: 100%;
 `;
 

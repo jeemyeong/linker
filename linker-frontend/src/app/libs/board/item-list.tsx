@@ -49,7 +49,7 @@ class InnerItemList<T extends BoardItem> extends React.Component<
 
   render() {
     return this.props.items.map((item, index) => (
-      <Draggable key={"item|"+item.id} draggableId={item.id.toString()} index={index}>
+      <Draggable key={"item|"+item.id} draggableId={"item|"+item.id} index={index}>
         {(dragProvided, dragSnapshot) => (
           <Item
             renderItem={this.props.renderItem}

@@ -12,7 +12,7 @@ const Container = styled.div`
   border-top-right-radius: ${sizes.borderRadius}px;
   color: ${({ isDragging }: DraggableStateSnapshot) =>
   isDragging ? colors.apricot : colors.grey.light};
-  height: ${sizes.columnTitleHeight};
+  height: ${sizes.rightSide.column.title.height};
   transition: background-color 0.1s ease;
   display: flex;
   flex-direction: row;
@@ -22,7 +22,8 @@ const Container = styled.div`
   }
 `;
 const Title = styled.h2`
-  font-size: 2rem;
+  font-size: ${sizes.rightSide.column.title.fontSize};
+  font-weight: bold;
   text-align: left;
   padding: 5px 5px 5px 5px;
 `;

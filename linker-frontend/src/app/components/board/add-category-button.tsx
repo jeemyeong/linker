@@ -7,7 +7,7 @@ import Button from '@material-ui/core/Button';
 export const AddCategoryButtonContainer = styled.div`
   border-radius: 15px;
   background-color: ${colors.grey.bright};
-  height: ${sizes.columnTitleHeight};
+  height: ${sizes.rightSide.column.title.height};
   display: flex;
   flex-direction: row;
 `;
@@ -17,7 +17,7 @@ export const StyledButton = styled(Button)`
     width: 100%;
     justify-content: flex-start;
     color: ${colors.grey.lighter};
-    font-size: 1.4em;
+    font-size: ${sizes.rightSide.column.title.fontSize};
     font-weight: 600;
     text-transform: none;
     &:hover {

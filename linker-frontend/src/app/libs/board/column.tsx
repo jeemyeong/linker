@@ -12,9 +12,9 @@ import { observer } from "mobx-react";
 import { sizes } from "app/constants/size";
 
 export const ColumnContainer = styled.div`
-  width: ${sizes.columnWidth};
+  width: ${sizes.rightSide.column.width};
   padding: ${sizes.grid}px;
-  margin: 20px;
+  margin: 5px;
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -45,7 +45,7 @@ export class Column<T extends BoardItem, K extends BoardColumn<T>> extends React
     const { index, renderColumnTitle, column, renderAddItemButton, itemKey } = this.props;
     const items = column[itemKey];
     return (
-      <Draggable draggableId={column.id.toString()} index={index}>
+      <Draggable draggableId={"column|"+column.id} index={index}>
         {(provided, snapshot) => (
           <ColumnContainer innerRef={provided.innerRef} {...provided.draggableProps}>
             {renderColumnTitle(column, snapshot.isDragging, provided.dragHandleProps)}
