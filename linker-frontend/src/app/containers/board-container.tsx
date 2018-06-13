@@ -6,7 +6,6 @@ import { LinkCard } from 'app/components/board/link-card';
 import ColumnTitle from 'app/components/board/column-title';
 import UiStore from 'app/stores/ui-store';
 import { AddLinkButton } from 'app/components/board/add-link-button';
-import AddContentDialog from 'app/components/board/add-content-dialog';
 import { Loader } from 'app/components/ui/loader';
 import BoardStore from 'app/stores/board-store';
 import { EmptyBoard } from 'app/components/ui/empty-board';
@@ -17,6 +16,7 @@ import { LinkData } from 'app/type/link-data';
 import { ColumnContainer } from 'app/libs/board/column';
 import { AddCategoryButton } from 'app/components/board/add-category-button';
 import * as R from 'ramda';
+import UpdateContentDialog from 'app/components/board/add-content-dialog';
 
 const Container = styled.div``;
 
@@ -33,13 +33,13 @@ export class BoardContainer extends React.Component<BoardContainerProps, BoardCo
   }
 
   renderColumnTitle = (column, isDragging, dragHandleProps) => {
-    const boardStore = this.props[STORE_BOARD] as BoardStore;
     return (
       <ColumnTitle
-        updateCategory={boardStore.updateCategory}
         category={column}
         isDragging={isDragging}
-        dragHandleProps={dragHandleProps}/>
+        dragHandleProps={dragHandleProps}
+        onDoubleClick={() => this.openEditCategoryModal({category: column})}
+      />
     );
   };
 
@@ -50,7 +50,7 @@ export class BoardContainer extends React.Component<BoardContainerProps, BoardCo
         this.newLink);
 
     return uiStore.openDialog(
-      <AddContentDialog
+      <UpdateContentDialog
         label={'URL'}
         onSubmit={onSubmit}
         closeModal={uiStore.closeDialog}
@@ -93,13 +93,36 @@ export class BoardContainer extends React.Component<BoardContainerProps, BoardCo
         this.newCategory);
 
     return uiStore.openDialog(
-      <AddContentDialog
+      <UpdateContentDialog
         label={'Title'}
         defaultValue={defaultCategoryName}
         onSubmit={onSubmit}
         closeModal={uiStore.closeDialog}
         title={'Add Category'}
         msg={'You can add new category with typing title in this box.'}
+      />
+    )
+  };
+
+  openEditCategoryModal = ({category}) => {
+    const uiStore = this.props[STORE_UI] as UiStore;
+    const boardStore = this.props[STORE_BOARD] as BoardStore;
+    const onSubmit = ({value: title}) =>
+      uiStore.closeDialogWithActions({category, title, message: 'Category has been saved'},
+        boardStore.updateCategory);
+    const deleteCategory = () =>
+      uiStore.closeDialogWithActions({category, message: 'Category has been deleted'},
+        boardStore.deleteCategory);
+
+    return uiStore.openDialog(
+      <UpdateContentDialog
+        label={'Title'}
+        defaultValue={category.title}
+        onSubmit={onSubmit}
+        deleteContent={deleteCategory}
+        closeModal={uiStore.closeDialog}
+        title={'Edit Category'}
+        msg={'You can edit category with typing title in this box.'}
       />
     )
   };
@@ -114,7 +137,7 @@ export class BoardContainer extends React.Component<BoardContainerProps, BoardCo
       );
 
     return uiStore.openDialog(
-      <AddContentDialog
+      <UpdateContentDialog
         label={'Title'}
         onSubmit={onSubmit}
         closeModal={uiStore.closeDialog}

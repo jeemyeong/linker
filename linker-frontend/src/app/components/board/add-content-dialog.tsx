@@ -6,20 +6,21 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import Button from '@material-ui/core/Button';
 
-interface AddContentProps {
+interface UpdateContentProps {
   onSubmit: { ({value} : {value: string}): Promise<void> }
   closeModal: { (): void }
   msg: string
   title: string
   label?: string
   defaultValue?: string
+  deleteContent?: {(): void}
 }
 
-interface AddContentState {
+interface UpdateContentState {
   value: string;
 }
 
-export class AddContentDialog extends React.Component<AddContentProps, AddContentState> {
+export class UpdateContentDialog extends React.Component<UpdateContentProps, UpdateContentState> {
   state = {
     value: this.props.defaultValue || ''
   };
@@ -31,7 +32,7 @@ export class AddContentDialog extends React.Component<AddContentProps, AddConten
   onSubmit = () => this.props.onSubmit({value: this.state.value})
 
   render() {
-    const { closeModal, msg, title, label } = this.props;
+    const { deleteContent, closeModal, msg, title, label } = this.props;
     return (
       <div>
         <DialogTitle>{title}</DialogTitle>
@@ -53,6 +54,11 @@ export class AddContentDialog extends React.Component<AddContentProps, AddConten
           />
         </DialogContent>
         <DialogActions>
+          {deleteContent &&
+            <Button onClick={deleteContent} color="primary">
+              Delete
+            </Button>
+          }
           <Button onClick={closeModal} color="primary">
             Cancel
           </Button>
@@ -65,4 +71,4 @@ export class AddContentDialog extends React.Component<AddContentProps, AddConten
   }
 }
 
-export default AddContentDialog;
+export default UpdateContentDialog;
