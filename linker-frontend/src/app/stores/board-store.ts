@@ -1,10 +1,10 @@
 import { action, observable, runInAction, toJS } from 'mobx';
-import ApiCall from 'app/network/api-call';
 import * as R from 'ramda';
 import { BoardData } from 'app/type/board-data';
 import { LinkData } from 'app/type/link-data';
 import { CategoryData } from 'app/type/category-data';
 import { UpdateBoardCommand } from "app/type/update-board-command";
+import { ApiCall } from 'app/network/api-call';
 
 export class BoardStore {
   constructor(board: BoardData = null) {
@@ -50,7 +50,8 @@ export class BoardStore {
       this.isLoading = false;
       this.maxLinkId = Math.max(...R.unnest(this.board.categories.map(category => R.unnest(category.links.map(link => link.id))))) + 1;
       this.maxCategoryId = Math.max(...this.board.categories.map(category => category.id)) + 1;
-    }));
+    }))
+  ;
 
   @action
   reorderCategories = ({originIndex, newIndex}) => {

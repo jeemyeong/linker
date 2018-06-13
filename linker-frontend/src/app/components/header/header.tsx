@@ -28,10 +28,10 @@ const StyledButton = styled(Button)`
 `;
 
 
-export const Header = () => (
+export const Header = ({onClickSignIn}) => (
   <Container>
     <StickyContainer>
-      <StyledButton>Sign In</StyledButton>
+      <StyledButton onClick={onClickSignIn}>Sign In</StyledButton>
     </StickyContainer>
   </Container>
 );

@@ -12,6 +12,8 @@ import { Main } from 'app/components/main/main';
 import { STORE_ROUTER, STORE_UI } from 'app/constants/stores';
 import { Nav } from 'app/components/nav/nav';
 import { sizes } from 'app/constants/size';
+import { SignIn } from 'app/components/sign-in/sign-in';
+import { ApiCall } from 'app/network/api-call';
 
 const Container = styled.div`
   display: flex;
@@ -63,7 +65,25 @@ export class Linker extends React.Component<LinkerAppProps, LinkerState> {
         </LeftSide>
 
         <RightSide>
-          <Header/>
+          <Header
+            onClickSignIn={() =>uiStore.openDialog({
+              DialogComponent: <SignIn
+                onFailure={(response) => {
+                  uiStore.closeDialogWithActions({message: `Error: ${response.error}`})
+                }}
+                onSuccess={(gToken) => {
+                  uiStore.closeDialogWithActions(
+                    () => ApiCall.signIn({gToken}).then(
+                      () => uiStore.openSnackbar({message: 'Successful SignIn'}),
+                    ).catch(
+                      (err) => uiStore.openSnackbar({message: `${err}`})
+                    )
+                  )
+                }}
+                closeModal={uiStore.closeDialog}
+              />
+            })}
+          />
           <Main
             {...this.props}
           />

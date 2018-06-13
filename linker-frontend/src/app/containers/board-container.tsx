@@ -15,8 +15,7 @@ import { CategoryData } from 'app/type/category-data';
 import { LinkData } from 'app/type/link-data';
 import { ColumnContainer } from 'app/libs/board/column';
 import { AddCategoryButton } from 'app/components/board/add-category-button';
-import * as R from 'ramda';
-import UpdateContentDialog from 'app/components/board/add-content-dialog';
+import UpdateContentDialog from 'app/components/board/update-content-dialog';
 
 const Container = styled.div``;
 
@@ -45,19 +44,22 @@ export class BoardContainer extends React.Component<BoardContainerProps, BoardCo
 
   openAddLinkModal = (category: CategoryData) => {
     const uiStore = this.props[STORE_UI] as UiStore;
-    const onSubmit = ({value: url}) =>
-      uiStore.closeDialogWithActions({category, url, message: 'Link has been saved'},
-        this.newLink);
 
-    return uiStore.openDialog(
-      <UpdateContentDialog
-        label={'URL'}
-        onSubmit={onSubmit}
-        closeModal={uiStore.closeDialog}
-        title={'Add Link'}
-        msg={'You can add link with typing URL in this box.'}
-      />
-    )
+    return uiStore.openDialog({
+      DialogComponent: <UpdateContentDialog
+          label={'URL'}
+          onSubmit={({value: url}) => uiStore.closeDialogWithActions(
+            () => this.newLink({category, url}).then(
+              () => uiStore.openSnackbar({message: 'Link has been saved'})
+            ).catch(
+              (err) => uiStore.openSnackbar({message: `${err}`})
+            )
+          )}
+          closeModal={uiStore.closeDialog}
+          title={'Add Link'}
+          msg={'You can add link with typing URL in this box.'}
+        />
+    })
   };
 
   renderAddItemButton = (index: number) => {
@@ -88,63 +90,75 @@ export class BoardContainer extends React.Component<BoardContainerProps, BoardCo
 
   openAddCategoryModal = ({defaultCategoryName}) => {
     const uiStore = this.props[STORE_UI] as UiStore;
-    const onSubmit = ({value: title}) =>
-      uiStore.closeDialogWithActions({title, message: 'Category has been saved'},
-        this.newCategory);
 
-    return uiStore.openDialog(
-      <UpdateContentDialog
+    return uiStore.openDialog({
+      DialogComponent: <UpdateContentDialog
         label={'Title'}
         defaultValue={defaultCategoryName}
-        onSubmit={onSubmit}
+        onSubmit={({value: title}) => uiStore.closeDialogWithActions(
+          () => this.newCategory({title}).then(
+            () => uiStore.openSnackbar({message: 'Category has been saved'})
+          ).catch(
+            (err) => uiStore.openSnackbar({message: `${err}`})
+          )
+        )}
         closeModal={uiStore.closeDialog}
         title={'Add Category'}
         msg={'You can add new category with typing title in this box.'}
       />
-    )
+    })
   };
 
   openEditCategoryModal = ({category}) => {
     const uiStore = this.props[STORE_UI] as UiStore;
     const boardStore = this.props[STORE_BOARD] as BoardStore;
-    const onSubmit = ({value: title}) =>
-      uiStore.closeDialogWithActions({category, title, message: 'Category has been saved'},
-        boardStore.updateCategory);
-    const deleteCategory = () =>
-      uiStore.closeDialogWithActions({category, message: 'Category has been deleted'},
-        boardStore.deleteCategory);
 
-    return uiStore.openDialog(
-      <UpdateContentDialog
+    return uiStore.openDialog({
+      DialogComponent: <UpdateContentDialog
         label={'Title'}
         defaultValue={category.title}
-        onSubmit={onSubmit}
-        deleteContent={deleteCategory}
+        onSubmit={({value: title}) => uiStore.closeDialogWithActions(
+          () => boardStore.updateCategory({category, title}).then(
+            () => uiStore.openSnackbar({message: 'Category has been saved'})
+          ).catch(
+            (err) => uiStore.openSnackbar({message: `${err}`})
+          )
+        )}
+        onDelete={() => uiStore.closeDialogWithActions(
+          () => boardStore.deleteCategory({category}).then(
+            () => uiStore.openSnackbar({message: 'Category has been deleted'})
+          ).catch(
+            (err) => uiStore.openSnackbar({message: `${err}`})
+          )
+        )}
         closeModal={uiStore.closeDialog}
         title={'Edit Category'}
         msg={'You can edit category with typing title in this box.'}
       />
-    )
+    })
   };
 
   openAddLinkWithDefaultCategory = ({defaultCategoryName}) => {
     const uiStore = this.props[STORE_UI] as UiStore;
     const boardStore = this.props[STORE_BOARD] as BoardStore;
-    const onSubmit = ({value: url}) =>
-      uiStore.closeDialogWithActions({title: defaultCategoryName, message: 'Link has been saved'},
-        this.newCategory,
-        R.tap(() => this.newLink({category: boardStore.board.categories[0], url})),
-      );
 
-    return uiStore.openDialog(
-      <UpdateContentDialog
+    return uiStore.openDialog({
+      DialogComponent: <UpdateContentDialog
         label={'Title'}
-        onSubmit={onSubmit}
+        onSubmit={({value: url}) => uiStore.closeDialogWithActions(
+          () => this.newCategory({title: defaultCategoryName}).then(
+          () => this.newLink({category: boardStore.board.categories[0], url})
+          ).then(
+            () => uiStore.openSnackbar({message: 'Link has been saved'}),
+          ).catch(
+            (err) => uiStore.openSnackbar({message: `${err}`})
+          ),
+        )}
         closeModal={uiStore.closeDialog}
         title={'Add Link'}
         msg={'You can add link with typing URL in this box.'}
       />
-    )
+    })
   };
 
   newCategory = ({title}: {title: string}) => {
