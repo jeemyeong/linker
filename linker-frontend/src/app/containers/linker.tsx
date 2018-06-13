@@ -9,11 +9,11 @@ import { Snackbar } from 'app/components/ui/snackbar';
 import { DialogModal } from 'app/components/ui/dialog-modal';
 import Header from 'app/components/header/header';
 import { Main } from 'app/components/main/main';
-import { STORE_ROUTER, STORE_UI } from 'app/constants/stores';
+import { STORE_ROUTER, STORE_UI, STORE_USER } from 'app/constants/stores';
 import { Nav } from 'app/components/nav/nav';
 import { sizes } from 'app/constants/size';
 import { SignIn } from 'app/components/sign-in/sign-in';
-import { ApiCall } from 'app/network/api-call';
+import UserStore from 'app/stores/user-store';
 
 const Container = styled.div`
   display: flex;
@@ -32,17 +32,16 @@ const RightSide = styled.div`
 
 export interface LinkerAppProps extends RouteComponentProps<any> {
   /** MobX Stores will be injected via @inject() **/
-  // [STORE_ROUTER]: RouterStore;
-  // [STOURE_TODO]: UserStore;
 }
 
 export interface LinkerState {}
 
-@inject(STORE_UI, STORE_ROUTER)
+@inject(STORE_UI, STORE_ROUTER, STORE_USER)
 @observer
 export class Linker extends React.Component<LinkerAppProps, LinkerState> {
   render() {
     const uiStore = this.props[STORE_UI] as UiStore;
+    const userStore = this.props[STORE_USER] as UserStore;
     return (
       <Container>
         {
@@ -73,7 +72,7 @@ export class Linker extends React.Component<LinkerAppProps, LinkerState> {
                 }}
                 onSuccess={(gToken) => {
                   uiStore.closeDialogWithActions(
-                    () => ApiCall.signIn({gToken}).then(
+                    () => userStore.signIn({gToken}).then(
                       () => uiStore.openSnackbar({message: 'Successful SignIn'}),
                     ).catch(
                       (err) => uiStore.openSnackbar({message: `${err}`})

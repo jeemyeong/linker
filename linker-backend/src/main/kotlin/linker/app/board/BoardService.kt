@@ -20,6 +20,7 @@ import java.util.*
 interface BoardService {
     fun findBoardById(id: Long): Optional<Board>
     fun updateBoard(command: UpdateBoard): Board
+    fun findByUserId(userId: Long): List<Board>
 }
 
 @Service
@@ -47,5 +48,9 @@ class BoardServiceImpl: BoardService {
         }
         boardRepository.save(board)
         return findBoardById(board.id).get()
+    }
+
+    override fun findByUserId(userId: Long): List<Board> {
+        return boardRepository.findByUserId(userId)
     }
 }
