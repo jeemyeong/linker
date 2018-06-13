@@ -118,6 +118,12 @@ export class BoardStore {
   updateCategory = ({category, title}: {category: CategoryData, title: string}) => {
     this.board.categories.find(c => c.id == category.id).title = title;
     return this.update()
+  };
+
+  @action
+  deleteCategory = ({category}: {category: CategoryData}) => {
+    this.board.categories = this.board.categories.filter(c => c.id != category.id)
+    return this.update()
   }
 }
 

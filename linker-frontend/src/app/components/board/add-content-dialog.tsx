@@ -13,6 +13,7 @@ interface UpdateContentProps {
   title: string
   label?: string
   defaultValue?: string
+  deleteContent?: {(): void}
 }
 
 interface UpdateContentState {
@@ -31,7 +32,7 @@ export class UpdateContentDialog extends React.Component<UpdateContentProps, Upd
   onSubmit = () => this.props.onSubmit({value: this.state.value})
 
   render() {
-    const { closeModal, msg, title, label } = this.props;
+    const { deleteContent, closeModal, msg, title, label } = this.props;
     return (
       <div>
         <DialogTitle>{title}</DialogTitle>
@@ -53,6 +54,11 @@ export class UpdateContentDialog extends React.Component<UpdateContentProps, Upd
           />
         </DialogContent>
         <DialogActions>
+          {deleteContent &&
+            <Button onClick={deleteContent} color="primary">
+              Delete
+            </Button>
+          }
           <Button onClick={closeModal} color="primary">
             Cancel
           </Button>

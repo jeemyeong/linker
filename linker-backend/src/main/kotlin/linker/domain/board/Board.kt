@@ -17,7 +17,7 @@ data class Board(
         var title: String,
         @field:Column(name = "user_id")
         var userId: Long,
-        @field:OneToMany(targetEntity = Category::class, cascade = [CascadeType.ALL])
+        @field:OneToMany(targetEntity = Category::class, cascade = [CascadeType.ALL], orphanRemoval = true)
         @field:JoinColumn(name = "board_id")
         var categories: List<Category>
 )
