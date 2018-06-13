@@ -6,7 +6,6 @@ import { LinkCard } from 'app/components/board/link-card';
 import ColumnTitle from 'app/components/board/column-title';
 import UiStore from 'app/stores/ui-store';
 import { AddLinkButton } from 'app/components/board/add-link-button';
-import * as R from 'ramda';
 import AddContentDialog from 'app/components/board/add-content-dialog';
 import { Loader } from 'app/components/ui/loader';
 import BoardStore from 'app/stores/board-store';
@@ -17,6 +16,7 @@ import { CategoryData } from 'app/type/category-data';
 import { LinkData } from 'app/type/link-data';
 import { ColumnContainer } from 'app/libs/board/column';
 import { AddCategoryButton } from 'app/components/board/add-category-button';
+import * as R from 'ramda';
 
 const Container = styled.div``;
 
@@ -29,7 +29,7 @@ export interface BoardContainerState {}
 export class BoardContainer extends React.Component<BoardContainerProps, BoardContainerState> {
 
   componentWillReact() {
-    console.log("BoardContainer: I will re-render, since the props has changed!");
+    console.log('BoardContainer: I will re-render, since the props has changed!');
   }
 
   renderColumnTitle = (column, isDragging, dragHandleProps) => {
@@ -46,25 +46,18 @@ export class BoardContainer extends React.Component<BoardContainerProps, BoardCo
   openAddLinkModal = (category: CategoryData) => {
     const uiStore = this.props[STORE_UI] as UiStore;
     const onSubmit = ({value: url}) =>
-      (R as any).pipeP(() => Promise.resolve(),
-        uiStore.openLoader,
-        () => this.newLink({category, url}),
-        uiStore.closeDialog,
-        uiStore.closeLoader,
-        R.always({message: "Link has been saved"}),
-        uiStore.openSnackbar)();
+      uiStore.closeDialogWithActions({category, url, message: 'Link has been saved'},
+        this.newLink);
 
-    return uiStore.openDialog({
-      DialogComponent: (
-        <AddContentDialog
-          label={'URL'}
-          onSubmit={onSubmit}
-          closeModal={uiStore.closeDialog}
-          title={'Add Link'}
-          msg={'You can add link with typing URL in this box.'}
-        />
-      )
-    })
+    return uiStore.openDialog(
+      <AddContentDialog
+        label={'URL'}
+        onSubmit={onSubmit}
+        closeModal={uiStore.closeDialog}
+        title={'Add Link'}
+        msg={'You can add link with typing URL in this box.'}
+      />
+    )
   };
 
   renderAddItemButton = (index: number) => {
@@ -96,52 +89,39 @@ export class BoardContainer extends React.Component<BoardContainerProps, BoardCo
   openAddCategoryModal = ({defaultCategoryName}) => {
     const uiStore = this.props[STORE_UI] as UiStore;
     const onSubmit = ({value: title}) =>
-      (R as any).pipe(() => Promise.resolve(),
-        uiStore.openLoader,
-        () => this.newCategory({title}),
-        uiStore.closeDialog,
-        uiStore.closeLoader,
-        R.always({message: "Category has been saved"}),
-        uiStore.openSnackbar)();
+      uiStore.closeDialogWithActions({title, message: 'Category has been saved'},
+        this.newCategory);
 
-    return uiStore.openDialog({
-      DialogComponent: (
-        <AddContentDialog
-          label={'Title'}
-          defaultValue={defaultCategoryName}
-          onSubmit={onSubmit}
-          closeModal={uiStore.closeDialog}
-          title={'Add Category'}
-          msg={'You can add new category with typing title in this box.'}
-        />
-      )
-    })
+    return uiStore.openDialog(
+      <AddContentDialog
+        label={'Title'}
+        defaultValue={defaultCategoryName}
+        onSubmit={onSubmit}
+        closeModal={uiStore.closeDialog}
+        title={'Add Category'}
+        msg={'You can add new category with typing title in this box.'}
+      />
+    )
   };
 
   openAddLinkWithDefaultCategory = ({defaultCategoryName}) => {
     const uiStore = this.props[STORE_UI] as UiStore;
     const boardStore = this.props[STORE_BOARD] as BoardStore;
     const onSubmit = ({value: url}) =>
-      (R as any).pipe(() => Promise.resolve(),
-        uiStore.openLoader,
-        () => this.newCategory({title: defaultCategoryName}),
-        () => this.newLink({category: boardStore.board.categories[0], url}),
-        uiStore.closeDialog,
-        uiStore.closeLoader,
-        R.always({message: "Link has been saved"}),
-        uiStore.openSnackbar)();
+      uiStore.closeDialogWithActions({title: defaultCategoryName, message: 'Link has been saved'},
+        this.newCategory,
+        R.tap(() => this.newLink({category: boardStore.board.categories[0], url})),
+      );
 
-    return uiStore.openDialog({
-      DialogComponent: (
-        <AddContentDialog
-          label={'Title'}
-          onSubmit={onSubmit}
-          closeModal={uiStore.closeDialog}
-          title={'Add Link'}
-          msg={'You can add link with typing URL in this box.'}
-        />
-      )
-    })
+    return uiStore.openDialog(
+      <AddContentDialog
+        label={'Title'}
+        onSubmit={onSubmit}
+        closeModal={uiStore.closeDialog}
+        title={'Add Link'}
+        msg={'You can add link with typing URL in this box.'}
+      />
+    )
   };
 
   newCategory = ({title}: {title: string}) => {
@@ -166,7 +146,7 @@ export class BoardContainer extends React.Component<BoardContainerProps, BoardCo
   };
 
   render() {
-    console.log("BoardContainer is rendering");
+    console.log('BoardContainer is rendering');
     const boardStore = this.props[STORE_BOARD] as BoardStore;
     const board = boardStore.board;
     const isLoading = boardStore.isLoading;
@@ -181,7 +161,7 @@ export class BoardContainer extends React.Component<BoardContainerProps, BoardCo
       <Container>
         <Board
           board={board}
-          itemKey={"links"}
+          itemKey={'links'}
           reorderColumn={boardStore.reorderCategories}
           reorderItem={boardStore.reorderLink}
           renderItem={this.renderItem}
