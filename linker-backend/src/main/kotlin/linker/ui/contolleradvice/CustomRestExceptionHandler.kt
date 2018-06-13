@@ -1,6 +1,6 @@
 package linker.ui.contolleradvice
 
-import linker.infra.exception.ApiError
+import linker.infra.exceptions.ApiError
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.ResponseStatus
+import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.context.request.WebRequest
 import java.net.MalformedURLException
 import javax.validation.ConstraintViolationException
@@ -33,6 +34,14 @@ class CustomRestExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     fun handleMalformedURL(ex: MalformedURLException, request: WebRequest): ResponseEntity<ApiError> {
+        val error = ex.localizedMessage + " " + ex.message + " "
+        val apiError = ApiError(HttpStatus.BAD_REQUEST, ex.localizedMessage, listOf(error))
+        return ResponseEntity(apiError, HttpHeaders(), apiError.status)
+    }
+
+    @ExceptionHandler(HttpClientErrorException::class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    fun handleRestError(ex: HttpClientErrorException, request: WebRequest): ResponseEntity<ApiError> {
         val error = ex.localizedMessage + " " + ex.message + " "
         val apiError = ApiError(HttpStatus.BAD_REQUEST, ex.localizedMessage, listOf(error))
         return ResponseEntity(apiError, HttpHeaders(), apiError.status)

@@ -1,7 +1,6 @@
 package linker.domain.user
 
 import javax.persistence.*
-import javax.validation.constraints.Email
 
 /**
  * Created by Jeemyeong.
@@ -15,7 +14,11 @@ data class User(
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         var id: Long = 0,
-        @field:Column(nullable = false)
-        @field:Email
-        val email: String
+        @field:Column(name = "email", nullable = false, unique=true)
+        val email: String,
+        var googleId: String?,
+        var name: String?,
+        var link: String?,
+        var locale: String?,
+        var picture: String?
 )

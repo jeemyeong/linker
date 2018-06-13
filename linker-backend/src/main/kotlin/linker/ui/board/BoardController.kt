@@ -36,7 +36,6 @@ class BoardController {
         }.orElse(ResponseEntity("Board is not present", HttpStatus.BAD_REQUEST))
     }
 
-
     /**
      * Query
      */
