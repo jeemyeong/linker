@@ -17,7 +17,7 @@ import java.util.*
 
 interface UserService {
     fun findUserById(id: Long): Optional<User>
-    fun signIn(googleToken: String): User
+    fun signInWithGoogle(googleToken: String): User
 }
 
 @Service
@@ -29,7 +29,7 @@ class UserServiceImpl: UserService {
 
     override fun findUserById(id: Long): Optional<User> = userRepository.findById(id)
 
-    override fun signIn(googleToken: String): User {
+    override fun signInWithGoogle(googleToken: String): User {
         val googleOAuthResponse: GoogleOAuthResponse = googleAuthRestManager.getProfileFromGoogle(googleToken)
         var user = userRepository.findByEmail(googleOAuthResponse.email)
         if (user == null) {
@@ -39,7 +39,9 @@ class UserServiceImpl: UserService {
                     name = googleOAuthResponse.name,
                     link = googleOAuthResponse.link,
                     locale = googleOAuthResponse.locale,
-                    picture = googleOAuthResponse.picture
+                    picture = googleOAuthResponse.picture,
+                    provider = "Google", // TODO: Change with enum
+                    role = "user"
             )
         } else {
             user.googleId = googleOAuthResponse.id
@@ -47,6 +49,8 @@ class UserServiceImpl: UserService {
             user.link = googleOAuthResponse.link
             user.locale = googleOAuthResponse.locale
             user.picture = googleOAuthResponse.picture
+            user.provider = "Google" // TODO: Change with enum
+            user.role = "user"
         }
         userRepository.save(user)
         return findUserById(user.id).get()

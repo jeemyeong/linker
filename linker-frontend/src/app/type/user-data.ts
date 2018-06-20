@@ -1,7 +1,12 @@
-import { BoardData } from 'app/type/board-data';
-
 export interface UserData {
   id: number
   email: string
-  boards?: Array<BoardData>
+  googleId?: string
+  name: string
+  link?: string
+  locale?: string
+  picture?: string
+  provider?: string
+  role?: string
+
 }

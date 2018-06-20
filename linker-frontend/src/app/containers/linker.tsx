@@ -72,7 +72,7 @@ export class Linker extends React.Component<LinkerAppProps, LinkerState> {
                 }}
                 onSuccess={(gToken) => {
                   uiStore.closeDialogWithActions(
-                    () => userStore.signIn({gToken}).then(
+                    () => userStore.signInWithGoogle({gToken}).then(
                       () => uiStore.openSnackbar({message: 'Successful SignIn'}),
                     ).catch(
                       (err) => uiStore.openSnackbar({message: `${err}`})

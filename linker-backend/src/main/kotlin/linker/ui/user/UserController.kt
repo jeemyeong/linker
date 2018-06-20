@@ -1,11 +1,15 @@
 package linker.ui.user
 
-import linker.app.board.BoardService
 import linker.app.user.UserCommand
 import linker.app.user.UserService
+import linker.infra.annotation.Authenticated
+import linker.infra.auth.Role
+import linker.infra.helper.SignHelper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
+import javax.servlet.http.Cookie
+import javax.servlet.http.HttpServletResponse
 
 /**
  * Created by Jeemyeong.
@@ -13,7 +17,7 @@ import org.springframework.web.bind.annotation.*
  * Date: 14/06/2018
  * Time: 12:26 AM
  */
-@CrossOrigin
+@CrossOrigin(value = ["http://localhost:3000"], allowCredentials = "true")
 @RestController
 @RequestMapping(value = ["/user"])
 @Controller
@@ -21,11 +25,28 @@ class UserController {
     @Autowired
     lateinit var userService: UserService
     @Autowired
-    lateinit var boardService: BoardService
+    lateinit var signHelper: SignHelper
+
     @RequestMapping(value = ["/sign-in/google"], method = [(RequestMethod.POST)])
-    fun signIn(@RequestBody signInCommand: UserCommand.SignInCommand): UserDto {
-        val user = userService.signIn(signInCommand.accessToken)
-        val boards = boardService.findByUserId(user.id)
-        return UserDto.fromDomain(user, boards)
+    fun signInWithGoogle(@RequestBody signInCommand: UserCommand.SignInCommand, response: HttpServletResponse): UserDto {
+        val user = userService.signInWithGoogle(signInCommand.accessToken)
+        val token = signHelper.createToken(user.id, listOf(Role.ROLE_CLIENT))
+        val cookie = Cookie("JWT", token)
+        cookie.domain = "localhost"
+        cookie.path = "/"
+        response.addCookie(cookie)
+        return UserDto.fromDomain(user)
+    }
+
+    @Authenticated
+    @RequestMapping(value = ["/sign-in/token"], method = [(RequestMethod.GET)])
+    fun signInWithToken(response: HttpServletResponse): Any? {
+        val user = userService.findUserById(signHelper.getUserId()).orElseThrow { InternalError("Cannot find user") }
+        val token = signHelper.createToken(user.id, listOf(Role.ROLE_CLIENT))
+        val cookie = Cookie("JWT", token)
+        cookie.domain = "localhost"
+        cookie.path = "/"
+        response.addCookie(cookie)
+        return UserDto.fromDomain(user)
     }
 }

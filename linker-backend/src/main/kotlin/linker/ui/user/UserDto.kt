@@ -20,10 +20,12 @@ data class UserDto(
         val link: String?,
         val locale: String?,
         val picture: String?,
-        val boards: List<BoardDto>
+        val provider: String?,
+        val role: String?,
+        val boards: List<BoardDto>?
 ) {
     companion object {
-        fun fromDomain(user: User, boards: List<Board>) = UserDto(
+        fun fromDomain(user: User, boards: List<Board>? = null) = UserDto(
                 id = user.id,
                 email = user.email,
                 googleId = user.googleId,
@@ -31,7 +33,9 @@ data class UserDto(
                 link = user.link,
                 locale = user.locale,
                 picture = user.picture,
-                boards = boards.map { BoardDto.fromDomain(it) }
+                provider = user.provider,
+                role = user.role,
+                boards = boards?.map { BoardDto.fromDomain(it) }
         )
     }
 }

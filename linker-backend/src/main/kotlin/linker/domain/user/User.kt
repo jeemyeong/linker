@@ -20,5 +20,7 @@ data class User(
         var name: String?,
         var link: String?,
         var locale: String?,
-        var picture: String?
+        var picture: String?,
+        var provider: String?,
+        var role: String?
 )

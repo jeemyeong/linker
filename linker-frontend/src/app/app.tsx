@@ -8,6 +8,10 @@ import { createStores } from 'app/stores/createStore';
 import { useStrict } from 'mobx';
 import { Provider } from 'mobx-react';
 import { Linker } from 'app/containers/linker';
+import axios from 'axios';
+
+// enable axios with cookie
+axios.defaults.withCredentials = true;
 
 // enable MobX strict mode
 useStrict(true);

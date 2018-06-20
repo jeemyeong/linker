@@ -10,12 +10,20 @@ export class UserStore {
   @observable public user?: UserData;
   @observable public authed: boolean = false;
 
-  public signIn = ({gToken}): Promise<void> => {
-    return ApiCall.signIn({gToken}).then(user => runInAction(() => {
-      this.user = user;
-      this.authed = true;
-    }))
-  }
+  public signInWithGoogle = ({gToken}): Promise<void> =>
+    ApiCall.signInWithGoogle({gToken})
+      .then(user => runInAction(() => {
+        this.user = user;
+        this.authed = true;
+      }));
+
+
+  public signInWithToken = () =>
+    ApiCall.signTestWithToken()
+      .then(user => runInAction(() => {
+        this.user = user;
+        this.authed = true;
+      }))
 }
 
 export default UserStore;

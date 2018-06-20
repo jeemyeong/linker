@@ -3,6 +3,9 @@ package linker.ui.board
 import linker.app.board.BoardCommand
 import linker.app.board.BoardService
 import linker.app.board.BoardVO
+import linker.infra.annotation.Authenticated
+import linker.infra.exceptions.TokenException
+import linker.infra.helper.SignHelper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -16,19 +19,25 @@ import org.springframework.web.bind.annotation.*
  * Time: 12:46 AM
  */
 
-@CrossOrigin
+@CrossOrigin(origins = ["http://localhost:3000"], allowCredentials = "true")
 @RestController
 @RequestMapping(value = ["/board"])
 @Controller
 class BoardController {
     @Autowired
     lateinit var boardService: BoardService
+    @Autowired
+    lateinit var signHelper: SignHelper
     /**
      * Command
      */
+    @Authenticated
     @RequestMapping(value = ["/{boardId}"], method = [(RequestMethod.PUT)])
     fun updateBoard(@PathVariable boardId: Long, @RequestBody board: BoardVO): ResponseEntity<Any> {
         return boardService.findBoardById(boardId).map {
+            if (it.userId != signHelper.getUserId()) {
+                throw TokenException("You cannot command this board")
+            }
             ResponseEntity<Any>(BoardDto.fromDomain(boardService.updateBoard(BoardCommand.UpdateBoard(
                     id = boardId,
                     board = board
