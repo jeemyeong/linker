@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { App, rootStore } from 'app/app';
-import { STORE_USER } from 'app/constants/stores';
+import { App } from 'app/app';
+import { initRender } from './init-render';
 
 const render = () =>
   ReactDOM.render(
@@ -9,9 +9,4 @@ const render = () =>
     document.getElementById('root')
   );
 
-rootStore[STORE_USER].signInWithToken()
-  .then( // render react DOM
-    () => render(),
-    () => render()
-  );
-
+initRender(render);
