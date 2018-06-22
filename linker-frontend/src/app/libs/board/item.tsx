@@ -4,6 +4,8 @@ import { DraggableProvided } from 'react-beautiful-dnd';
 import { RenderItemToJSXElement } from 'app/libs/board/board';
 import { colors } from 'app/constants/colors';
 import { observer } from "mobx-react";
+import * as debug from 'debug';
+const log = debug('application:item.tsx');
 
 const Container = styled.div`
   margin: 5px 0px 5px 0px;
@@ -33,7 +35,7 @@ export default class Item<T> extends React.Component<
 
   componentDidMount() {
     // cdm is called when item is put to another column
-    console.log("CDM / content: " + this.props.item["content"])
+    log("componentDidMount: " + this.props.item["content"])
   }
 
   componentDidUpdate() {
@@ -41,7 +43,7 @@ export default class Item<T> extends React.Component<
   }
 
   componentWillUnmount() {
-    console.log("CWU / content: " + this.props.item["content"])
+    log("componentWillUnmount: " + this.props.item["content"])
   }
 
   render() {

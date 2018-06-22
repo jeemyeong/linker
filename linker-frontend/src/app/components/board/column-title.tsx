@@ -5,6 +5,8 @@ import { colors } from 'app/constants/colors';
 import { CategoryData } from 'app/type/category-data';
 import { observer } from "mobx-react";
 import { sizes } from "app/constants/size";
+import * as debug from 'debug';
+const log = debug('application:column-title.tsx');
 
 const Container = styled.div`
   border-top-left-radius: ${sizes.borderRadius}px;
@@ -39,7 +41,7 @@ interface ColumnTitleProps {
 export default class ColumnTitle extends React.Component<ColumnTitleProps, {}> {
   render() {
     const { category, dragHandleProps, isDragging, onDoubleClick } = this.props;
-    console.log("ColumnTitle: render");
+    log("render: " + category.title);
     return (
       <Container {...dragHandleProps} isDragging={isDragging}>
         <Title onDoubleClick={onDoubleClick}>{category.title}</Title>

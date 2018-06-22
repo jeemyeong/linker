@@ -1,4 +1,4 @@
-import debug from 'debug';
+import * as debug from 'debug';
 import { __PRODUCTION__ } from './config';
 import { rootStore } from 'app/app';
 import { STORE_USER } from 'app/constants/stores';

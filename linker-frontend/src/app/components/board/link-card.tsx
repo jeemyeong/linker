@@ -6,6 +6,8 @@ import { colors } from 'app/constants/colors';
 import { sample } from 'app/util/sample';
 import * as R from 'ramda';
 import { sizes } from 'app/constants/size';
+import * as debug from 'debug';
+const log = debug('application:link-card.tsx');
 
 const Card = styled.div`
   margin-top: 5px;
@@ -215,7 +217,7 @@ export class LinkCard extends React.Component<LinkProps, {}> {
 
   render() {
     const { link, deleteLink, isDragging } = this.props;
-    console.log("LinkCard is rendering", link.content);
+    log("render: " + link.url);
     const title = link.ogTitle ? link.ogTitle + ": " + link.url.replace(/^.*\/\//, "") : link.url.replace(/^.*\/\//, "").replace(/^www./, "");
     const ellipsedTitle= ellipseStr(title, 34);
     return (

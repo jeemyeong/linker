@@ -8,6 +8,8 @@ import Item from './item';
 import styled from 'styled-components';
 import { BoardItem, RenderItemToJSXElement } from './board';
 import { observer } from "mobx-react";
+import * as debug from 'debug';
+const log = debug('application:item-list.tsx');
 
 const Wrapper: any = styled.div`
   background-color: 'transparent';
@@ -111,10 +113,10 @@ export default class ItemList<T extends BoardItem> extends React.Component<
   ItemListState
 > {
   componentWillUnmount() {
-    console.log("ItemList CWU")
+    log("componentWillUnmount")
   }
   componentDidMount() {
-    console.log("ItemList CDM")
+    log("componentDidMount")
   }
   render() {
     const {

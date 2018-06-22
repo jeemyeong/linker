@@ -16,6 +16,8 @@ import { LinkData } from 'app/type/link-data';
 import { ColumnContainer } from 'app/libs/board/column';
 import { AddCategoryButton } from 'app/components/board/add-category-button';
 import UpdateContentDialog from 'app/components/board/update-content-dialog';
+import * as debug from 'debug';
+const log = debug('application:board-container.tsx');
 
 const Container = styled.div``;
 
@@ -28,7 +30,7 @@ export interface BoardContainerState {}
 export class BoardContainer extends React.Component<BoardContainerProps, BoardContainerState> {
 
   componentWillReact() {
-    console.log('BoardContainer: I will re-render, since the props has changed!');
+    log('componentWillReact');
   }
 
   renderColumnTitle = (column, isDragging, dragHandleProps) => {
@@ -183,7 +185,7 @@ export class BoardContainer extends React.Component<BoardContainerProps, BoardCo
   };
 
   render() {
-    console.log('BoardContainer is rendering');
+    log('render');
     const boardStore = this.props[STORE_BOARD] as BoardStore;
     const board = boardStore.board;
     const isLoading = boardStore.isLoading;
