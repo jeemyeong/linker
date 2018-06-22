@@ -21,7 +21,7 @@ data class Category(
         var order: Int,
         @field:Column(name = "board_id")
         var boardId: Long,
-        @field:OneToMany(targetEntity = Link::class, cascade = [CascadeType.ALL], orphanRemoval = true)
+        @field:OneToMany(targetEntity = Link::class, cascade = [CascadeType.ALL])
         @field:JoinColumn(name = "category_id")
         var links: List<Link>
 )
