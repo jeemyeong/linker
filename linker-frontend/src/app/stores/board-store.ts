@@ -51,6 +51,7 @@ export class BoardStore {
       this.maxLinkId = Math.max(...R.unnest(this.board.categories.map(category => R.unnest(category.links.map(link => link.id))))) + 1;
       this.maxCategoryId = Math.max(...this.board.categories.map(category => category.id)) + 1;
     }))
+    .catch(() => alert("Unknown Error") || location.reload(true))
   ;
 
   @action
