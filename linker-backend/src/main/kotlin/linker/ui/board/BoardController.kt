@@ -38,7 +38,7 @@ class BoardController {
             if (it.userId != signHelper.getUserId()) {
                 throw TokenException("You cannot command this board")
             }
-            ResponseEntity<Any>(BoardDto.fromDomain(boardService.updateBoard(BoardCommand.UpdateBoard(
+            ResponseEntity<Any>(BoardDto.fromDomain(boardService.updateBoard(it.userId, BoardCommand.UpdateBoard(
                     id = boardId,
                     board = board
             ))), HttpStatus.OK)

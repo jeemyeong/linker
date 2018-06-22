@@ -40,7 +40,7 @@ class UserController {
 
     @Authenticated
     @RequestMapping(value = ["/sign-in/token"], method = [(RequestMethod.GET)])
-    fun signInWithToken(response: HttpServletResponse): Any? {
+    fun signInWithToken(response: HttpServletResponse): UserDto {
         val user = userService.findUserById(signHelper.getUserId()).orElseThrow { InternalError("Cannot find user") }
         val token = signHelper.createToken(user.id, listOf(Role.ROLE_CLIENT))
         val cookie = Cookie("JWT", token)
@@ -51,7 +51,7 @@ class UserController {
     }
 
     @RequestMapping(value = ["/sign-out"], method = [(RequestMethod.GET)])
-    fun signOut(response: HttpServletResponse): Any? {
+    fun signOut(response: HttpServletResponse): Any {
         val cookie = Cookie("JWT", "deleted")
         cookie.domain = "localhost"
         cookie.path = "/"
