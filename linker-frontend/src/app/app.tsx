@@ -26,8 +26,7 @@ export const AppRouter = hot(module)(({ history }) => (
     <Router history={history}>
       <Switch>
         <Route exact path="/" component={EmptyBoard} />
-        <Route exact path="/board/" component={EmptyBoard} />
-        <Route path="/board/:boardId" component={Linker} />
+        <Route path="/user/:userId" component={Linker} />
       </Switch>
     </Router>
   </Root>

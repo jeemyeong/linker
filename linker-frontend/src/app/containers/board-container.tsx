@@ -10,13 +10,14 @@ import { Loader } from 'app/components/ui/loader';
 import BoardStore from 'app/stores/board-store';
 import { EmptyBoard } from 'app/components/ui/empty-board';
 import { RouteComponentProps } from 'react-router';
-import { STORE_BOARD, STORE_ROUTER, STORE_UI } from 'app/constants/stores';
+import { STORE_BOARD, STORE_ROUTER, STORE_UI, STORE_USER } from 'app/constants/stores';
 import { CategoryData } from 'app/type/category-data';
 import { LinkData } from 'app/type/link-data';
 import { ColumnContainer } from 'app/libs/board/column';
 import { AddCategoryButton } from 'app/components/board/add-category-button';
 import UpdateContentDialog from 'app/components/board/update-content-dialog';
 import * as debug from 'debug';
+import { ApiCall } from 'app/network/api-call';
 const log = debug('application:board-container.tsx');
 
 const Container = styled.div``;
@@ -25,7 +26,7 @@ export interface BoardContainerProps extends RouteComponentProps<any> {}
 
 export interface BoardContainerState {}
 
-@inject(STORE_UI, STORE_BOARD, STORE_ROUTER)
+@inject(STORE_UI, STORE_BOARD, STORE_ROUTER, STORE_USER)
 @observer
 export class BoardContainer extends React.Component<BoardContainerProps, BoardContainerState> {
 
@@ -180,8 +181,17 @@ export class BoardContainer extends React.Component<BoardContainerProps, BoardCo
 
   componentDidMount() {
     const boardStore = this.props[STORE_BOARD] as BoardStore;
-    const boardId = this.props.match.params.boardId;
-    boardStore.getBoard(boardId);
+    const userId = this.props.match.params.userId;
+    ApiCall.getUserInfo({userId}).then(
+      user => user.boards
+    ).then(
+      boards => {
+        boardStore.boards = boards
+        return boards
+      }
+    ).then(
+      boards => boards[0] && boardStore.getBoards(boards[0])
+    )
   };
 
   render() {

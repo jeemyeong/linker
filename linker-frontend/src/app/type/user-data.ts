@@ -8,5 +8,5 @@ export interface UserData {
   picture?: string
   provider?: string
   role?: string
-
+  boards? : number[]
 }

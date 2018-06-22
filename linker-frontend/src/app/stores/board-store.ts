@@ -10,15 +10,17 @@ export class BoardStore {
   constructor(board: BoardData = null) {
     this.board = board;
     this.isLoading = true;
+    this.boards = [];
   }
 
   @observable public board?: BoardData;
   @observable public isLoading: boolean;
+  @observable public boards: number[];
   private maxLinkId = 0;
   private maxCategoryId = 0;
 
   @action
-  getBoard = (id: number) => {
+  getBoards = (id: number) => {
     this.isLoading = true;
     return ApiCall.getBoard({id})
       .then(board => runInAction(() =>{
