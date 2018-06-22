@@ -25,6 +25,7 @@ const Title = styled.h2`
   font-weight: bold;
   text-align: left;
   padding: 5px 5px 5px 5px;
+  user-select: none;
 `;
 
 interface ColumnTitleProps {
