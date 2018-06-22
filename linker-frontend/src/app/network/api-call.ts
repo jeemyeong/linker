@@ -11,5 +11,6 @@ export const ApiCall = {
   updateBoard: ({id, updateBoardCommand}: {id: number, updateBoardCommand: UpdateBoardCommand}): Promise<BoardData> =>
     axios.put(`${API_URL}/board/${id}`, updateBoardCommand).then(v => v.data),
   signInWithGoogle: ({gToken}) => axios.post(`${API_URL}/user/sign-in/google`, gToken).then(v => v.data),
-  signTestWithToken: () => axios.get(`${API_URL}/user/sign-in/token`).then(v => v.data)
+  signInWithToken: () => axios.get(`${API_URL}/user/sign-in/token`).then(v => v.data),
+  signOut: () => axios.get(`${API_URL}/user/sign-out`).then(v => v.data),
 };

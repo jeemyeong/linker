@@ -82,6 +82,7 @@ export class Linker extends React.Component<LinkerAppProps, LinkerState> {
                 closeModal={uiStore.closeDialog}
               />
             })}
+            onClickSignOut={userStore.signOut}
           />
           <Main
             {...this.props}

@@ -31,9 +31,8 @@ const StyledButton = styled(Button)`
   }
 `;
 
-export const Header = inject(STORE_USER)(observer(({onClickSignIn, ...props}) => {
+export const Header = inject(STORE_USER)(observer(({onClickSignIn, onClickSignOut, ...props}) => {
   const userStore = props[STORE_USER] as UserStore;
-  console.log(document.cookie)
   return (
     <Container>
       <StickyContainer>
@@ -41,6 +40,7 @@ export const Header = inject(STORE_USER)(observer(({onClickSignIn, ...props}) =>
           <Avatar
             alt={userStore.user.name}
             src={userStore.user.picture}
+            onClick={onClickSignOut}
           />
           :
           <StyledButton onClick={onClickSignIn}>Sign In</StyledButton>}

@@ -8,5 +8,5 @@ export const CenterWrapper = styled.div`
   bottom: auto;
   marginRight: -50%;
   transform: translate(-50%, -50%);
-  z-index: 9999;
+  z-index: 2000;
 `;

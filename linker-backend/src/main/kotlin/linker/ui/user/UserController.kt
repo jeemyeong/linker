@@ -49,4 +49,14 @@ class UserController {
         response.addCookie(cookie)
         return UserDto.fromDomain(user)
     }
+
+    @RequestMapping(value = ["/sign-out"], method = [(RequestMethod.GET)])
+    fun signOut(response: HttpServletResponse): Any? {
+        val cookie = Cookie("JWT", "deleted")
+        cookie.domain = "localhost"
+        cookie.path = "/"
+        cookie.maxAge = -1
+        response.addCookie(cookie)
+        return HttpServletResponse.SC_OK
+    }
 }

@@ -19,10 +19,17 @@ export class UserStore {
 
 
   public signInWithToken = () =>
-    ApiCall.signTestWithToken()
+    ApiCall.signInWithToken()
       .then(user => runInAction(() => {
         this.user = user;
         this.authed = true;
+      }));
+
+  public signOut = () =>
+    ApiCall.signOut()
+      .then(user => runInAction(() => {
+        this.user = null;
+        this.authed = false;
       }))
 }
 

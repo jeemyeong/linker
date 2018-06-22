@@ -26,7 +26,7 @@ class SignHelper {
 
     fun createToken(userId: Long, roles: List<Role>): String {
 
-        val claims = Jwts.claims().setSubject(userId.toString())
+        val claims = Jwts.claims().setId(userId.toString())
         claims["auth"] = roles
 
         val now = Date()
@@ -45,12 +45,11 @@ class SignHelper {
     }
 
     fun getUserId(): Long {
-        return resolveToken().body.subject.toLong()
+        return resolveToken().body.id.toLong()
     }
 
     fun resolveToken(): Jws<Claims> {
         try {
-            val token2 = WebUtils.getCookie(request, "JWT")
             return Optional.ofNullable(WebUtils.getCookie(request, "JWT")).map { it.value }
                     .orElseThrow { TokenException("There is no JWT token") }
                     .let { Jwts.parser().setSigningKey(secretKey).parseClaimsJws(it) }
