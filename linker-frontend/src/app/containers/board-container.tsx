@@ -58,8 +58,8 @@ export class BoardContainer extends React.Component<BoardContainerProps, BoardCo
             )
           )}
           closeModal={uiStore.closeDialog}
-          title={'Add Link'}
-          msg={'You can add link with typing URL in this box.'}
+          title={`Add Link to ${category.title}`}
+          placeholder={'https://paste.link.here'}
         />
     })
   };
@@ -106,7 +106,6 @@ export class BoardContainer extends React.Component<BoardContainerProps, BoardCo
         )}
         closeModal={uiStore.closeDialog}
         title={'Add Category'}
-        msg={'You can add new category with typing title in this box.'}
       />
     })
   };
@@ -135,7 +134,6 @@ export class BoardContainer extends React.Component<BoardContainerProps, BoardCo
         )}
         closeModal={uiStore.closeDialog}
         title={'Edit Category'}
-        msg={'You can edit category with typing title in this box.'}
       />
     })
   };
@@ -157,8 +155,8 @@ export class BoardContainer extends React.Component<BoardContainerProps, BoardCo
           ),
         )}
         closeModal={uiStore.closeDialog}
-        title={'Add Link'}
-        msg={'You can add link with typing URL in this box.'}
+        title={`Add Link to ${defaultCategoryName}`}
+        placeholder={'https://paste.link.here'}
       />
     })
   };

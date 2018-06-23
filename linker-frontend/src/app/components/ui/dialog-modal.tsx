@@ -1,10 +1,11 @@
 import * as React from 'react';
-import Dialog, { DialogProps } from '@material-ui/core/Dialog';
+import styled from 'styled-components';
 
-export const DialogModal = ({children, ...args}: {children?} & DialogProps) => (
-  <Dialog
-    {...args}
-  >
+const Dialog = styled.div`
+`;
+
+export const DialogModal = ({children, isOpen, onClose}: {children?, isOpen, onClose}) => (
+  <Dialog>
     {children}
   </Dialog>
 );

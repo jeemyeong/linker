@@ -1,15 +1,24 @@
 import * as React from 'react';
-import { DialogTitle } from '@material-ui/core';
 import GoogleLogin from 'react-google-login';
 import googleSigninImg from '../../../assets/google_signin.png';
 import styled from 'styled-components';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogActions from '@material-ui/core/DialogActions';
-import Button from '@material-ui/core/Button';
-import DialogContentText from '@material-ui/core/DialogContentText';
+import { colors } from 'app/constants/colors';
 
 const Container = styled.div`
   padding: 20px;
+`;
+
+const DialogTitle = styled.h1`
+  font-size: 3em;
+  font-weight: 800;
+  margin: 10px;
+  margin-bottom: 20px;
+  user-select: none;
+  color: ${colors.black}
+`;
+
+const DialogContent = styled.div`
+  margin-bottom: 30px;
 `;
 
 const StyledGoogleLogin = styled(GoogleLogin)`
@@ -25,19 +34,39 @@ const StyledGoogleLogin = styled(GoogleLogin)`
     border: none;
     cursor: pointer;       
     vertical-align: middle;
+    user-select: none;
   }
   & * {
     display: none;
   }
 `;
 
+const DialogActions = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+`;
+
+const Button = styled.button` 
+  ${({backgroundColor, color}: { backgroundColor?, color? }) => `
+    background: ${backgroundColor || ''};
+    &: hover {
+      background: ${backgroundColor ? backgroundColor : `rgba(0,0,0,0.03)`};
+    };
+    color: ${color || colors.grey.light};
+    cursor: pointer;
+    padding: 10px 30px;
+    font-weight: 700;
+    border-radius: 10px;
+    font-size: 1.2em;
+    outline: none;
+  `}
+`;
+
 export const SignIn = ({closeModal, onSuccess, onFailure}) => (
   <Container>
     <DialogTitle>Sign In</DialogTitle>
     <DialogContent>
-      <DialogContentText>
-        You can use Google OAuth2.0 to SignIn
-      </DialogContentText>
       <StyledGoogleLogin
         clientId="178132627968-qii6o29lgn7l5gatelcq4iqs3ag6vqa0.apps.googleusercontent.com"
         onSuccess={onSuccess}

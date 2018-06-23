@@ -1,17 +1,13 @@
 import * as React from 'react'
-import DialogTitle from '@material-ui/core/DialogTitle/DialogTitle';
-import TextField from '@material-ui/core/TextField';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import Button from '@material-ui/core/Button';
+import styled from 'styled-components';
+import { colors } from 'app/constants/colors';
 
 interface UpdateContentProps {
   onSubmit: { ({value} : {value: string}): Promise<void> }
   closeModal: { (): void }
-  msg: string
   title: string
   label?: string
+  placeholder?: string
   defaultValue?: string
   onDelete?: {(): void}
 }
@@ -19,6 +15,59 @@ interface UpdateContentProps {
 interface UpdateContentState {
   value: string;
 }
+
+const DialogTitle = styled.h1`
+  font-size: 3em;
+  font-weight: 800;
+  margin: 10px;
+  margin-bottom: 20px;
+  user-select: none;
+  color: ${colors.black}
+`;
+
+const DialogContent = styled.div`
+  margin-bottom: 30px;
+`;
+
+const TextField = styled.input`
+  margin: 10px;
+  min-width: 100%;
+  width: 30vw;
+  height: 70px;
+  padding: 10px 30px;
+  background: rgba(0,0,0,0.03);
+  border-radius: 10px;
+  font-size: 2em;
+  font-weight: 700;
+  border: none;
+  outline: none;
+  color: ${colors.black};
+  &::placeholder {
+    color: ${colors.grey.light};
+  };
+`;
+
+const DialogActions = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+`;
+
+const Button = styled.button` 
+  ${({backgroundColor, color}: { backgroundColor?, color? }) => `
+    background: ${backgroundColor || ''};
+    &: hover {
+      background: ${backgroundColor ? backgroundColor : `rgba(0,0,0,0.03)`};
+    };
+    color: ${color || colors.grey.light};
+    cursor: pointer;
+    padding: 10px 30px;
+    font-weight: 700;
+    border-radius: 10px;
+    font-size: 1.2em;
+    outline: none;
+  `}
+`;
 
 export class UpdateContentDialog extends React.Component<UpdateContentProps, UpdateContentState> {
   state = {
@@ -32,38 +81,37 @@ export class UpdateContentDialog extends React.Component<UpdateContentProps, Upd
   onSubmit = () => this.props.onSubmit({value: this.state.value})
 
   render() {
-    const { onDelete, closeModal, msg, title, label } = this.props;
+    const { onDelete, closeModal, title, placeholder } = this.props;
     return (
       <div>
         <DialogTitle>{title}</DialogTitle>
         <DialogContent>
-          <DialogContentText>
-            {msg}
-          </DialogContentText>
           <TextField
             autoFocus
-            margin="dense"
-            id="name"
-            label={label}
+            id="input"
             type="content"
-            fullWidth
             onChange={(e) => this.setState({ value: e.target.value })}
             onKeyPress={this._handleKeyPress}
             value={this.state.value}
             required={true}
+            placeholder={placeholder}
           />
         </DialogContent>
         <DialogActions>
           {onDelete &&
-            <Button onClick={onDelete} color="primary">
+            <Button onClick={onDelete}>
               Delete
             </Button>
           }
-          <Button onClick={closeModal} color="primary">
+          <Button onClick={closeModal}>
             Cancel
           </Button>
-          <Button onClick={this.onSubmit} color="primary">
-            Add
+          <Button
+            onClick={this.onSubmit}
+            color={colors.white}
+            backgroundColor={colors.main}
+          >
+            Save
           </Button>
         </DialogActions>
       </div>
