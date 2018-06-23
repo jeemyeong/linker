@@ -1,9 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import Button from '@material-ui/core/Button';
-import { inject, observer } from 'mobx-react';
-import { STORE_AUTH } from 'app/constants/stores';
-import AuthStore from 'app/stores/user-store';
+import { observer } from 'mobx-react';
 import Avatar from '@material-ui/core/Avatar';
 
 const Container = styled.header`
@@ -31,15 +29,14 @@ const StyledButton = styled(Button)`
   }
 `;
 
-export const Header = inject(STORE_AUTH)(observer(({onClickSignIn, onClickSignOut, ...props}) => {
-  const authStore = props[STORE_AUTH] as AuthStore;
+export const Header = observer(({onClickSignIn, onClickSignOut, authed, authData, ...props}) => {
   return (
     <Container>
       <StickyContainer>
-        {authStore.authed ?
+        {authed ?
           <Avatar
-            alt={authStore.authData.name}
-            src={authStore.authData.picture}
+            alt={authData.name}
+            src={authData.picture}
             onClick={onClickSignOut}
           />
           :
@@ -47,6 +44,6 @@ export const Header = inject(STORE_AUTH)(observer(({onClickSignIn, onClickSignOu
       </StickyContainer>
     </Container>
   )
-}));
+});
 
 export default Header;

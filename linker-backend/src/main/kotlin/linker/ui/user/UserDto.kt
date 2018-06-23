@@ -1,7 +1,9 @@
 package linker.ui.user
 
 import com.fasterxml.jackson.annotation.JsonInclude
+import linker.domain.board.Board
 import linker.domain.user.User
+import linker.ui.board.BoardDto
 
 /**
  * Created by Jeemyeong.
@@ -20,10 +22,10 @@ data class UserDto(
         val picture: String?,
         val provider: String?,
         val role: String?,
-        val boards: List<Long>?
+        val boards: List<BoardDto>?
 ) {
     companion object {
-        fun fromDomain(user: User, boards: List<Long>? = null) = UserDto(
+        fun fromDomain(user: User, boards: List<Board>? = null) = UserDto(
                 id = user.id,
                 email = user.email,
                 googleId = user.googleId,
@@ -33,7 +35,7 @@ data class UserDto(
                 picture = user.picture,
                 provider = user.provider,
                 role = user.role,
-                boards = boards
+                boards = boards?.map { BoardDto.fromDomain(it) }
         )
     }
 }

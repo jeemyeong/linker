@@ -4,6 +4,8 @@ import Button from '@material-ui/core/Button';
 import Settings from '@material-ui/icons/Settings';
 import { colors } from 'app/constants/colors';
 import { sizes } from 'app/constants/size';
+import { observer } from 'mobx-react';
+import { BoardData } from 'app/type/board-data';
 
 const StyledNav = styled.nav`
   position: absolute;
@@ -77,7 +79,7 @@ const StyledSettingsIcon = styled(Settings)`
   }
 `;
 
-export const Nav = () => (
+export const Nav = observer(({boards, currentBoardId}: {boards: BoardData[], currentBoardId: number}) => (
   <StyledNav>
     <Title>Linker</Title>
     <StyledButton>
@@ -85,9 +87,7 @@ export const Nav = () => (
       Board
     </StyledButton>
     <Tabs>
-      <Tab isSelected={true}>Development</Tab>
-      <Tab>Social</Tab>
-      <Tab>Culture</Tab>
+      {boards.map(board => <Tab key={board.id} isSelected={board.id == currentBoardId}>{board.title}</Tab>)}
     </Tabs>
   </StyledNav>
-);
+));

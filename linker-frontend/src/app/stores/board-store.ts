@@ -5,6 +5,8 @@ import { LinkData } from 'app/type/link-data';
 import { CategoryData } from 'app/type/category-data';
 import { UpdateBoardCommand } from "app/type/update-board-command";
 import { ApiCall } from 'app/network/api-call';
+import { rootStore } from 'app/app';
+import { STORE_UI } from 'app/constants/stores';
 
 export class BoardStore {
   constructor(board: BoardData = null) {
@@ -20,7 +22,7 @@ export class BoardStore {
   private maxCategoryId = 0;
 
   @action
-  getBoards = (id: number) => {
+  getBoard = ({id}: {id: number}) => {
     this.isLoading = true;
     return ApiCall.getBoard({id})
       .then(board => runInAction(() =>{
@@ -53,7 +55,7 @@ export class BoardStore {
       this.maxLinkId = Math.max(...R.unnest(this.board.categories.map(category => R.unnest(category.links.map(link => link.id))))) + 1;
       this.maxCategoryId = Math.max(...this.board.categories.map(category => category.id)) + 1;
     }))
-    .catch(() => alert("Unknown Error") || location.reload(true))
+    .catch(() => rootStore[STORE_UI].openSnackbar({message: 'Error for update'}) || this.getBoard({id: this.board.id}))
   ;
 
   @action

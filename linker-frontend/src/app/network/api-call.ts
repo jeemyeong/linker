@@ -13,5 +13,5 @@ export const ApiCall = {
   signInWithGoogle: ({gToken}) => axios.post(`${API_URL}/user/sign-in/google`, gToken).then(v => v.data),
   signInWithToken: () => axios.get(`${API_URL}/user/sign-in/token`).then(v => v.data),
   signOut: () => axios.get(`${API_URL}/user/sign-out`).then(v => v.data),
-  getUserInfo: ({userId}: {userId: number}) => axios.get(`${API_URL}/user/${userId}`).then(v => v.data),
+  getUserBoards: ({userId}: {userId: number}) => axios.get(`${API_URL}/user/${userId}/boards`).then(v => v.data),
 };

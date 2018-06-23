@@ -17,7 +17,6 @@ import { ColumnContainer } from 'app/libs/board/column';
 import { AddCategoryButton } from 'app/components/board/add-category-button';
 import UpdateContentDialog from 'app/components/board/update-content-dialog';
 import * as debug from 'debug';
-import { ApiCall } from 'app/network/api-call';
 const log = debug('application:board-container.tsx');
 
 const Container = styled.div``;
@@ -177,21 +176,6 @@ export class BoardContainer extends React.Component<BoardContainerProps, BoardCo
   renderItem = (item: LinkData, isDragging: boolean) => {
     const boardStore = this.props[STORE_BOARD] as BoardStore;
     return <LinkCard isDragging={isDragging} link={item} deleteLink={boardStore.deleteLink}/>
-  };
-
-  componentDidMount() {
-    const boardStore = this.props[STORE_BOARD] as BoardStore;
-    const userId = this.props.match.params.userId;
-    ApiCall.getUserInfo({userId}).then(
-      user => user.boards
-    ).then(
-      boards => {
-        boardStore.boards = boards
-        return boards
-      }
-    ).then(
-      boards => boards[0] && boardStore.getBoards(boards[0])
-    )
   };
 
   render() {

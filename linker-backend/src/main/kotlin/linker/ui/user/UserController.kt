@@ -40,9 +40,7 @@ class UserController {
         cookie.domain = "localhost"
         cookie.path = "/"
         response.addCookie(cookie)
-
-        val boards = boardService.findByUserId(user.id).map { it.id }
-        return ResponseEntity<Any>(UserDto.fromDomain(user, boards), HttpStatus.OK)
+        return ResponseEntity<Any>(UserDto.fromDomain(user), HttpStatus.OK)
     }
 
     @Authenticated
@@ -54,9 +52,7 @@ class UserController {
         cookie.domain = "localhost"
         cookie.path = "/"
         response.addCookie(cookie)
-
-        val boards = boardService.findByUserId(user.id).map { it.id }
-        return ResponseEntity<Any>(UserDto.fromDomain(user, boards), HttpStatus.OK)
+        return ResponseEntity<Any>(UserDto.fromDomain(user), HttpStatus.OK)
     }
 
     @RequestMapping(value = ["/sign-out"], method = [(RequestMethod.GET)])
@@ -69,10 +65,9 @@ class UserController {
         return ResponseEntity<Any>(null, HttpStatus.OK)
     }
 
-    @RequestMapping(value = ["/{userId}"], method = [(RequestMethod.GET)])
+    @RequestMapping(value = ["/{userId}/boards"], method = [(RequestMethod.GET)])
     fun getUserInfo(@PathVariable userId: Long): ResponseEntity<Any> {
         val user = userService.findUserById(userId).orElseThrow { InternalError("Cannot find user") }
-        val boards = boardService.findByUserId(user.id).map { it.id }
-        return ResponseEntity<Any>(UserDto.fromDomain(user, boards), HttpStatus.OK)
+        return ResponseEntity<Any>(boardService.findByUserId(user.id), HttpStatus.OK)
     }
 }
