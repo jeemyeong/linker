@@ -9,11 +9,11 @@ import { Snackbar } from 'app/components/ui/snackbar';
 import { DialogModal } from 'app/components/ui/dialog-modal';
 import Header from 'app/components/header/header';
 import { Main } from 'app/components/main/main';
-import { STORE_ROUTER, STORE_UI, STORE_USER } from 'app/constants/stores';
+import { STORE_ROUTER, STORE_UI, STORE_AUTH } from 'app/constants/stores';
 import { Nav } from 'app/components/nav/nav';
 import { sizes } from 'app/constants/size';
 import { SignIn } from 'app/components/sign-in/sign-in';
-import UserStore from 'app/stores/user-store';
+import AuthStore from 'app/stores/user-store';
 
 const Container = styled.div`
   display: flex;
@@ -36,12 +36,12 @@ export interface LinkerAppProps extends RouteComponentProps<any> {
 
 export interface LinkerState {}
 
-@inject(STORE_UI, STORE_ROUTER, STORE_USER)
+@inject(STORE_UI, STORE_ROUTER, STORE_AUTH)
 @observer
 export class Linker extends React.Component<LinkerAppProps, LinkerState> {
   render() {
     const uiStore = this.props[STORE_UI] as UiStore;
-    const userStore = this.props[STORE_USER] as UserStore;
+    const authStore = this.props[STORE_AUTH] as AuthStore;
     return (
       <Container>
         {
@@ -72,7 +72,7 @@ export class Linker extends React.Component<LinkerAppProps, LinkerState> {
                 }}
                 onSuccess={(gToken) => {
                   uiStore.closeDialogWithActions(
-                    () => userStore.signInWithGoogle({gToken}).then(
+                    () => authStore.signInWithGoogle({gToken}).then(
                       () => uiStore.openSnackbar({message: 'Successful SignIn'}),
                     ).catch(
                       (err) => uiStore.openSnackbar({message: `${err}`})
@@ -82,7 +82,7 @@ export class Linker extends React.Component<LinkerAppProps, LinkerState> {
                 closeModal={uiStore.closeDialog}
               />
             })}
-            onClickSignOut={userStore.signOut}
+            onClickSignOut={authStore.signOut}
           />
           <Main
             {...this.props}

@@ -10,7 +10,7 @@ import { Loader } from 'app/components/ui/loader';
 import BoardStore from 'app/stores/board-store';
 import { EmptyBoard } from 'app/components/ui/empty-board';
 import { RouteComponentProps } from 'react-router';
-import { STORE_BOARD, STORE_ROUTER, STORE_UI, STORE_USER } from 'app/constants/stores';
+import { STORE_BOARD, STORE_ROUTER, STORE_UI, STORE_AUTH } from 'app/constants/stores';
 import { CategoryData } from 'app/type/category-data';
 import { LinkData } from 'app/type/link-data';
 import { ColumnContainer } from 'app/libs/board/column';
@@ -26,7 +26,7 @@ export interface BoardContainerProps extends RouteComponentProps<any> {}
 
 export interface BoardContainerState {}
 
-@inject(STORE_UI, STORE_BOARD, STORE_ROUTER, STORE_USER)
+@inject(STORE_UI, STORE_BOARD, STORE_ROUTER, STORE_AUTH)
 @observer
 export class BoardContainer extends React.Component<BoardContainerProps, BoardContainerState> {
 

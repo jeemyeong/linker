@@ -1,36 +1,36 @@
 import { observable, runInAction } from 'mobx';
-import { UserData } from 'app/type/user-data';
+import { AuthData } from 'app/type/user-data';
 import { ApiCall } from 'app/network/api-call';
 
-export class UserStore {
-  constructor(user: UserData = null) {
-    this.user = user;
+export class AuthStore {
+  constructor(authData: AuthData = null) {
+    this.authData = authData;
   }
 
-  @observable public user?: UserData;
+  @observable public authData?: AuthData;
   @observable public authed: boolean = false;
 
   public signInWithGoogle = ({gToken}): Promise<void> =>
     ApiCall.signInWithGoogle({gToken})
-      .then(user => runInAction(() => {
-        this.user = user;
+      .then(authData => runInAction(() => {
+        this.authData = authData;
         this.authed = true;
       }));
 
 
   public signInWithToken = () =>
     ApiCall.signInWithToken()
-      .then(user => runInAction(() => {
-        this.user = user;
+      .then(authData => runInAction(() => {
+        this.authData = authData;
         this.authed = true;
       }));
 
   public signOut = () =>
     ApiCall.signOut()
       .then(user => runInAction(() => {
-        this.user = null;
+        this.authData = null;
         this.authed = false;
       }))
 }
 
-export default UserStore;
+export default AuthStore;

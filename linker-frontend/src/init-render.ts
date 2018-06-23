@@ -1,7 +1,7 @@
 import * as debug from 'debug';
 import { __PRODUCTION__ } from './config';
 import { rootStore } from 'app/app';
-import { STORE_USER } from 'app/constants/stores';
+import { STORE_AUTH } from 'app/constants/stores';
 
 if (__PRODUCTION__) {
   //production disable log
@@ -11,7 +11,7 @@ if (__PRODUCTION__) {
 }
 
 export const initRender = (callback) => Promise.resolve().then(
-  () => rootStore[STORE_USER].signInWithToken().then(
+  () => rootStore[STORE_AUTH].signInWithToken().then(
     () => callback()
   ).catch(
     () => callback()
