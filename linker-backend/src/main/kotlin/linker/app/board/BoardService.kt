@@ -21,6 +21,8 @@ interface BoardService {
     fun findBoardById(id: Long): Optional<Board>
     fun updateBoard(userId: Long, command: UpdateBoard): Board
     fun findByUserId(userId: Long): List<Board>
+    fun newBoard(userId: Long, title: String): Board
+    fun deleteBoard(boardId: Long)
 }
 
 @Service
@@ -49,5 +51,13 @@ class BoardServiceImpl: BoardService {
 
     override fun findByUserId(userId: Long): List<Board> {
         return boardRepository.findByUserId(userId)
+    }
+
+    override fun newBoard(userId: Long, title: String): Board {
+        return boardRepository.save(Board(title = title, userId = userId, categories = emptyList()))
+    }
+
+    override fun deleteBoard(boardId: Long) {
+        return boardRepository.deleteById(boardId)
     }
 }

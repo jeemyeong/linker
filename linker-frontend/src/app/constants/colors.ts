@@ -10,6 +10,7 @@ export const colors = {
   shadow: 'rgba(0,0,0,0.2)',
   grey: {
     light: '#a3a1a1',
+    light2: '#ccc',
     lighter: '#e3dede',
     bright: '#f4f4f4'
   },

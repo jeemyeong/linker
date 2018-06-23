@@ -10,23 +10,13 @@ import { DialogModal } from 'app/components/ui/dialog-modal';
 import Header from 'app/components/header/header';
 import { Main } from 'app/components/main/main';
 import { STORE_ROUTER, STORE_UI, STORE_AUTH, STORE_NAV, STORE_BOARD } from 'app/constants/stores';
-import { Nav } from 'app/components/nav/nav';
+import { NavContainer } from 'app/components/nav/nav-container';
 import { sizes } from 'app/constants/size';
 import { SignIn } from 'app/components/sign-in/sign-in';
 import AuthStore from 'app/stores/auth-store';
 import { NavStore } from 'app/stores/nav-store';
-import BoardStore from 'app/stores/board-store';
 
 const Container = styled.div`
-`;
-
-const ModalContainer = styled.div`
-  position: fixed;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  filter: none;
-  z-index: 9999;
 `;
 
 const ContentContainer = styled.div`
@@ -58,37 +48,29 @@ export class Linker extends React.Component<LinkerAppProps, LinkerState> {
 
   componentDidMount() {
     const navStore = this.props[STORE_NAV] as NavStore;
-    const boardStore = this.props[STORE_BOARD]  as BoardStore;
     const userId = this.props.match.params.userId;
     navStore
       .getBoards({userId})
-      .then(currentBoardId => currentBoardId && boardStore.getBoard({id: currentBoardId}))
   }
 
   render() {
     const uiStore = this.props[STORE_UI] as UiStore;
     const authStore = this.props[STORE_AUTH] as AuthStore;
-    const navStore = this.props[STORE_NAV] as NavStore;
     const isModalOpen = uiStore.state.loader.isOpen || uiStore.state.dialog.isOpen;
     return (
       <Container>
-        {
-          isModalOpen &&
-          <ModalContainer>
-            {
-              uiStore.state.loader.isOpen && <Overlay><Loader/></Overlay>
-            }
-            {
-              uiStore.state.dialog.isOpen &&
-              <DialogModal
-                isOpen={uiStore.state.dialog.isOpen}
-                onClose={uiStore.closeDialog}
-              >
-                {uiStore.state.dialog.Component}
-              </DialogModal>
-            }
-          </ModalContainer>
-        }
+          {
+            uiStore.state.loader.isOpen && <Overlay><Loader/></Overlay>
+          }
+          {
+            uiStore.state.dialog.isOpen &&
+            <DialogModal
+              isOpen={uiStore.state.dialog.isOpen}
+              onClose={uiStore.closeDialog}
+            >
+              {uiStore.state.dialog.Component}
+            </DialogModal>
+          }
         {
           uiStore.state.snackbar.isOpen && <Snackbar message={uiStore.state.snackbar.message} handleClose={uiStore.closeSnackbar}/>
         }
@@ -96,10 +78,7 @@ export class Linker extends React.Component<LinkerAppProps, LinkerState> {
           isModalOpen={isModalOpen}
         >
           <LeftSide>
-            <Nav
-              boards={navStore.boards}
-              currentBoardId={navStore.currentBoardId}
-            />
+            <NavContainer/>
           </LeftSide>
 
           <RightSide>

@@ -9,7 +9,7 @@ const Container = styled.div`
 `;
 
 const DialogTitle = styled.h1`
-  font-size: 3em;
+  font-size: 3.5em;
   font-weight: 800;
   margin: 10px;
   margin-bottom: 20px;
@@ -34,7 +34,7 @@ const StyledGoogleLogin = styled(GoogleLogin)`
     border: none;
     cursor: pointer;       
     vertical-align: middle;
-    user-select: none;
+    outline: none;
   }
   & * {
     display: none;
@@ -57,7 +57,7 @@ const Button = styled.button`
     cursor: pointer;
     padding: 10px 30px;
     font-weight: 700;
-    border-radius: 10px;
+    border-radius: 15px;
     font-size: 1.2em;
     outline: none;
   `}

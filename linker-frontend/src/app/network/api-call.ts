@@ -14,4 +14,8 @@ export const ApiCall = {
   signInWithToken: () => axios.get(`${API_URL}/user/sign-in/token`).then(v => v.data),
   signOut: () => axios.get(`${API_URL}/user/sign-out`).then(v => v.data),
   getUserBoards: ({userId}: {userId: number}) => axios.get(`${API_URL}/user/${userId}/boards`).then(v => v.data),
+  newBoard: ({title}: {title: string}): Promise<BoardData> =>
+    axios.post(`${API_URL}/board`, {title: title}).then(v => v.data),
+  deleteBoard: ({boardId}: {boardId: number}): Promise<null> =>
+    axios.delete(`${API_URL}/board/${boardId}`).then(v => v.data),
 };

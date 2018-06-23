@@ -4,8 +4,12 @@ import Button from '@material-ui/core/Button';
 import Settings from '@material-ui/icons/Settings';
 import { colors } from 'app/constants/colors';
 import { sizes } from 'app/constants/size';
-import { observer } from 'mobx-react';
-import { BoardData } from 'app/type/board-data';
+import { inject, observer } from 'mobx-react';
+import { STORE_AUTH, STORE_NAV, STORE_UI } from 'app/constants/stores';
+import { NavStore } from 'app/stores/nav-store';
+import AuthStore from 'app/stores/auth-store';
+import UiStore from 'app/stores/ui-store';
+import { ManageBoards } from 'app/components/board/manage-boards';
 
 const StyledNav = styled.nav`
   position: absolute;
@@ -79,15 +83,41 @@ const StyledSettingsIcon = styled(Settings)`
   }
 `;
 
-export const Nav = observer(({boards, currentBoardId}: {boards: BoardData[], currentBoardId: number}) => (
-  <StyledNav>
-    <Title>Linker</Title>
-    <StyledButton>
-      <StyledSettingsIcon/>
-      Board
-    </StyledButton>
-    <Tabs>
-      {boards.map(board => <Tab key={board.id} isSelected={board.id == currentBoardId}>{board.title}</Tab>)}
-    </Tabs>
-  </StyledNav>
-));
+@inject(STORE_NAV, STORE_AUTH, STORE_UI)
+@observer
+export class NavContainer extends React.Component<{}, {}> {
+
+  manageBoards = () => {
+    const uiStore = this.props[STORE_UI] as UiStore;
+    uiStore.openDialog({
+      DialogComponent: <ManageBoards/>
+    })
+  };
+
+  render() {
+    const navStore = this.props[STORE_NAV] as NavStore;
+    const authStore = this.props[STORE_AUTH] as AuthStore;
+    return (
+      <StyledNav>
+        <Title>Linker</Title>
+        {
+          authStore.authed && (
+            <StyledButton
+              onClick={this.manageBoards}
+            >
+              <StyledSettingsIcon/>
+              Boards
+            </StyledButton>
+          )
+        }
+        <Tabs>
+          {navStore.boards.map(board =>
+            <Tab key={board.id} isSelected={board.id == navStore.currentBoardId} onClick={() => navStore.changeCurrentBoard({boardId: board.id})}>
+              {board.title}
+            </Tab>
+          )}
+        </Tabs>
+      </StyledNav>
+    )
+  }
+}
