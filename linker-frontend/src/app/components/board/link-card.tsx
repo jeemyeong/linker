@@ -6,7 +6,7 @@ import { colors } from 'app/constants/colors';
 import { sample } from 'app/util/sample';
 import * as R from 'ramda';
 import { sizes } from 'app/constants/size';
-import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
+import { ContextMenu, MenuItem } from "react-contextmenu";
 import * as debug from 'debug';
 import { observer } from 'mobx-react';
 import { copyToClipboard } from 'app/util/copy-to-clipboard';
@@ -255,23 +255,21 @@ export class LinkCard extends React.Component<LinkProps, {}> {
     const title = link.ogTitle ? link.ogTitle + ": " + link.url.replace(/^.*\/\//, "") : link.url.replace(/^.*\/\//, "").replace(/^www./, "");
     const ellipsedTitle = ellipseStr(title, 34);
     return (
-      <ContextMenuTrigger id={`link_card_context|${link.id}`}>
-        <Card>
-          <Figure>
-            {link.ogImage ?
-              <Img src={link.ogImage} alt="card image"/> : !isDragging && sample([<GradientsA/>, <GradientsB/>])
-            }
-            <Caption>
-              <Overlay className="overlay">
-                <DeleteButton className="delete" onClick={() => confirm("Do you want to remove this link really?") && onClickDelete({targetLink: link})}/>
-              </Overlay>
-              <A href={link.url} target="_blank">
-                <Title>{ellipsedTitle}</Title>
-                <P>{ellipseStr(`${title} ${link.ogDescription ? link.ogDescription : ""}`, 120)}</P>
-              </A>
-            </Caption>
-          </Figure>
-        </Card>
+      <Card>
+        <Figure>
+          {link.ogImage ?
+            <Img src={link.ogImage} alt="card image"/> : !isDragging && sample([<GradientsA/>, <GradientsB/>])
+          }
+          <Caption>
+            <Overlay className="overlay">
+              <DeleteButton className="delete" onClick={() => confirm("Do you want to remove this link really?") && onClickDelete({targetLink: link})}/>
+            </Overlay>
+            <A href={link.url} target="_blank">
+              <Title>{ellipsedTitle}</Title>
+              <P>{ellipseStr(`${title} ${link.ogDescription ? link.ogDescription : ""}`, 120)}</P>
+            </A>
+          </Caption>
+        </Figure>
         <StyledContextMenu id={`link_card_context|${link.id}`}>
           <MenuItem onClick={onClickEdit}>
             <StyledMenuItem>
@@ -289,7 +287,7 @@ export class LinkCard extends React.Component<LinkProps, {}> {
             </StyledMenuItem>
           </MenuItem>
         </StyledContextMenu>
-      </ContextMenuTrigger>
+      </Card>
     )
   }
 };

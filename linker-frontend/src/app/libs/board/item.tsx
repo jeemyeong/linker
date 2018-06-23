@@ -5,6 +5,7 @@ import { RenderItemToJSXElement } from 'app/libs/board/board';
 import { colors } from 'app/constants/colors';
 import { observer } from "mobx-react";
 import * as debug from 'debug';
+import { ContextMenuTrigger } from "react-contextmenu";
 const log = debug('application:item.tsx');
 
 const Container = styled.div`
@@ -17,7 +18,6 @@ const Container = styled.div`
   display: flex;
   align-items: center;
 `;
-
 export interface ItemProps<T> {
   item: T;
   isDragging: boolean;
@@ -49,13 +49,15 @@ export default class Item<T> extends React.Component<
   render() {
     const { provided, item, isDragging } = this.props;
     return (
-      <Container
-        innerRef={provided.innerRef}
-        {...provided.draggableProps}
-        {...provided.dragHandleProps}
-      >
-        {this.props.renderItem(item, isDragging)}
-      </Container>
+      <ContextMenuTrigger id={`link_card_context|${item["id"]}`}>
+        <Container
+          innerRef={provided.innerRef}
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
+        >
+          {this.props.renderItem(item, isDragging)}
+        </Container>
+      </ContextMenuTrigger>
     );
   }
 }
