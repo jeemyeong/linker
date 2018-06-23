@@ -64,6 +64,7 @@ const Button = styled.button`
     border-radius: 15px;
     font-size: 1.2em;
     outline: none;
+    margin: 5px;
   `}
 `;
 
@@ -111,6 +112,9 @@ export class ManageBoards extends React.Component<ManageBoardsProps, ManageBoard
   };
 
   onSubmit = () => {
+    if (!this.state.title) {
+      return;
+    }
     const uiStore = this.props[STORE_UI] as UiStore;
     const title = this.state.title;
     uiStore.closeDialogWithActions(

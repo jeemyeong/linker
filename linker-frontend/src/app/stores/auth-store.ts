@@ -15,7 +15,6 @@ export class AuthStore {
       .then(authData => runInAction(() => {
         this.authData = authData;
         this.authed = true;
-        console.log(this.authed, 'AuthStore')
       }));
 
 
@@ -24,7 +23,6 @@ export class AuthStore {
       .then(authData => runInAction(() => {
         this.authData = authData;
         this.authed = true;
-        console.log(this.authed, 'AuthStore')
       }));
 
   public signOut = () =>
@@ -32,7 +30,6 @@ export class AuthStore {
       .then(user => runInAction(() => {
         this.authData = null;
         this.authed = false;
-        console.log(this.authed, 'AuthStore')
       }))
 }
 

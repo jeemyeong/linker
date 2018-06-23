@@ -6,14 +6,18 @@ import { colors } from 'app/constants/colors';
 import { sample } from 'app/util/sample';
 import * as R from 'ramda';
 import { sizes } from 'app/constants/size';
+import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 import * as debug from 'debug';
+import { observer } from 'mobx-react';
+import { copyToClipboard } from 'app/util/copy-to-clipboard';
 const log = debug('application:link-card.tsx');
 
 const Card = styled.div`
   margin-top: 5px;
-  width: 100%;
   transition: 0.6s;
-  transform-style: preserve-3d;
+  transform-style: flat;
+  width: 100%;
+  width: ${sizes.rightSide.column.width};
   height: ${sizes.rightSide.column.linkCard.height};
   font-size: 1em;
   border-radius: 20px;
@@ -30,7 +34,7 @@ const Figure = styled.figure`
   border-radius: 20px;
   backface-visibility: hidden;
   overflow: hidden;
-  position: absolute;
+  // position: absolute;
   top: 0;
   left: 0;
   width: 100%;
@@ -92,8 +96,8 @@ const Overlay = styled.div`
   width: 100%;
   height: 100%;
   content: '';
-  opacity: 0.3;
-  background: linear-gradient(rgba(72,76,97,0) 0%, rgba(72,76,97,0.8) 80%);
+  opacity: 0.05;
+  background: linear-gradient(rgba(72,76,97,0) 0%, rgba(72,76,97,0.5) 80%);
   transform: translate3d(0,50%,0);
   transition: opacity 0.35s, transform 0.35s;
 `;
@@ -203,41 +207,89 @@ const GradientsB = styled.div`
     }
   }
 `;
+const StyledContextMenu = styled(ContextMenu)`
+  && {
+    background: ${colors.white};
+    border-radius: 10px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    z-index: 9997;
+    min-width: 130px;
+  }
+`;
 
+const StyledMenuItem = styled.button`
+  min-height: 50px;
+  width: 100%;
+  text-align: left;
+  padding: 10px;
+  font-size: 1.1em;
+  font-weight: 600;
+  color: ${colors.grey.light};
+  cursor: pointer;
+  outline: none;
+  user-select: none;
+  &:hover {
+    background: rgba(0,0,0,0.03);
+  }
+`;
 interface LinkProps {
   link: LinkData
-  deleteLink: { ({ targetLink }) };
+  onClickDelete: {(e)}
+  onClickEdit: {(e)}
   isDragging: boolean
 }
 
+@observer
 export class LinkCard extends React.Component<LinkProps, {}> {
   shouldComponentUpdate(nextProps, nextState) {
     return !R.equals(nextProps, this.props)
   }
 
   render() {
-    const { link, deleteLink, isDragging } = this.props;
+    const { link, onClickDelete, onClickEdit, isDragging } = this.props;
     log("render: " + link.url);
     const title = link.ogTitle ? link.ogTitle + ": " + link.url.replace(/^.*\/\//, "") : link.url.replace(/^.*\/\//, "").replace(/^www./, "");
-    const ellipsedTitle= ellipseStr(title, 34);
+    const ellipsedTitle = ellipseStr(title, 34);
     return (
-      <Card>
-        <Figure>
-          {link.ogImage ?
-            <Img src={link.ogImage} alt="card image"/> : !isDragging && sample([<GradientsA/>, <GradientsB/>])
-          }
-          <Caption>
-            <Overlay className="overlay">
-              <DeleteButton className="delete" onClick={() => confirm("Do you want to remove this link really?") && deleteLink({targetLink: link})}/>
-            </Overlay>
-
-            <A href={link.url} target="_blank">
-              <Title>{ellipsedTitle}</Title>
-              <P>{ellipseStr(`${title} ${link.ogDescription ? link.ogDescription : ""}`, 120)}</P>
-            </A>
-          </Caption>
-        </Figure>
-      </Card>
+      <ContextMenuTrigger id={`link_card_context|${link.id}`}>
+        <Card>
+          <Figure>
+            {link.ogImage ?
+              <Img src={link.ogImage} alt="card image"/> : !isDragging && sample([<GradientsA/>, <GradientsB/>])
+            }
+            <Caption>
+              <Overlay className="overlay">
+                <DeleteButton className="delete" onClick={() => confirm("Do you want to remove this link really?") && onClickDelete({targetLink: link})}/>
+              </Overlay>
+              <A href={link.url} target="_blank">
+                <Title>{ellipsedTitle}</Title>
+                <P>{ellipseStr(`${title} ${link.ogDescription ? link.ogDescription : ""}`, 120)}</P>
+              </A>
+            </Caption>
+          </Figure>
+        </Card>
+        <StyledContextMenu id={`link_card_context|${link.id}`}>
+          <MenuItem onClick={onClickEdit}>
+            <StyledMenuItem>
+              Edit
+            </StyledMenuItem>
+          </MenuItem>
+          <MenuItem onClick={onClickDelete}>
+            <StyledMenuItem>
+              Remove
+            </StyledMenuItem>
+          </MenuItem>
+          <MenuItem onClick={() => copyToClipboard(link.url)}>
+            <StyledMenuItem>
+              Copy Link
+            </StyledMenuItem>
+          </MenuItem>
+        </StyledContextMenu>
+      </ContextMenuTrigger>
     )
   }
 };

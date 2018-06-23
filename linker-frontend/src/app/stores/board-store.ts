@@ -125,6 +125,19 @@ export class BoardStore {
   };
 
   @action
+  updateLink = ({link, url}: {link: LinkData, url: string}) => {
+    this.board.categories.forEach(
+      c => {
+        const l = c.links.find(l => l.id == link.id)
+        if(l) {
+          l.url = url;
+        }
+      }
+    );
+    return this.update()
+  };
+
+  @action
   deleteCategory = ({category}: {category: CategoryData}) => {
     this.board.categories = this.board.categories.filter(c => c.id != category.id)
     return this.update()

@@ -47,6 +47,7 @@ const Tab = styled.h3`
   font-weight: 600;
   margin-top: 10px;
   cursor: pointer;
+  user-select: none;
   color: ${({isSelected}: {isSelected?: boolean}) => isSelected? colors.main : colors.grey.light};
 `;
 

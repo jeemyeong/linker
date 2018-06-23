@@ -18,6 +18,7 @@ const DialogTitle = styled.h1`
 `;
 
 const DialogContent = styled.div`
+  margin-top: 40px;
   margin-bottom: 30px;
 `;
 
@@ -60,6 +61,7 @@ const Button = styled.button`
     border-radius: 15px;
     font-size: 1.2em;
     outline: none;
+    margin: 5px;
   `}
 `;
 
@@ -76,7 +78,7 @@ export const SignIn = ({closeModal, onSuccess, onFailure}) => (
       </StyledGoogleLogin>
     </DialogContent>
     <DialogActions>
-      <Button onClick={closeModal} color="primary">
+      <Button onClick={closeModal}>
         Cancel
       </Button>
     </DialogActions>

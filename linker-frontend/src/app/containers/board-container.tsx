@@ -34,12 +34,19 @@ export class BoardContainer extends React.Component<BoardContainerProps, BoardCo
   }
 
   renderColumnTitle = (column, isDragging, dragHandleProps) => {
+    const boardStore = this.props[STORE_BOARD] as BoardStore;
+    const uiStore = this.props[STORE_UI] as UiStore;
     return (
       <ColumnTitle
         category={column}
         isDragging={isDragging}
         dragHandleProps={dragHandleProps}
-        onDoubleClick={() => this.openEditCategoryModal({category: column})}
+        onClickEdit={() => this.openEditCategoryModal({category: column})}
+        onClickDelete={() => boardStore.deleteCategory({category: column}).then(
+          () => uiStore.openSnackbar({message: 'Category has been deleted'})
+        ).catch(
+          (err) => uiStore.openSnackbar({message: `${err}`})
+        )}
       />
     );
   };
@@ -49,7 +56,6 @@ export class BoardContainer extends React.Component<BoardContainerProps, BoardCo
 
     return uiStore.openDialog({
       DialogComponent: <UpdateContentDialog
-          label={'URL'}
           onSubmit={({value: url}) => uiStore.closeDialogWithActions(
             () => this.newLink({category, url}).then(
               () => uiStore.openSnackbar({message: 'Link has been saved'})
@@ -95,7 +101,6 @@ export class BoardContainer extends React.Component<BoardContainerProps, BoardCo
 
     return uiStore.openDialog({
       DialogComponent: <UpdateContentDialog
-        label={'Title'}
         defaultValue={defaultCategoryName}
         onSubmit={({value: title}) => uiStore.closeDialogWithActions(
           () => this.newCategory({title}).then(
@@ -116,18 +121,10 @@ export class BoardContainer extends React.Component<BoardContainerProps, BoardCo
 
     return uiStore.openDialog({
       DialogComponent: <UpdateContentDialog
-        label={'Title'}
         defaultValue={category.title}
         onSubmit={({value: title}) => uiStore.closeDialogWithActions(
           () => boardStore.updateCategory({category, title}).then(
             () => uiStore.openSnackbar({message: 'Category has been saved'})
-          ).catch(
-            (err) => uiStore.openSnackbar({message: `${err}`})
-          )
-        )}
-        onDelete={() => uiStore.closeDialogWithActions(
-          () => boardStore.deleteCategory({category}).then(
-            () => uiStore.openSnackbar({message: 'Category has been deleted'})
           ).catch(
             (err) => uiStore.openSnackbar({message: `${err}`})
           )
@@ -138,13 +135,32 @@ export class BoardContainer extends React.Component<BoardContainerProps, BoardCo
     })
   };
 
+  openEditLinkModal = ({link}) => {
+    const uiStore = this.props[STORE_UI] as UiStore;
+    const boardStore = this.props[STORE_BOARD] as BoardStore;
+
+    return uiStore.openDialog({
+      DialogComponent: <UpdateContentDialog
+        onSubmit={({value: url}) => uiStore.closeDialogWithActions(
+          () => boardStore.updateLink({link, url}).then(
+            () => uiStore.openSnackbar({message: 'Link has been saved'})
+          ).catch(
+            (err) => uiStore.openSnackbar({message: `${err}`})
+          )
+        )}
+        closeModal={uiStore.closeDialog}
+        title={'Edit Link'}
+        defaultValue={link.url}
+      />
+    })
+  };
+
   openAddLinkWithDefaultCategory = ({defaultCategoryName}) => {
     const uiStore = this.props[STORE_UI] as UiStore;
     const boardStore = this.props[STORE_BOARD] as BoardStore;
 
     return uiStore.openDialog({
       DialogComponent: <UpdateContentDialog
-        label={'Title'}
         onSubmit={({value: url}) => uiStore.closeDialogWithActions(
           () => this.newCategory({title: defaultCategoryName}).then(
           () => this.newLink({category: boardStore.board.categories[0], url})
@@ -172,8 +188,18 @@ export class BoardContainer extends React.Component<BoardContainerProps, BoardCo
   };
 
   renderItem = (item: LinkData, isDragging: boolean) => {
+    const uiStore = this.props[STORE_UI] as UiStore;
     const boardStore = this.props[STORE_BOARD] as BoardStore;
-    return <LinkCard isDragging={isDragging} link={item} deleteLink={boardStore.deleteLink}/>
+    return <LinkCard
+      isDragging={isDragging}
+      link={item}
+      onClickDelete={() => boardStore.deleteLink({targetLink: item}).then(
+        () => uiStore.openSnackbar({message: 'Category has been deleted'})
+      ).catch(
+        (err) => uiStore.openSnackbar({message: `${err}`})
+      )}
+      onClickEdit={() => this.openEditLinkModal({link: item})}
+    />
   };
 
   render() {
