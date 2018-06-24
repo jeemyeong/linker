@@ -69,6 +69,6 @@ class UserController {
     @RequestMapping(value = ["/{userId}/boards"], method = [(RequestMethod.GET)])
     fun getUserInfo(@PathVariable userId: Long): ResponseEntity<Any> {
         val user = userService.findUserById(userId).orElseThrow { BadRequestException("Cannot find user") }
-        return ResponseEntity<Any>(boardService.findByUserId(user.id), HttpStatus.OK)
+        return ResponseEntity<Any>(boardService.findByUserId(user.id).sortedBy { it.id }, HttpStatus.OK)
     }
 }
