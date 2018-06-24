@@ -5,6 +5,7 @@ import linker.app.user.UserCommand
 import linker.app.user.UserService
 import linker.infra.annotation.Authenticated
 import linker.infra.auth.Role
+import linker.infra.exceptions.BadRequestException
 import linker.infra.helper.SignHelper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -67,7 +68,7 @@ class UserController {
 
     @RequestMapping(value = ["/{userId}/boards"], method = [(RequestMethod.GET)])
     fun getUserInfo(@PathVariable userId: Long): ResponseEntity<Any> {
-        val user = userService.findUserById(userId).orElseThrow { InternalError("Cannot find user") }
+        val user = userService.findUserById(userId).orElseThrow { BadRequestException("Cannot find user") }
         return ResponseEntity<Any>(boardService.findByUserId(user.id), HttpStatus.OK)
     }
 }

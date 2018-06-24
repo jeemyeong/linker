@@ -35,6 +35,12 @@ export class BoardStore {
       }));
   };
 
+  @action
+  resetBoard = (): Promise<void> => {
+    this.board = null;
+    return Promise.resolve()
+  };
+
   private reorder = <T>({list, originIndex, newIndex}: {list: T[], originIndex: number, newIndex: number}): T[] => {
     const result = Array.from(list);
     const [removed] = result.splice(originIndex, 1);

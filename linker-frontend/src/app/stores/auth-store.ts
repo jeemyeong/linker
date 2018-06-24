@@ -10,11 +10,12 @@ export class AuthStore {
   @observable public authData?: AuthData;
   @observable public authed: boolean = false;
 
-  public signInWithGoogle = ({gToken}): Promise<void> =>
+  public signInWithGoogle = ({gToken}): Promise<AuthData> =>
     ApiCall.signInWithGoogle({gToken})
       .then(authData => runInAction(() => {
         this.authData = authData;
         this.authed = true;
+        return authData
       }));
 
 

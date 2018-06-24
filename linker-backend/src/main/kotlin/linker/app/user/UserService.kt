@@ -47,6 +47,7 @@ class UserServiceImpl: UserService {
                     provider = "Google", // TODO: Change with enum
                     role = "user"
             )
+            userRepository.save(user)
             boardRepository.save(Board(title = "First Board", userId = user.id, categories = emptyList()))
 
         } else {
@@ -57,8 +58,8 @@ class UserServiceImpl: UserService {
             user.picture = googleOAuthResponse.picture
             user.provider = "Google" // TODO: Change with enum
             user.role = "user"
+            userRepository.save(user)
         }
-        userRepository.save(user)
         return findUserById(user.id).get()
     }
 }

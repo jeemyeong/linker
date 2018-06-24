@@ -2,7 +2,6 @@ import * as React from 'react';
 import { hot } from 'react-hot-loader';
 import { Router, Route, Switch } from 'react-router';
 import { Root } from 'app/containers/Root';
-import { EmptyBoard } from "app/components/ui/empty-board";
 import { createBrowserHistory } from 'history';
 import { createStores } from 'app/stores/createStore';
 import { useStrict } from 'mobx';
@@ -25,8 +24,8 @@ export const AppRouter = hot(module)(({ history }) => (
   <Root>
     <Router history={history}>
       <Switch>
-        <Route exact path="/" component={EmptyBoard} />
         <Route path="/user/:userId" component={Linker} />
+        <Route component={Linker} />
       </Switch>
     </Router>
   </Root>

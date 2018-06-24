@@ -3,6 +3,7 @@ import { BoardData } from 'app/type/board-data';
 import { ApiCall } from 'app/network/api-call';
 import { rootStore } from 'app/app';
 import { STORE_BOARD } from 'app/constants/stores';
+import BoardStore from 'app/stores/board-store';
 
 export class NavStore {
   @observable boards: BoardData[] = [];
@@ -51,7 +52,8 @@ export class NavStore {
 
   @action
   changeCurrentBoard = ({boardId}: {boardId: number}): Promise<void> => {
+    const boardStore = rootStore[STORE_BOARD] as BoardStore;
     this.currentBoardId = boardId;
-    return this.currentBoardId && rootStore[STORE_BOARD].getBoard({id: this.currentBoardId})
+    return this.currentBoardId ? boardStore.getBoard({id: this.currentBoardId}) : boardStore.resetBoard()
   }
 }

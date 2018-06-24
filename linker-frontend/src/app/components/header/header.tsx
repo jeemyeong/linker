@@ -77,7 +77,7 @@ const StyledMenuItem = styled.button`
   }
 `;
 
-export const Header = observer(({onClickSignIn, onClickSignOut, authed, authData, ...props}) => {
+export const Header = observer(({onClickSignIn, onClickSignOut, authed, authData, redirectToUserBoard, ...props}) => {
   return (
     <Container>
       <StickyContainer>
@@ -93,6 +93,11 @@ export const Header = observer(({onClickSignIn, onClickSignOut, authed, authData
                 </AvatarName>
               </AvatarContainer>
               <StyledContextMenu id="avatar_context_menu">
+                <MenuItem onClick={redirectToUserBoard}>
+                  <StyledMenuItem>
+                    Home
+                  </StyledMenuItem>
+                </MenuItem>
                 <MenuItem onClick={onClickSignOut}>
                   <StyledMenuItem>
                     Sign Out

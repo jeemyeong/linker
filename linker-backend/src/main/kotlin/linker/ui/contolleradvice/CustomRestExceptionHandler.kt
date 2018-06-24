@@ -62,7 +62,7 @@ class CustomRestExceptionHandler {
     @ExceptionHandler(BadRequestException::class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    fun handleBadRequestError(ex: InternalException, request: WebRequest): ResponseEntity<ApiError> {
+    fun handleBadRequestError(ex: BadRequestException, request: WebRequest): ResponseEntity<ApiError> {
         val error = ex.localizedMessage + " " + ex.message + " "
         val apiError = ApiError(HttpStatus.BAD_REQUEST, ex.localizedMessage, listOf(error))
         return ResponseEntity(apiError, HttpHeaders(), apiError.status)

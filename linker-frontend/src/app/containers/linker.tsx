@@ -15,6 +15,10 @@ import { sizes } from 'app/constants/size';
 import { SignIn } from 'app/components/sign-in/sign-in';
 import AuthStore from 'app/stores/auth-store';
 import { NavStore } from 'app/stores/nav-store';
+import * as debug from 'debug';
+import RouterStore from 'app/stores/router-store';
+import { AuthData } from 'app/type/user-data';
+const log = debug('application:linker.tsx');
 
 const Container = styled.div`
 `;
@@ -49,13 +53,59 @@ export class Linker extends React.Component<LinkerAppProps, LinkerState> {
   componentDidMount() {
     const navStore = this.props[STORE_NAV] as NavStore;
     const userId = this.props.match.params.userId;
-    navStore
-      .getBoards({userId})
+    log('componentDidMount');
+    log('userId: '+userId);
+    if (userId) {
+      navStore.getBoards({userId}).catch(this.redirectToOtherPage)
+    } else {
+      this.redirectToOtherPage()
+    }
   }
+
+  redirectToOtherPage = () => {
+    const authStore = this.props[STORE_AUTH] as AuthStore;
+    if (authStore.authed) {
+      const userId = authStore.authData.id;
+      this.redirectToUserBoard({userId});
+    } else {
+      this.openSignInPage()
+    }
+  };
+
+  openSignInPage = () => {
+    const uiStore = this.props[STORE_UI] as UiStore;
+    const authStore = this.props[STORE_AUTH] as AuthStore;
+    return uiStore.openDialog({
+      DialogComponent: <SignIn
+        onFailure={(response) => uiStore.openSnackbar({message: `${response.error}`})}
+        onSuccess={(gToken) => authStore.signInWithGoogle({gToken}).then((authData:AuthData) => {
+          uiStore.openSnackbar({message: 'Successful SignIn'});
+          return authData
+        }).then(
+          (authData: AuthData) => {
+            const userId = authData.id;
+            this.redirectToUserBoard({userId});
+            uiStore.closeDialog()
+          }).catch(
+          (err) => uiStore.openSnackbar({message: `${err}`})
+        )}
+        closeModal={uiStore.closeDialog}
+      />
+    })
+  };
+
+  redirectToUserBoard = ({userId}: {userId: number}) => {
+    const routerStore = this.props[STORE_ROUTER] as RouterStore;
+    const navStore = this.props[STORE_NAV] as NavStore;
+
+    routerStore.push(`/user/${userId}`);
+    navStore.getBoards({userId: userId});
+  };
 
   render() {
     const uiStore = this.props[STORE_UI] as UiStore;
     const authStore = this.props[STORE_AUTH] as AuthStore;
+    const userId = authStore.authData && authStore.authData.id;
     const isModalOpen = uiStore.state.loader.isOpen || uiStore.state.dialog.isOpen;
     return (
       <Container>
@@ -105,6 +155,7 @@ export class Linker extends React.Component<LinkerAppProps, LinkerState> {
               onClickSignOut={authStore.signOut}
               authed={authStore.authed}
               authData={authStore.authData}
+              redirectToUserBoard={() => this.redirectToUserBoard({userId})}
             />
             <Main
               {...this.props}
