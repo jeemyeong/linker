@@ -48,11 +48,6 @@ const Figure = styled.figure`
     background: transparent;
   }
   
-  &:hover div.overlay{
-    opacity: 1;
-    transform: translate3d(0,0,0);
-  }
-  
   &:hover button.delete{
     opacity: 1;
   }
@@ -89,19 +84,6 @@ const Caption = styled.div`
   font-size: 1em;
 `;
 
-const Overlay = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  content: '';
-  opacity: 0.05;
-  background: linear-gradient(rgba(72,76,97,0) 0%, rgba(72,76,97,0.5) 80%);
-  transform: translate3d(0,50%,0);
-  transition: opacity 0.35s, transform 0.35s;
-`;
-
 const Title = styled.h2`
   word-spacing: -0.15em;
   overflow-wrap: break-word;
@@ -129,20 +111,6 @@ const Title = styled.h2`
     content: '';
     transition: transform 0.35s;
     transform: translate3d(-600%,0,0);
-  }
-`;
-
-const DeleteButton = styled.button`
-  opacity: 0;
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  cursor: pointer;
-  font-weight: bold;
-  text-align: right;
-  
-  &:after {
-    content: '✖';
   }
 `;
 
@@ -261,9 +229,6 @@ export class LinkCard extends React.Component<LinkProps, {}> {
             <Img src={link.ogImage} alt="card image"/> : !isDragging && sample([<GradientsA/>, <GradientsB/>])
           }
           <Caption>
-            <Overlay className="overlay">
-              <DeleteButton className="delete" onClick={() => confirm("Do you want to remove this link really?") && onClickDelete({targetLink: link})}/>
-            </Overlay>
             <A href={link.url} target="_blank">
               <Title>{ellipsedTitle}</Title>
               <P>{ellipseStr(`${title} ${link.ogDescription ? link.ogDescription : ""}`, 120)}</P>

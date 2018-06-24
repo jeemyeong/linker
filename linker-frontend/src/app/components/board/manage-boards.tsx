@@ -112,6 +112,12 @@ export class ManageBoards extends React.Component<ManageBoardsProps, ManageBoard
     return (e.key === 'Enter') && this.onSubmit()
   };
 
+  _handleKeyDown = (e) => {
+    const uiStore = this.props[STORE_UI] as UiStore;
+    return (e.keyCode === 27) && uiStore.closeDialog()
+  };
+
+
   onSubmit = () => {
     if (!this.state.title) {
       return;
@@ -162,6 +168,7 @@ export class ManageBoards extends React.Component<ManageBoardsProps, ManageBoard
             type="content"
             onChange={(e) => this.setState({ title: e.target.value })}
             onKeyPress={this._handleKeyPress}
+            onKeyDown={this._handleKeyDown}
             value={this.state.title}
             required={true}
             placeholder={"New Board"}

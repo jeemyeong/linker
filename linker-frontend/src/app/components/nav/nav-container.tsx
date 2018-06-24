@@ -168,8 +168,8 @@ export class NavContainer extends React.Component<{}, {}> {
         }
         <Tabs>
           {navStore.boards.map(board =>
-            <ContextMenuTrigger id={`board_title_context|${board.id}`}>
-              <Tab key={board.id} isSelected={board.id == navStore.currentBoardId} onClick={() => navStore.changeCurrentBoard({boardId: board.id})}>
+            <ContextMenuTrigger id={`board_title_context|${board.id}`} key={board.id}>
+              <Tab isSelected={board.id == navStore.currentBoardId} onClick={() => navStore.changeCurrentBoard({boardId: board.id})}>
                 {board.title}
               </Tab>
               <StyledContextMenu id={`board_title_context|${board.id}`}>

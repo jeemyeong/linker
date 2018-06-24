@@ -80,6 +80,10 @@ export class UpdateContentDialog extends React.Component<UpdateContentProps, Upd
     return (e.key === 'Enter') && this.onSubmit()
   };
 
+  _handleKeyDown = (e) => {
+    return (e.keyCode === 27) && this.props.closeModal()
+  };
+
   onSubmit = () => {
     if (!this.state.value) {
       return;
@@ -98,6 +102,7 @@ export class UpdateContentDialog extends React.Component<UpdateContentProps, Upd
             id="input"
             type="content"
             onChange={(e) => this.setState({ value: e.target.value })}
+            onKeyDown={this._handleKeyDown}
             onKeyPress={this._handleKeyPress}
             value={this.state.value}
             required={true}
