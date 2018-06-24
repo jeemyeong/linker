@@ -16,6 +16,7 @@ import linker.domain.user.User
 sealed class BoardCommand {
     class UpdateBoard(val id: Long, val board: BoardVO)
     class CreateBoard(val title: String)
+    class UpdateBoardTitle(val title: String)
 }
 
 data class BoardVO(

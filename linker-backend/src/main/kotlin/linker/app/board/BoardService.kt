@@ -23,6 +23,7 @@ interface BoardService {
     fun findByUserId(userId: Long): List<Board>
     fun newBoard(userId: Long, title: String): Board
     fun deleteBoard(boardId: Long)
+    fun updateBoard(boardId: Long, title: String): Board
 }
 
 @Service
@@ -59,5 +60,11 @@ class BoardServiceImpl: BoardService {
 
     override fun deleteBoard(boardId: Long) {
         return boardRepository.deleteById(boardId)
+    }
+
+    override fun updateBoard(boardId: Long, title: String): Board {
+        val board = boardRepository.findById(boardId).get()
+        board.title = title
+        return boardRepository.save(board)
     }
 }

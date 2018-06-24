@@ -58,7 +58,10 @@ export class BoardContainer extends React.Component<BoardContainerProps, BoardCo
       DialogComponent: <UpdateContentDialog
           onSubmit={({value: url}) => uiStore.closeDialogWithActions(
             () => this.newLink({category, url}).then(
-              () => uiStore.openSnackbar({message: 'Link has been saved'})
+              () => {
+                console.log("ERR")
+                uiStore.openSnackbar({message: 'Link has been saved'})
+              }
             ).catch(
               (err) => uiStore.openSnackbar({message: `${err}`})
             )

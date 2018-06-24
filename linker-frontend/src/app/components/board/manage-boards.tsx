@@ -5,6 +5,7 @@ import { inject, observer } from 'mobx-react';
 import { STORE_NAV, STORE_UI } from 'app/constants/stores';
 import { NavStore } from 'app/stores/nav-store';
 import UiStore from 'app/stores/ui-store';
+import { BoardData } from 'app/type/board-data';
 
 const DialogTitle = styled.h1`
   font-size: 3.5em;
@@ -126,10 +127,10 @@ export class ManageBoards extends React.Component<ManageBoardsProps, ManageBoard
     )
   };
 
-  onDelete = ({boardId, title}) => {
+  onDelete = ({board}: {board: BoardData}) => {
     const uiStore = this.props[STORE_UI] as UiStore;
-    this.deleteBoard({boardId}).then(
-      () => uiStore.openSnackbar({message: `${title} has been deleted`})
+    this.deleteBoard({board}).then(
+      () => uiStore.openSnackbar({message: `${board.title} has been deleted`})
     ).catch(
       (err) => uiStore.openSnackbar({message: `${err}`})
     )
@@ -141,9 +142,9 @@ export class ManageBoards extends React.Component<ManageBoardsProps, ManageBoard
     return navStore.createBoard({title})
   };
 
-  deleteBoard = ({boardId}: {boardId: number}) => {
+  deleteBoard = ({board}: {board: BoardData}) => {
     const navStore = this.props[STORE_NAV] as NavStore;
-    return navStore.deleteBoard({boardId})
+    return navStore.deleteBoard({board})
   };
 
 
@@ -170,7 +171,7 @@ export class ManageBoards extends React.Component<ManageBoardsProps, ManageBoard
               <Item key={board.id}>
                 <div>{board.title}</div>
                 <DeleteItemButton
-                  onClick={() => this.onDelete({boardId: board.id, title: board.title})}
+                  onClick={() => this.onDelete({board})}
                 >
                   ✖️
                 </DeleteItemButton>

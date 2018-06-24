@@ -26,17 +26,26 @@ export class NavStore {
   };
 
   @action
-  deleteBoard = ({boardId}: {boardId: number}) => {
-    return ApiCall.deleteBoard({boardId})
+  deleteBoard = ({board}: {board: BoardData}) => {
+    return ApiCall.deleteBoard({boardId: board.id})
       .then(() => runInAction(() => {
         this.boards = this.boards.filter(
-          (board) => board.id !== boardId
+          (b) => b.id !== board.id
         );
-        if (this.currentBoardId == boardId) {
+        if (this.currentBoardId == board.id) {
           const boardId = this.boards[0] && this.boards[0].id || null;
           return this.changeCurrentBoard({boardId});
         }
         return Promise.resolve();
+      }))
+  };
+
+  @action
+  updateBoardTitle = ({board, title}: {board: BoardData, title: string}) => {
+    return ApiCall.updateBoardTitle({boardId: board.id, title})
+      .then(board => runInAction(() => {
+        this.boards.find(b => b.id == board.id).title = board.title;
+        return board.id
       }))
   };
 

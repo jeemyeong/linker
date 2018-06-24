@@ -61,6 +61,17 @@ class BoardController {
             ResponseEntity<Any>(boardService.deleteBoard(boardId), HttpStatus.OK)
         }.orElse(ResponseEntity("Board is not present", HttpStatus.BAD_REQUEST))
     }
+
+    @Authenticated
+    @RequestMapping(value = ["/{boardId}/title"], method = [(RequestMethod.PUT)])
+    fun updateBoardTitle(@PathVariable boardId: Long, @RequestBody updateBoardTitleCommand: BoardCommand.UpdateBoardTitle): ResponseEntity<Any> {
+        return boardService.findBoardById(boardId).map {
+            if (it.userId != signHelper.getUserId()) {
+                throw TokenException("You cannot command this board")
+            }
+            ResponseEntity<Any>(boardService.updateBoard(boardId, updateBoardTitleCommand.title), HttpStatus.OK)
+        }.orElse(ResponseEntity("Board is not present", HttpStatus.BAD_REQUEST))
+    }
     /**
      * Query
      */

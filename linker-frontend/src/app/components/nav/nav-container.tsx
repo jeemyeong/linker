@@ -10,6 +10,9 @@ import { NavStore } from 'app/stores/nav-store';
 import AuthStore from 'app/stores/auth-store';
 import UiStore from 'app/stores/ui-store';
 import { ManageBoards } from 'app/components/board/manage-boards';
+import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
+import UpdateContentDialog from 'app/components/board/update-content-dialog';
+import { BoardData } from 'app/type/board-data';
 
 const StyledNav = styled.nav`
   position: absolute;
@@ -84,6 +87,36 @@ const StyledSettingsIcon = styled(Settings)`
   }
 `;
 
+const StyledContextMenu = styled(ContextMenu)`
+  && {
+    background: ${colors.white};
+    border-radius: 10px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    z-index: 9997;
+    min-width: 130px;
+  }
+`;
+
+const StyledMenuItem = styled.button`
+  min-height: 50px;
+  width: 100%;
+  text-align: left;
+  padding: 10px;
+  font-size: 1.1em;
+  font-weight: 600;
+  color: ${colors.grey.light};
+  cursor: pointer;
+  outline: none;
+  user-select: none;
+  &:hover {
+    background: rgba(0,0,0,0.03);
+  }
+`;
+
 @inject(STORE_NAV, STORE_AUTH, STORE_UI)
 @observer
 export class NavContainer extends React.Component<{}, {}> {
@@ -95,7 +128,29 @@ export class NavContainer extends React.Component<{}, {}> {
     })
   };
 
+  openEditBoardTitleModal = ({board}: {board: BoardData}) => {
+    const uiStore = this.props[STORE_UI] as UiStore;
+    const navStore = this.props[STORE_NAV] as NavStore;
+
+    return uiStore.openDialog({
+      DialogComponent: <UpdateContentDialog
+        onSubmit={({value: title}) => uiStore.closeDialogWithActions(
+          () => navStore.updateBoardTitle({board: board, title}).then(
+            () => uiStore.openSnackbar({message: 'Board has been saved'})
+          ).catch(
+            (err) => uiStore.openSnackbar({message: `${err}`})
+          )
+        )}
+        closeModal={uiStore.closeDialog}
+        title={'Edit Board'}
+        defaultValue={board.title}
+      />
+    })
+  };
+
+
   render() {
+    const uiStore = this.props[STORE_UI] as UiStore;
     const navStore = this.props[STORE_NAV] as NavStore;
     const authStore = this.props[STORE_AUTH] as AuthStore;
     return (
@@ -113,9 +168,27 @@ export class NavContainer extends React.Component<{}, {}> {
         }
         <Tabs>
           {navStore.boards.map(board =>
-            <Tab key={board.id} isSelected={board.id == navStore.currentBoardId} onClick={() => navStore.changeCurrentBoard({boardId: board.id})}>
-              {board.title}
-            </Tab>
+            <ContextMenuTrigger id={`board_title_context|${board.id}`}>
+              <Tab key={board.id} isSelected={board.id == navStore.currentBoardId} onClick={() => navStore.changeCurrentBoard({boardId: board.id})}>
+                {board.title}
+              </Tab>
+              <StyledContextMenu id={`board_title_context|${board.id}`}>
+                <MenuItem onClick={() => this.openEditBoardTitleModal({board})}>
+                  <StyledMenuItem>
+                    Edit
+                  </StyledMenuItem>
+                </MenuItem>
+                <MenuItem onClick={() => navStore.deleteBoard({board}).then(
+                  () => uiStore.openSnackbar({message: 'Category has been deleted'})
+                ).catch(
+                  (err) => uiStore.openSnackbar({message: `${err}`})
+                )}>
+                  <StyledMenuItem>
+                    Remove
+                  </StyledMenuItem>
+                </MenuItem>
+              </StyledContextMenu>
+            </ContextMenuTrigger>
           )}
         </Tabs>
       </StyledNav>

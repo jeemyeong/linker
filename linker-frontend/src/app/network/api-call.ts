@@ -18,4 +18,6 @@ export const ApiCall = {
     axios.post(`${API_URL}/board`, {title: title}).then(v => v.data),
   deleteBoard: ({boardId}: {boardId: number}): Promise<null> =>
     axios.delete(`${API_URL}/board/${boardId}`).then(v => v.data),
+  updateBoardTitle: ({boardId, title}: {boardId: number, title: string}) =>
+    axios.put(`${API_URL}/board/${boardId}/title`, {title: title}).then(v => v.data)
 };
