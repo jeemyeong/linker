@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletResponse
  * Date: 14/06/2018
  * Time: 12:26 AM
  */
-@CrossOrigin(value = ["http://localhost:3000"], allowCredentials = "true")
+@CrossOrigin(value = ["http://localhost:3000", "http://linker.jeemyeong.com"], allowCredentials = "true")
 @RestController
 @RequestMapping(value = ["/user"])
 @Controller
