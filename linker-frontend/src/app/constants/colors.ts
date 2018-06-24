@@ -1,5 +1,5 @@
 export const colors = {
-  main: '#714bfb',
+  main: '#6B50FF',
   blue: {
     deep: '#355C7D',
     light: 'lightblue',
@@ -17,7 +17,7 @@ export const colors = {
   green: '#bfe2be',
   white: '#ffffff',
   purple: {
-    bright: '#dedcee',
+    bright: '#F0EDFF',
     lighter: '#A593E0',
     light: '#6C5B7B',
     deep: '#7200da',

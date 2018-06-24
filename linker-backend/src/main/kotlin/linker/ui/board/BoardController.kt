@@ -87,9 +87,4 @@ class BoardController {
             ResponseEntity<Any>(BoardDto.fromDomain(board), HttpStatus.OK)
         }.orElse(ResponseEntity("Board is not present", HttpStatus.BAD_REQUEST))
     }
-
-    @RequestMapping(value = ["/user/{userId}"], method = [(RequestMethod.GET)])
-    fun getBoards(@PathVariable userId: Long): ResponseEntity<Any> {
-        return ResponseEntity<Any>(boardService.findByUserId(userId), HttpStatus.OK)
-    }
 }
