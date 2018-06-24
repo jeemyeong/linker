@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { observable, action } from 'mobx';
+import { go } from 'app/util/functional';
 
 interface UiSate {
   dialog: {
@@ -12,6 +13,9 @@ interface UiSate {
   snackbar: {
     isOpen: boolean,
     message: null | string
+  }
+  floatingButton: {
+    isOpen: boolean
   }
 }
 
@@ -27,6 +31,9 @@ export class UiStore {
     snackbar: {
       isOpen: false,
       message: null
+    },
+    floatingButton: {
+      isOpen: false
     }
   };
 
@@ -50,8 +57,7 @@ export class UiStore {
         Component: null
       }
     }
-  }
-
+  };
 
   @action
   openLoader = () => {
@@ -82,7 +88,7 @@ export class UiStore {
         message
       }
     }
-  }
+  };
 
   @action
   closeSnackbar = () => {
@@ -93,7 +99,16 @@ export class UiStore {
         message: null
       }
     }
-  }
+  };
+
+  closeDialogWithActions = (...fns) => {
+    return go(null,
+      this.openLoader,
+      ...fns,
+      this.closeDialog,
+      this.closeLoader
+    )
+  };
 }
 
 export default UiStore;
