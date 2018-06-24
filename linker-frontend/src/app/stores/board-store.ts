@@ -43,7 +43,7 @@ export class BoardStore {
   };
 
   private update = () => ApiCall
-    .updateBoard({id: 1, updateBoardCommand: new UpdateBoardCommand({board: this.board})})
+    .updateBoard({id: this.board.id, updateBoardCommand: new UpdateBoardCommand({board: this.board})})
     .then(board => runInAction(() =>{
       if (R.equals(toJS(this.board), board)) {
         return;
