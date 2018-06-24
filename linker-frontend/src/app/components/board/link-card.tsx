@@ -193,12 +193,15 @@ interface LinkProps {
 
 @observer
 export class LinkCard extends React.Component<LinkProps, {}> {
+
+  gradient = sample(colors.gradients);
+
   shouldComponentUpdate(nextProps, nextState) {
     return !R.equals(nextProps, this.props)
   }
 
   render() {
-    const { link, onClickDelete, onClickEdit, isDragging } = this.props;
+    const { link, onClickDelete, onClickEdit } = this.props;
     log("render: " + link.url);
     const title = link.ogTitle ? link.ogTitle + ": " + link.url.replace(/^.*\/\//, "") : link.url.replace(/^.*\/\//, "").replace(/^www./, "");
     const ellipsedTitle = ellipseStr(title, 34);
@@ -206,7 +209,7 @@ export class LinkCard extends React.Component<LinkProps, {}> {
       <Card>
         <Figure>
           {link.ogImage ?
-            <Img src={link.ogImage} alt="card image"/> : !isDragging && <Gradients gradient={sample(colors.gradients)}/>
+            <Img src={link.ogImage} alt="card image"/> : <Gradients gradient={this.gradient}/>
           }
           <Caption>
             <A href={link.url} target="_blank">
