@@ -1,6 +1,7 @@
 package linker.ui.contolleradvice
 
 import linker.infra.exceptions.ApiError
+import linker.infra.exceptions.BadRequestException
 import linker.infra.exceptions.InternalException
 import linker.infra.exceptions.TokenException
 import org.springframework.http.HttpHeaders
@@ -55,6 +56,15 @@ class CustomRestExceptionHandler {
     fun handleInternalServerError(ex: InternalException, request: WebRequest): ResponseEntity<ApiError> {
         val error = ex.localizedMessage + " " + ex.message + " "
         val apiError = ApiError(HttpStatus.INTERNAL_SERVER_ERROR, ex.localizedMessage, listOf(error))
+        return ResponseEntity(apiError, HttpHeaders(), apiError.status)
+    }
+
+    @ExceptionHandler(BadRequestException::class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    fun handleBadRequestError(ex: InternalException, request: WebRequest): ResponseEntity<ApiError> {
+        val error = ex.localizedMessage + " " + ex.message + " "
+        val apiError = ApiError(HttpStatus.BAD_REQUEST, ex.localizedMessage, listOf(error))
         return ResponseEntity(apiError, HttpHeaders(), apiError.status)
     }
 }

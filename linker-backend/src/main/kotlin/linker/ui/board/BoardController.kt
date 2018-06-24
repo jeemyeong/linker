@@ -4,6 +4,7 @@ import linker.app.board.BoardCommand
 import linker.app.board.BoardService
 import linker.app.board.BoardVO
 import linker.infra.annotation.Authenticated
+import linker.infra.exceptions.BadRequestException
 import linker.infra.exceptions.TokenException
 import linker.infra.helper.SignHelper
 import org.springframework.beans.factory.annotation.Autowired
@@ -54,9 +55,13 @@ class BoardController {
     @Authenticated
     @RequestMapping(value = ["/{boardId}"], method = [(RequestMethod.DELETE)])
     fun deleteBoard(@PathVariable boardId: Long): ResponseEntity<Any> {
+        val userId = signHelper.getUserId()
         return boardService.findBoardById(boardId).map {
-            if (it.userId != signHelper.getUserId()) {
+            if (it.userId != userId) {
                 throw TokenException("You cannot command this board")
+            }
+            if (boardService.findByUserId(userId).size == 1) {
+                throw BadRequestException("You cannot delete all boards")
             }
             ResponseEntity<Any>(boardService.deleteBoard(boardId), HttpStatus.OK)
         }.orElse(ResponseEntity("Board is not present", HttpStatus.BAD_REQUEST))
@@ -65,8 +70,9 @@ class BoardController {
     @Authenticated
     @RequestMapping(value = ["/{boardId}/title"], method = [(RequestMethod.PUT)])
     fun updateBoardTitle(@PathVariable boardId: Long, @RequestBody updateBoardTitleCommand: BoardCommand.UpdateBoardTitle): ResponseEntity<Any> {
+        val userId = signHelper.getUserId()
         return boardService.findBoardById(boardId).map {
-            if (it.userId != signHelper.getUserId()) {
+            if (it.userId != userId) {
                 throw TokenException("You cannot command this board")
             }
             ResponseEntity<Any>(boardService.updateBoard(boardId, updateBoardTitleCommand.title), HttpStatus.OK)

@@ -1,6 +1,8 @@
 package linker.app.user
 
+import linker.domain.board.Board
 import linker.domain.user.User
+import linker.infra.board.BoardRepository
 import linker.infra.rest.GoogleOAuthResponse
 import linker.infra.rest.GoogleOAuthRestManager
 import linker.infra.user.UserRepository
@@ -25,6 +27,8 @@ class UserServiceImpl: UserService {
     @Autowired
     lateinit var userRepository: UserRepository
     @Autowired
+    lateinit var boardRepository: BoardRepository
+    @Autowired
     lateinit var googleAuthRestManager: GoogleOAuthRestManager
 
     override fun findUserById(id: Long): Optional<User> = userRepository.findById(id)
@@ -43,6 +47,8 @@ class UserServiceImpl: UserService {
                     provider = "Google", // TODO: Change with enum
                     role = "user"
             )
+            boardRepository.save(Board(title = "First Board", userId = user.id, categories = emptyList()))
+
         } else {
             user.googleId = googleOAuthResponse.id
             user.name = googleOAuthResponse.name
