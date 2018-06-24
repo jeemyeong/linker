@@ -6,7 +6,6 @@ import UiStore from 'app/stores/ui-store';
 import { Loader } from 'app/components/ui/loader';
 import { Overlay } from 'app/components/ui/overlay';
 import { Snackbar } from 'app/components/ui/snackbar';
-import { DialogModal } from 'app/components/ui/dialog-modal';
 import Header from 'app/components/header/header';
 import { Main } from 'app/components/main/main';
 import { STORE_ROUTER, STORE_UI, STORE_AUTH, STORE_NAV, STORE_BOARD } from 'app/constants/stores';
@@ -114,12 +113,7 @@ export class Linker extends React.Component<LinkerAppProps, LinkerState> {
           }
           {
             uiStore.state.dialog.isOpen &&
-            <DialogModal
-              isOpen={uiStore.state.dialog.isOpen}
-              onClose={uiStore.closeDialog}
-            >
-              {uiStore.state.dialog.Component}
-            </DialogModal>
+            uiStore.state.dialog.Component
           }
         {
           uiStore.state.snackbar.isOpen && <Snackbar message={uiStore.state.snackbar.message} handleClose={uiStore.closeSnackbar}/>
