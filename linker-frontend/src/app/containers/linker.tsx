@@ -39,6 +39,17 @@ const RightSide = styled.div`
   height: 100%;
 `;
 
+
+
+
+const userIdPattern = new RegExp(/(\/user\/)([\d]+)($|[\/]?.*)/);
+
+const getUserId = (path) => {
+  const res = userIdPattern.exec(path);
+  return res && res[2] && +res[2]
+};
+
+
 export interface LinkerAppProps extends RouteComponentProps<any> {
   /** MobX Stores will be injected via @inject() **/
 }
@@ -49,16 +60,27 @@ export interface LinkerState {}
 @observer
 export class Linker extends React.Component<LinkerAppProps, LinkerState> {
 
+  unsubscribeHistory;
+
   componentDidMount() {
     const navStore = this.props[STORE_NAV] as NavStore;
     const userId = this.props.match.params.userId;
+    const routerStore = this.props[STORE_ROUTER] as RouterStore;
+
+    this.unsubscribeHistory = routerStore.history.subscribe(location => {
+      const userId = getUserId(location.pathname);
+      if (userId) {
+        navStore.getBoards({userId}).catch(this.redirectToOtherPage)
+      } else {
+        this.redirectToOtherPage()
+      }
+    });
     log('componentDidMount');
     log('userId: '+userId);
-    if (userId) {
-      navStore.getBoards({userId}).catch(this.redirectToOtherPage)
-    } else {
-      this.redirectToOtherPage()
-    }
+  }
+
+  componentWillUnmount() {
+    this.unsubscribeHistory()
   }
 
   redirectToOtherPage = () => {
@@ -95,10 +117,7 @@ export class Linker extends React.Component<LinkerAppProps, LinkerState> {
 
   redirectToUserBoard = ({userId}: {userId: number}) => {
     const routerStore = this.props[STORE_ROUTER] as RouterStore;
-    const navStore = this.props[STORE_NAV] as NavStore;
-
     routerStore.push(`/user/${userId}`);
-    navStore.getBoards({userId: userId});
   };
 
   render() {
@@ -108,13 +127,12 @@ export class Linker extends React.Component<LinkerAppProps, LinkerState> {
     const isModalOpen = uiStore.state.loader.isOpen || uiStore.state.dialog.isOpen;
     return (
       <Container>
-          {
-            uiStore.state.loader.isOpen && <Overlay><Loader/></Overlay>
-          }
-          {
-            uiStore.state.dialog.isOpen &&
-            uiStore.state.dialog.Component
-          }
+        {
+          uiStore.state.loader.isOpen && <Overlay><Loader/></Overlay>
+        }
+        {
+          uiStore.state.dialog.isOpen && uiStore.state.dialog.Component
+        }
         {
           uiStore.state.snackbar.isOpen && <Snackbar message={uiStore.state.snackbar.message} handleClose={uiStore.closeSnackbar}/>
         }
@@ -127,25 +145,7 @@ export class Linker extends React.Component<LinkerAppProps, LinkerState> {
 
           <RightSide>
             <Header
-              onClickSignIn={() =>uiStore.openDialog({
-                DialogComponent: <SignIn
-                  onFailure={(response) => {
-                    uiStore.closeDialogWithActions(
-                      () => uiStore.openSnackbar({message: `${response.error}`})
-                    )
-                  }}
-                  onSuccess={(gToken) => {
-                    uiStore.closeDialogWithActions(
-                      () => authStore.signInWithGoogle({gToken}).then(
-                        () => uiStore.openSnackbar({message: 'Successful SignIn'}),
-                      ).catch(
-                        (err) => uiStore.openSnackbar({message: `${err}`})
-                      )
-                    )
-                  }}
-                  closeModal={uiStore.closeDialog}
-                />
-              })}
+              onClickSignIn={this.openSignInPage}
               onClickSignOut={authStore.signOut}
               authed={authStore.authed}
               authData={authStore.authData}

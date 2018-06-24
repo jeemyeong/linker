@@ -1,5 +1,5 @@
 const portReplacer = (origin, port) =>
-  origin.replace(/(((:[\d]*)?$))/, ':' + port);
+  origin.replace(/((:[\d]*)?$)/, ':' + port);
 const PRODUCTION = 'production';
 export const __PRODUCTION__ = process.env.NODE_ENV === PRODUCTION;
 
