@@ -21,6 +21,10 @@ button {
   font-smoothing: antialiased;
 }
 
+* {
+  outline: none;
+}
+
 body {
   font: 14px PT Sans, Noto Sans, sans-serif;
   font-weight: 300;

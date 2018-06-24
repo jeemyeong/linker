@@ -1,4 +1,4 @@
-package linker.infra.exception
+package linker.infra.exceptions
 
 import org.springframework.http.HttpStatus
 

@@ -6,6 +6,8 @@ import {
 import { Column } from './column';
 import styled from 'styled-components';
 import { observer } from "mobx-react";
+import * as debug from 'debug';
+const log = debug('application:board.tsx');
 
 const ParentContainer = styled.div`
   height: ${({ height }: { height }) => height};
@@ -120,7 +122,7 @@ export class Board<
   };
 
   render() {
-    console.log("Board is rendering");
+    log("render");
     const { itemKey } = this.props;
     const { categories } = this.props.board;
     const { containerHeight, renderItem, renderAddColumn, renderAddItemButton, renderColumnTitle } = this.props;

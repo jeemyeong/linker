@@ -1,10 +1,12 @@
 import { action, observable, runInAction, toJS } from 'mobx';
-import ApiCall from 'app/network/api-call';
 import * as R from 'ramda';
 import { BoardData } from 'app/type/board-data';
 import { LinkData } from 'app/type/link-data';
 import { CategoryData } from 'app/type/category-data';
 import { UpdateBoardCommand } from "app/type/update-board-command";
+import { ApiCall } from 'app/network/api-call';
+import { rootStore } from 'app/app';
+import { STORE_UI } from 'app/constants/stores';
 
 export class BoardStore {
   constructor(board: BoardData = null) {
@@ -18,7 +20,7 @@ export class BoardStore {
   private maxCategoryId = 0;
 
   @action
-  getBoard = (id: number) => {
+  getBoard = ({id}: {id: number}) => {
     this.isLoading = true;
     return ApiCall.getBoard({id})
       .then(board => runInAction(() =>{
@@ -33,6 +35,12 @@ export class BoardStore {
       }));
   };
 
+  @action
+  resetBoard = (): Promise<void> => {
+    this.board = null;
+    return Promise.resolve()
+  };
+
   private reorder = <T>({list, originIndex, newIndex}: {list: T[], originIndex: number, newIndex: number}): T[] => {
     const result = Array.from(list);
     const [removed] = result.splice(originIndex, 1);
@@ -41,7 +49,7 @@ export class BoardStore {
   };
 
   private update = () => ApiCall
-    .updateBoard({id: 1, updateBoardCommand: new UpdateBoardCommand({board: this.board})})
+    .updateBoard({id: this.board.id, updateBoardCommand: new UpdateBoardCommand({board: this.board})})
     .then(board => runInAction(() =>{
       if (R.equals(toJS(this.board), board)) {
         return;
@@ -50,7 +58,9 @@ export class BoardStore {
       this.isLoading = false;
       this.maxLinkId = Math.max(...R.unnest(this.board.categories.map(category => R.unnest(category.links.map(link => link.id))))) + 1;
       this.maxCategoryId = Math.max(...this.board.categories.map(category => category.id)) + 1;
-    }));
+    }))
+    .catch((e) => rootStore[STORE_UI].openSnackbar({message: 'Error for update'}) || this.getBoard({id: this.board.id}).then(() => Promise.reject(e)))
+  ;
 
   @action
   reorderCategories = ({originIndex, newIndex}) => {
@@ -117,6 +127,19 @@ export class BoardStore {
   @action
   updateCategory = ({category, title}: {category: CategoryData, title: string}) => {
     this.board.categories.find(c => c.id == category.id).title = title;
+    return this.update()
+  };
+
+  @action
+  updateLink = ({link, url}: {link: LinkData, url: string}) => {
+    this.board.categories.forEach(
+      c => {
+        const l = c.links.find(l => l.id == link.id)
+        if(l) {
+          l.url = url;
+        }
+      }
+    );
     return this.update()
   };
 

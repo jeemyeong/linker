@@ -15,7 +15,7 @@ export const Snackbar = ({message, handleClose}: SnackbarProps) => (
       horizontal: 'left',
     }}
     open={true}
-    autoHideDuration={3000}
+    autoHideDuration={4000}
     onClose={handleClose}
     ContentProps={{
       'aria-describedby': 'message-id',

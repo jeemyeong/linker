@@ -1,6 +1,9 @@
 package linker.ui.contolleradvice
 
-import linker.infra.exception.ApiError
+import linker.infra.exceptions.ApiError
+import linker.infra.exceptions.BadRequestException
+import linker.infra.exceptions.InternalException
+import linker.infra.exceptions.TokenException
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -33,6 +36,33 @@ class CustomRestExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     fun handleMalformedURL(ex: MalformedURLException, request: WebRequest): ResponseEntity<ApiError> {
+        val error = ex.localizedMessage + " " + ex.message + " "
+        val apiError = ApiError(HttpStatus.BAD_REQUEST, ex.localizedMessage, listOf(error))
+        return ResponseEntity(apiError, HttpHeaders(), apiError.status)
+    }
+
+    @ExceptionHandler(TokenException::class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ResponseBody
+    fun handleUnauthorizedError(ex: TokenException, request: WebRequest): ResponseEntity<ApiError> {
+        val error = ex.localizedMessage + " " + ex.message + " "
+        val apiError = ApiError(HttpStatus.UNAUTHORIZED, ex.localizedMessage, listOf(error))
+        return ResponseEntity(apiError, HttpHeaders(), apiError.status)
+    }
+
+    @ExceptionHandler(InternalException::class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseBody
+    fun handleInternalServerError(ex: InternalException, request: WebRequest): ResponseEntity<ApiError> {
+        val error = ex.localizedMessage + " " + ex.message + " "
+        val apiError = ApiError(HttpStatus.INTERNAL_SERVER_ERROR, ex.localizedMessage, listOf(error))
+        return ResponseEntity(apiError, HttpHeaders(), apiError.status)
+    }
+
+    @ExceptionHandler(BadRequestException::class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    fun handleBadRequestError(ex: BadRequestException, request: WebRequest): ResponseEntity<ApiError> {
         val error = ex.localizedMessage + " " + ex.message + " "
         val apiError = ApiError(HttpStatus.BAD_REQUEST, ex.localizedMessage, listOf(error))
         return ResponseEntity(apiError, HttpHeaders(), apiError.status)

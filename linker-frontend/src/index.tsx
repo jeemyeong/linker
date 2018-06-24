@@ -1,9 +1,12 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { App } from 'app/app';
+import { initRender } from './init-render';
 
-// render react DOM
-ReactDOM.render(
-  <App/>,
-  document.getElementById('root')
-);
+const render = () =>
+  ReactDOM.render(
+    <App/>,
+    document.getElementById('root')
+  );
+
+initRender(render);

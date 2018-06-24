@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { observable, action } from 'mobx';
-import * as R from 'ramda';
 import { go } from 'app/util/functional';
 
 interface UiSate {
@@ -39,7 +38,7 @@ export class UiStore {
   };
 
   @action
-  openDialog = (DialogComponent: React.ReactElement<{}>) => {
+  openDialog = ({DialogComponent}: {DialogComponent: React.ReactElement<{}>}) => {
     this.state = {
       ...this.state,
       dialog: {
@@ -102,13 +101,12 @@ export class UiStore {
     }
   };
 
-  closeDialogWithActions = (arg: {message: string} & {[key: string]: any}, ...fns) => {
-    return go(arg,
-      R.tap(this.openLoader),
-      ...R.map<({})[], ({})[]>(R.tap, fns),
-      R.tap(this.closeDialog),
-      R.tap(this.closeLoader),
-      R.tap(this.openSnackbar)
+  closeDialogWithActions = (...fns) => {
+    return go(null,
+      this.openLoader,
+      ...fns,
+      this.closeDialog,
+      this.closeLoader
     )
   };
 }

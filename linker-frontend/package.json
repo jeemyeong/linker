@@ -49,16 +49,20 @@
   "dependencies": {
     "@material-ui/core": "^1.0.0",
     "@material-ui/icons": "^1.0.0",
+    "@types/debug": "^0.0.30",
     "@types/react-beautiful-dnd": "^6.0.1",
     "axios": "^0.18.0",
     "classnames": "^2.2.5",
+    "debug": "^3.1.0",
     "mobx": "^3.6.1",
     "mobx-react": "^4.4.2",
     "mobx-react-router": "^4.0.1",
     "ramda": "^0.25.0",
     "react": "^16.2.0",
     "react-beautiful-dnd": "^7.0.0",
+    "react-contextmenu": "^2.9.2",
     "react-dom": "^16.2.0",
+    "react-google-login": "^3.2.1",
     "react-router": "^4.2.0",
     "styled-components": "^3.2.6"
   }

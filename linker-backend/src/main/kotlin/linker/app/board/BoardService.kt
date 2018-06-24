@@ -19,7 +19,11 @@ import java.util.*
 
 interface BoardService {
     fun findBoardById(id: Long): Optional<Board>
-    fun updateBoard(command: UpdateBoard): Board
+    fun updateBoard(userId: Long, command: UpdateBoard): Board
+    fun findByUserId(userId: Long): List<Board>
+    fun newBoard(userId: Long, title: String): Board
+    fun deleteBoard(boardId: Long)
+    fun updateBoard(boardId: Long, title: String): Board
 }
 
 @Service
@@ -27,16 +31,13 @@ class BoardServiceImpl: BoardService {
     @Autowired
     lateinit var boardRepository: BoardRepository
     @Autowired
-    lateinit var categoryRepository: BoardRepository
-    @Autowired
     lateinit var userRepository: UserRepository
 
     override fun findBoardById(id: Long): Optional<Board> = boardRepository.findById(id)
 
     @Transactional
-    override fun updateBoard(command: UpdateBoard): Board {
-        var board = boardRepository.findById(command.id).get()
-        board = command.board.toDomain(userRepository.findById(2L).get())
+    override fun updateBoard(userId: Long, command: UpdateBoard): Board {
+        val board = command.board.toDomain(userRepository.findById(userId).get())
         board.categories = board.categories.mapIndexed { index, category ->
             category.order = index + 1
             category.links.mapIndexed { index, link ->
@@ -47,5 +48,23 @@ class BoardServiceImpl: BoardService {
         }
         boardRepository.save(board)
         return findBoardById(board.id).get()
+    }
+
+    override fun findByUserId(userId: Long): List<Board> {
+        return boardRepository.findByUserId(userId)
+    }
+
+    override fun newBoard(userId: Long, title: String): Board {
+        return boardRepository.save(Board(title = title, userId = userId, categories = emptyList()))
+    }
+
+    override fun deleteBoard(boardId: Long) {
+        return boardRepository.deleteById(boardId)
+    }
+
+    override fun updateBoard(boardId: Long, title: String): Board {
+        val board = boardRepository.findById(boardId).get()
+        board.title = title
+        return boardRepository.save(board)
     }
 }

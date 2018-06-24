@@ -10,6 +10,8 @@ import {
 } from 'app/libs/board/board';
 import { observer } from "mobx-react";
 import { sizes } from "app/constants/size";
+import * as debug from 'debug';
+const log = debug('application:column.tsx');
 
 export const ColumnContainer = styled.div`
   width: ${sizes.rightSide.column.width};
@@ -37,11 +39,11 @@ export class Column<T extends BoardItem, K extends BoardColumn<T>> extends React
   ColumnState
 > {
   componentDidMount() {
-    console.log("Column: CDM")
+    log("componentDidMount")
   }
 
   render() {
-    console.log("Column: I am rendering");
+    log("render");
     const { index, renderColumnTitle, column, renderAddItemButton, itemKey } = this.props;
     const items = column[itemKey];
     return (

@@ -11,4 +11,6 @@ import org.springframework.stereotype.Repository
  * Time: 9:20 PM
  */
 @Repository
-interface BoardRepository : JpaRepository<Board, Long>
+interface BoardRepository : JpaRepository<Board, Long> {
+    fun findByUserId(userId: Long): List<Board>
+}
