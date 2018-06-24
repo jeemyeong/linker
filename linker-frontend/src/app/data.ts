@@ -101,7 +101,7 @@ export const getLinks = (count) =>
 
     const custom = {
       id: `link-${idCount++}`,
-      content: random.content,
+      // content: random.value,
       author: random.author
     };
 
@@ -123,7 +123,7 @@ export const getAuthors = (count) =>
   });
 
 const getByAuthor = (author, items) =>
-  items.filter((link) => link.user === author);
+  items.filter((link) => link.authData === author);
 
 export const authorLinkMap = authors.reduce(
   (previous, author) => ({

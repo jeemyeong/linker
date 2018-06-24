@@ -1,36 +1,22 @@
 import { History } from 'history';
-import { RouterStore } from './router-store';
-import { STORE_TODO, STORE_ROUTER, STORE_LINK, STORE_USER, STORE_COLUMN } from 'app/constants';
-import { UserModel, TodoModel, LinkModel, LinkColumnModel } from 'app/models';
-import LinkStore from 'app/stores/link-store';
-import UserStore from 'app/stores/user-store';
-import TodoStore from 'app/stores/todo-store';
-import ColumnStore from 'app/stores/column-store';
+import AuthStore from 'app/stores/auth-store';
+import RouterStore from 'app/stores/router-store';
+import UiStore from 'app/stores/ui-store';
+import BoardStore from 'app/stores/board-store';
+import { STORE_BOARD, STORE_ROUTER, STORE_UI, STORE_AUTH, STORE_NAV } from 'app/constants/stores';
+import { NavStore } from 'app/stores/nav-store';
 
-interface createStoresProps {
-  history: History;
-  defaultTodos?: TodoModel[];
-  defaultLinks?: LinkModel[];
-  defaultUsers?: UserModel[];
-  defaultColumns?: LinkColumnModel[];
-}
-export const createStores = ({
-  history,
-  defaultTodos,
-  defaultLinks,
-  defaultUsers,
-  defaultColumns
-}: createStoresProps) => {
-  const todoStore = new TodoStore(defaultTodos);
-  const linkStore = new LinkStore(defaultLinks);
-  const userStore = new UserStore(defaultUsers);
-  const columnStore = new ColumnStore(defaultColumns);
+export const createStores = (history: History) => {
+  const authStore = new AuthStore();
   const routerStore = new RouterStore(history);
+  const uiStore = new UiStore();
+  const boardStore = new BoardStore();
+  const navStore = new NavStore();
   return {
-    [STORE_TODO]: todoStore,
     [STORE_ROUTER]: routerStore,
-    [STORE_LINK]: linkStore,
-    [STORE_USER]: userStore,
-    [STORE_COLUMN]: columnStore
+    [STORE_AUTH]: authStore,
+    [STORE_UI]: uiStore,
+    [STORE_BOARD]: boardStore,
+    [STORE_NAV]: navStore,
   };
 };

@@ -14,12 +14,12 @@ Content-Type: application/json
 
 ###
 
-GET http://localhost:8080/columns/all
+GET http://localhost:8080/categories/all
 Content-Type: application/json
 
 ###
 
-POST http://localhost:8080/columns/
+POST http://localhost:8080/categories/
 Content-Type: application/json
 
 {
@@ -29,7 +29,7 @@ Content-Type: application/json
 
 ###
 
-POST http://localhost:8080/columns/
+POST http://localhost:8080/categories/
 Content-Type: application/json
 
 {
@@ -39,7 +39,7 @@ Content-Type: application/json
 
 ###
 
-POST http://localhost:8080/columns/
+POST http://localhost:8080/categories/
 Content-Type: application/json
 
 {
@@ -49,7 +49,7 @@ Content-Type: application/json
 
 ###
 
-POST http://localhost:8080/columns/
+POST http://localhost:8080/categories/
 Content-Type: application/json
 
 {
@@ -64,7 +64,7 @@ Content-Type: application/json
 
 ###
 
-GET http://localhost:8080/links/user/jeemyeong@gmail.com
+GET http://localhost:8080/users/jeemyeong@gmail.com/links
 Content-Type: application/json
 
 ###
@@ -75,7 +75,7 @@ Content-Type: application/json
 {
   "url": "https://reactjs.org/blog/2018/03/29/react-v-16-3.html",
   "content": "리액트 블로그",
-  "linkColumnId": "1",
+  "categoryId": "1",
   "email": "jeemyeong@gmail.com"
 }
 
@@ -87,7 +87,7 @@ Content-Type: application/json
 {
   "url": "https://github.com/atlassian/react-beautiful-dnd/",
   "content": "리액트 dnd",
-  "linkColumnId": "1",
+  "categoryId": "1",
   "email": "jeemyeong@gmail.com"
 }
 
@@ -99,7 +99,7 @@ Content-Type: application/json
 {
   "url": "https://react.semantic-ui.com/introduction",
   "content": "리액트 semantic ui",
-  "linkColumnId": "1",
+  "categoryId": "1",
   "email": "jeemyeong@gmail.com"
 }
 
@@ -111,7 +111,7 @@ Content-Type: application/json
 {
   "url": "https://kotlinlang.org/docs/tutorials/koans.html",
   "content": "코틀린 튜토리얼",
-  "linkColumnId": "2",
+  "categoryId": "2",
   "email": "jeemyeong@gmail.com"
 }
 
@@ -123,7 +123,7 @@ Content-Type: application/json
 {
   "url": "https://redis.io/",
   "content": "레디스",
-  "linkColumnId": "3",
+  "categoryId": "3",
   "email": "jeemyeong@gmail.com"
 }
 
@@ -135,7 +135,7 @@ Content-Type: application/json
 {
   "url": "https://www.popit.kr/cqrs-eventsourcing/",
   "content": "나만 모르고 있던 CQRS",
-  "linkColumnId": "4",
+  "categoryId": "4",
   "email": "jeemyeong@gmail.com"
 }
 
@@ -147,9 +147,29 @@ Content-Type: application/json
 {
   "url": "https://blog.aliencube.org/ko/2013/08/18/cqrs-oversimplified-overview/",
   "content": "CQRS 초간단 정리",
-  "linkColumnId": "4",
+  "categoryId": "4",
   "email": "jeemyeong@gmail.com"
 }
 
 ###
 
+DELETE http://localhost:8080/links/20
+Content-Type: application/json
+
+###
+
+GET http://localhost:8080/links/testCrawl
+Content-Type: application/json
+
+###
+
+
+POST http://localhost:8080/links/
+Content-Type: application/json
+
+{"link":{"id":0,"content":"","category":{"id":4,"title":"CQRS","user":{"id":2,"email":"jeemyeong@gmail.com"},"order":2},"url":"asgd","order":5},"email":"jeemyeong@gmail.com",
+"hello": "String"
+
+}
+
+###
