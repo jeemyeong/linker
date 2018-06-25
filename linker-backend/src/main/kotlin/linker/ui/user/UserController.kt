@@ -38,7 +38,7 @@ class UserController {
         val user = userService.signInWithGoogle(signInCommand.accessToken)
         val token = signHelper.createToken(user.id, listOf(Role.ROLE_CLIENT))
         val cookie = Cookie("JWT", token)
-        cookie.domain = "localhost"
+        cookie.domain = "linker.jeemyeong.com"
         cookie.path = "/"
         response.addCookie(cookie)
         return ResponseEntity<Any>(UserDto.fromDomain(user), HttpStatus.OK)
@@ -50,7 +50,7 @@ class UserController {
         val user = userService.findUserById(signHelper.getUserId()).orElseThrow { InternalError("Cannot find user") }
         val token = signHelper.createToken(user.id, listOf(Role.ROLE_CLIENT))
         val cookie = Cookie("JWT", token)
-        cookie.domain = "localhost"
+        cookie.domain = "linker.jeemyeong.com"
         cookie.path = "/"
         response.addCookie(cookie)
         return ResponseEntity<Any>(UserDto.fromDomain(user), HttpStatus.OK)
@@ -59,7 +59,7 @@ class UserController {
     @RequestMapping(value = ["/sign-out"], method = [(RequestMethod.GET)])
     fun signOut(response: HttpServletResponse): ResponseEntity<Any> {
         val cookie = Cookie("JWT", "deleted")
-        cookie.domain = "localhost"
+        cookie.domain = "linker.jeemyeong.com"
         cookie.path = "/"
         cookie.maxAge = -1
         response.addCookie(cookie)
