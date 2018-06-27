@@ -55,5 +55,5 @@ docker build -t linker/frontend:0.1 .
 ## Serving Frontend
 
 ```
-docker run -d --name linker-frontend -p 80:8000 linker/frontend:0.1
+docker run --rm -d --name linker-frontend -p 80:80 linker/frontend:0.1
 ```
