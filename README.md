@@ -43,7 +43,7 @@ docker run -d --name linker-backend -p 8080:8080 --net=host linker/backend:0.1
 # Frontend
 
 ```
-cd linker-backend
+cd linker-frontend
 ```
 
 ## Dockerizing Frontend
