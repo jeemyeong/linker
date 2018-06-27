@@ -4,7 +4,7 @@
 
 ```
 docker run -d -p 3306:3306 \
-  -e MYSQL_ROOT_PASSWORD=examplepassword
+  -e MYSQL_ROOT_PASSWORD=linker
   --name mysql \
   mysql:5.7
 ```
@@ -12,7 +12,7 @@ docker run -d -p 3306:3306 \
 ## Database configuration of MySQL
 
 ```
-docker exec -it mysql mysql
+docker exec -it mysql mysql -uroot -p
 ```
 
 ```
