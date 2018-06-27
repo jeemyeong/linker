@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*
  * Time: 12:46 AM
  */
 
-@CrossOrigin(origins = ["http://localhost:3000"], allowCredentials = "true")
+@CrossOrigin(origins = ["http://localhost:3000", "http://linker.jeemyeong.com"], allowCredentials = "true")
 @RestController
 @RequestMapping(value = ["/board"])
 @Controller
