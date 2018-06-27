@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
 import { Router, Route, Switch } from 'react-router';
-import { Root } from 'app/containers/Root';
+import { Root } from 'app/containers/root';
 import { createBrowserHistory } from 'history';
 import { createStores } from 'app/stores/createStore';
 import { useStrict } from 'mobx';

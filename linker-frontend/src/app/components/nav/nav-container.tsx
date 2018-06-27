@@ -45,10 +45,11 @@ const Tabs = styled.div`
 const Tab = styled.h3`
   flex:1 1 auto;
   width: 200px;
-  height: ${sizes.leftSide.tab.height};
+  min-height: ${sizes.leftSide.tab.height};
   font-size: ${sizes.leftSide.tab.fontSize};
   font-weight: 600;
   margin-top: 10px;
+  line-height: 1.1;
   cursor: pointer;
   user-select: none;
   color: ${({isSelected}: {isSelected?: boolean}) => isSelected? colors.main : colors.grey.light};
@@ -64,14 +65,14 @@ const StyledButton = styled(Button)`
     color: ${colors.main};
     transition: color 0.3s ease;
     border-radius: 10px;
-    background-color: ${colors.purple.bright};
+    background-color: ${colors.submain};
     width: 100%;
     cursor: pointer;
     margin-top: 10px;
     padding: 5px;
     &:hover {
-      background-color: ${colors.purple.bright};
-      color: ${colors.purple.raspberry}
+      background-color: ${colors.purple.lighter};
+      color: ${colors.purple.light}
     }
     & span {
       height: 100%;

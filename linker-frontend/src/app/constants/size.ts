@@ -30,7 +30,23 @@ export const sizes = {
         }
       },
     },
-
+  },
+  dialogModal: {
+    dialogContent: {
+      dialogLabel: {
+        fontSize: '1.8em'
+      },
+      textField: {
+        width: '30vw',
+        height: '70px',
+        fontSize: '2em',
+      }
+    },
+    dialogAction: {
+      dialogButton: {
+        width: '105px'
+      }
+    }
   }
 
 };

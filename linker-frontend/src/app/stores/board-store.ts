@@ -26,8 +26,8 @@ export class BoardStore {
       .then(board => runInAction(() =>{
         this.board = board;
         this.isLoading = false;
-        this.maxLinkId = Math.max(...R.unnest(this.board.categories.map(category => R.unnest(category.links.map(link => link.id))))) + 1;
-        this.maxCategoryId = Math.max(...this.board.categories.map(category => category.id)) + 1;
+        this.maxLinkId = Math.max(...R.unnest(this.board.categories.map(category => R.unnest(category.links.map(link => link.id)))));
+        this.maxCategoryId = Math.max(...this.board.categories.map(category => category.id));
       }))
       .catch(() => runInAction(() => {
         this.board = null;
@@ -56,8 +56,8 @@ export class BoardStore {
       }
       this.board = board;
       this.isLoading = false;
-      this.maxLinkId = Math.max(...R.unnest(this.board.categories.map(category => R.unnest(category.links.map(link => link.id))))) + 1;
-      this.maxCategoryId = Math.max(...this.board.categories.map(category => category.id)) + 1;
+      this.maxLinkId = Math.max(...R.unnest(this.board.categories.map(category => R.unnest(category.links.map(link => link.id)))));
+      this.maxCategoryId = Math.max(...this.board.categories.map(category => category.id));
     }))
     .catch((e) => rootStore[STORE_UI].openSnackbar({message: 'Error for update'}) || this.getBoard({id: this.board.id}).then(() => Promise.reject(e)))
   ;
@@ -94,12 +94,12 @@ export class BoardStore {
 
   @action
   addLink = ({url, category}: {url: string, category: CategoryData}) => {
+    this.maxLinkId += 1;
     const link: LinkData = {
       url,
       id: this.maxLinkId,
       content: '',
     };
-    this.maxLinkId += 1;
     this.board.categories.find(c => c.id == category.id).links.push(link);
     return this.update()
   };
@@ -114,12 +114,12 @@ export class BoardStore {
 
   @action
   addCategory = ({title}: {title: string}) => {
+    this.maxCategoryId += 1;
     const category: CategoryData = {
       id: this.maxCategoryId,
       title: title,
       links: []
     };
-    this.maxCategoryId += 1;
     this.board.categories = [category, ...this.board.categories];
     return this.update()
   };

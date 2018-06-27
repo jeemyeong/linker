@@ -33,9 +33,9 @@ class GoogleOAuthRestManager: RestManager() {
 
 data class GoogleOAuthResponse(
         val email: String,
-        val name: String,
-        val id: String,
-        val link: String,
-        val locale: String,
-        val picture: String
+        val name: String?,
+        val id: String?,
+        val link: String?,
+        val locale: String?,
+        val picture: String?
 )

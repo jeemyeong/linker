@@ -1,0 +1,1 @@
+yarn build && docker stop linker-frontend || docker rm linker-frontend || docker rmi jeemyeong/linker-frontend && docker build . -t jeemyeong/linker-frontend && docker run -p 80:80 -d --name linker-frontend jeemyeong/linker-frontend

@@ -6,73 +6,16 @@ import { STORE_NAV, STORE_UI } from 'app/constants/stores';
 import { NavStore } from 'app/stores/nav-store';
 import UiStore from 'app/stores/ui-store';
 import { BoardData } from 'app/type/board-data';
-
-const DialogTitle = styled.h1`
-  font-size: 3.5em;
-  font-weight: 800;
-  margin: 10px;
-  margin-bottom: 20px;
-  user-select: none;
-  color: ${colors.black}
-`;
-
-const DialogContent = styled.div`
-  margin-top: 50px;
-  margin-bottom: 30px;
-`;
-
-const Label = styled.label`
-  color: ${colors.grey.light2}
-  font-size: 1.8em;
-  font-weight: 600;
-  margin: 10px;
-`;
-
-const TextField = styled.input`
-  margin: 10px;
-  min-width: 100%;
-  width: 30vw;
-  height: 70px;
-  padding: 10px 30px;
-  background: rgba(0,0,0,0.03);
-  border-radius: 10px;
-  font-size: 2em;
-  font-weight: 700;
-  border: none;
-  outline: none;
-  color: ${colors.black};
-  &::placeholder {
-    color: ${colors.grey.light};
-  };
-`;
-
-const DialogActions = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-`;
-
-const Button = styled.button` 
-  ${({backgroundColor, color}: { backgroundColor?, color? }) => `
-    background: ${backgroundColor || ''};
-    &: hover {
-      background: ${backgroundColor ? backgroundColor : `rgba(0,0,0,0.03)`};
-    };
-    color: ${color || colors.grey.light};
-    cursor: pointer;
-    padding: 10px 30px;
-    font-weight: 700;
-    border-radius: 15px;
-    font-size: 1.2em;
-    outline: none;
-    margin: 5px;
-  `}
-`;
+import {
+  DialogActions, DialogButton, DialogContent, DialogLabel, DialogModal, DialogTitle,
+  TextField
+} from 'app/components/ui/dialog-modal';
+import { sizes } from 'app/constants/size';
 
 const List = styled.ul`
   margin: 10px;
   min-width: 100%;
-  width: 30vw;
+  width: ${sizes.dialogModal.dialogContent.textField.width};
   padding: 50px 60px;
   background: rgba(0,0,0,0.03);
   border-radius: 10px;
@@ -158,10 +101,10 @@ export class ManageBoards extends React.Component<ManageBoardsProps, ManageBoard
     const navStore = this.props[STORE_NAV] as NavStore;
     const uiStore = this.props[STORE_UI] as UiStore;
     return (
-      <div>
+      <DialogModal>
         <DialogTitle>Boards</DialogTitle>
         <DialogContent>
-          <Label htmlFor='input'>Create New</Label>
+          <DialogLabel htmlFor='input'>Create New</DialogLabel>
           <TextField
             autoFocus
             id="input"
@@ -187,19 +130,18 @@ export class ManageBoards extends React.Component<ManageBoardsProps, ManageBoard
           </List> }
         </DialogContent>
         <DialogActions>
-          <Button onClick={uiStore.closeDialog}>
+          <DialogButton onClick={uiStore.closeDialog}>
             Cancel
-          </Button>
-          <Button
+          </DialogButton>
+          <DialogButton
             onClick={this.onSubmit}
             color={colors.white}
             backgroundColor={colors.main}
           >
             Create
-          </Button>
+          </DialogButton>
         </DialogActions>
-
-      </div>
+      </DialogModal>
     )
   }
 }

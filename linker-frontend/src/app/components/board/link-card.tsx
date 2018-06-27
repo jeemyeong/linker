@@ -135,10 +135,10 @@ const A = styled.a`
   text-decoration: inherit;
 `;
 
-const GradientsA = styled.div`
+const Gradients = styled.div`
   width: 100%;
   height: 100%;
-  background: linear-gradient(to right, #feac5e, #c779d0, #4bc0c8);
+  background: linear-gradient(to right, ${({ gradient }: { gradient }) => gradient.join(", ")});
   background-size: 400% 400%;
   animation: Gradient 15s ease infinite;
   
@@ -155,26 +155,6 @@ const GradientsA = styled.div`
   }
 `;
 
-
-const GradientsB = styled.div`
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(to right, #59C173, #F37335, #5D26C1);
-  background-size: 400% 400%;
-  animation: Gradient 15s ease infinite;
-  
-  @keyframes Gradient {
-    0% {
-      background-position: 0% 50%;
-    }
-    50% {
-      background-position: 100% 50%;
-    }
-    100% {
-      background-position: 0% 50%;
-    }
-  }
-`;
 const StyledContextMenu = styled(ContextMenu)`
   && {
     background: ${colors.white};
@@ -213,12 +193,15 @@ interface LinkProps {
 
 @observer
 export class LinkCard extends React.Component<LinkProps, {}> {
+
+  gradient = sample(colors.gradients);
+
   shouldComponentUpdate(nextProps, nextState) {
     return !R.equals(nextProps, this.props)
   }
 
   render() {
-    const { link, onClickDelete, onClickEdit, isDragging } = this.props;
+    const { link, onClickDelete, onClickEdit } = this.props;
     log("render: " + link.url);
     const title = link.ogTitle ? link.ogTitle + ": " + link.url.replace(/^.*\/\//, "") : link.url.replace(/^.*\/\//, "").replace(/^www./, "");
     const ellipsedTitle = ellipseStr(title, 34);
@@ -226,7 +209,7 @@ export class LinkCard extends React.Component<LinkProps, {}> {
       <Card>
         <Figure>
           {link.ogImage ?
-            <Img src={link.ogImage} alt="card image"/> : !isDragging && sample([<GradientsA/>, <GradientsB/>])
+            <Img src={link.ogImage} alt="card image"/> : <Gradients gradient={this.gradient}/>
           }
           <Caption>
             <A href={link.url} target="_blank">
