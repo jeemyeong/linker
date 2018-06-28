@@ -4,7 +4,7 @@
 
 ```
 docker run -d -p 3306:3306 \
-  -e MYSQL_ROOT_PASSWORD=examplepassword
+  -e MYSQL_ROOT_PASSWORD=linker
   --name mysql \
   mysql:5.7
 ```
@@ -12,7 +12,7 @@ docker run -d -p 3306:3306 \
 ## Database configuration of MySQL
 
 ```
-docker exec -it mysql mysql
+docker exec -it mysql mysql -uroot -p
 ```
 
 ```
@@ -43,7 +43,7 @@ docker run -d --name linker-backend -p 8080:8080 --net=host linker/backend:0.1
 # Frontend
 
 ```
-cd linker-backend
+cd linker-frontend
 ```
 
 ## Dockerizing Frontend
@@ -55,5 +55,5 @@ docker build -t linker/frontend:0.1 .
 ## Serving Frontend
 
 ```
-docker run -d --name linker-frontend -p 80:8000 linker/frontend:0.1
+docker run --rm -d --name linker-frontend -p 80:80 linker/frontend:0.1
 ```
