@@ -34,6 +34,14 @@ cd linker-backend
 docker build -t linker/backend:0.1 .
 ```
 
+## Send docker image to remote server
+
+```sh
+# bzip2 should be installed before this command
+docker save linker/backend:0.1 | bzip2 | \
+     ssh root@{remote.server.ip} 'bunzip2 | docker load'
+```
+
 ## Serving Backend
 
 ```sh
@@ -50,6 +58,14 @@ cd linker-frontend
 
 ```sh
 docker build -t linker/frontend:0.1 .
+```
+
+## Send docker image to remote server
+
+```sh
+# bzip2 should be installed before this command
+docker save linker/frontend:0.1 | bzip2 | \
+     ssh root@{remote.server.ip} 'bunzip2 | docker load'
 ```
 
 ## Serving Frontend
