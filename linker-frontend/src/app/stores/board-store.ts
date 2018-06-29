@@ -16,8 +16,8 @@ export class BoardStore {
 
   @observable public board?: BoardData;
   @observable public isLoading: boolean;
-  private maxLinkId = 0;
-  private maxCategoryId = 0;
+  private maxLinkId = 99999999;
+  private maxCategoryId = 99999999;
 
   @action
   getBoard = ({id}: {id: number}) => {
@@ -26,8 +26,6 @@ export class BoardStore {
       .then(board => runInAction(() =>{
         this.board = board;
         this.isLoading = false;
-        this.maxLinkId = Math.max(...R.unnest(this.board.categories.map(category => R.unnest(category.links.map(link => link.id)))));
-        this.maxCategoryId = Math.max(...this.board.categories.map(category => category.id));
       }))
       .catch(() => runInAction(() => {
         this.board = null;
