@@ -64,3 +64,8 @@ iptables -I INPUT 5 -p tcp -m tcp --dport 80 -j ACCEPT
 iptables -I INPUT 5 -p tcp -m tcp --dport 8080 -j ACCEPT
 iptables -I INPUT 5 -p tcp -m tcp --dport 3306 -j ACCEPT
 ```
+
+# Remove docker cache
+```sh
+docker system prune -a
+```
