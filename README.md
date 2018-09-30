@@ -4,7 +4,7 @@
 
 ```sh
 docker run -d -p 3306:3306 \
-  -e MYSQL_ROOT_PASSWORD=linker \
+  -e MYSQL_ROOT_PASSWORD={MYSQL_ROOT_PASSWORD} \
   --name mysql \
   mysql:5.7
 ```
@@ -16,8 +16,8 @@ docker exec -it mysql mysql -uroot -p
 ```
 
 ```sh
-create database linker CHARACTER SET utf8;
-grant all privileges on linker.* to linker@'%' identified by 'linkerpassword';
+create database {database} CHARACTER SET utf8;
+grant all privileges on {database}.* to {host}@'%' identified by '{password}';
 flush privileges;
 quit
 ```
