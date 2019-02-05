@@ -133,3 +133,5 @@ typings/
 
 # dist
 dist
+
+.idea/vcs.xml

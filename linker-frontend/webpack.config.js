@@ -1,17 +1,21 @@
-var webpack = require('webpack');
-var path = require('path');
+const webpack = require('webpack');
+const path = require('path');
 
 // variables
-var isProduction = process.argv.indexOf('-p') >= 0;
-var sourcePath = path.join(__dirname, './src');
-var outPath = path.join(__dirname, './dist');
+const isProduction = process.argv.indexOf('-p') >= 0;
+const sourcePath = path.join(__dirname, './src');
+const outPath = path.join(__dirname, './dist');
 
 // plugins
-var HtmlWebpackPlugin = require('html-webpack-plugin');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
-var WebpackCleanupPlugin = require('webpack-cleanup-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const WebpackCleanupPlugin = require('webpack-cleanup-plugin');
+const TerserWebpackPlugin = require('terser-webpack-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const tsImportPluginFactory = require('ts-import-plugin')
 
 module.exports = {
+  mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
   context: sourcePath,
   entry: {
     main: './index.tsx'
@@ -36,10 +40,22 @@ module.exports = {
     rules: [
       // .ts, .tsx
       {
-        test: /\.tsx?$/,
+        test: /\.(js|jsx|tsx|ts)$/,
         use: isProduction
-          ? 'ts-loader'
-          : ['babel-loader?plugins=react-hot-loader/babel', 'ts-loader']
+          ? [{
+              loader: 'ts-loader',
+              options: {
+                transpileOnly: true,
+                getCustomTransformers: () => ({
+                  before: [ tsImportPluginFactory() ]
+                }),
+                compilerOptions: {
+                  module: 'es2015'
+                }
+              }
+            }]
+          : ['babel-loader?plugins=react-hot-loader/babel', 'ts-loader'],
+          exclude: /node_modules/
       },
       // css
       {
@@ -84,23 +100,6 @@ module.exports = {
       { test: /\.html$/, use: 'html-loader' },
     ]
   },
-  optimization: {
-    splitChunks: {
-      name: true,
-      cacheGroups: {
-        commons: {
-          chunks: 'initial',
-          minChunks: 2
-        },
-        vendors: {
-          test: /[\\/]node_modules[\\/]/,
-          chunks: 'all',
-          priority: -10
-        }
-      }
-    },
-    runtimeChunk: true
-  },
   plugins: [
     new WebpackCleanupPlugin(),
     new ExtractTextPlugin({
@@ -110,11 +109,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: 'assets/index.html'
     }),
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: JSON.stringify(process.env.NODE_ENV),
-      },
-    }),
+    new BundleAnalyzerPlugin()
   ],
   devServer: {
     contentBase: sourcePath,
@@ -125,7 +120,7 @@ module.exports = {
     },
     stats: 'minimal'
   },
-  devtool: 'cheap-module-eval-source-map',
+  devtool: isProduction ? '' : 'cheap-module-eval-source-map',
   node: {
     // workaround for webpack-dev-server issue
     // https://github.com/webpack/webpack-dev-server/issues/60#issuecomment-103411179
