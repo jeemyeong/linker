@@ -54,7 +54,7 @@ module.exports = {
                 }
               }
             }]
-          : ['babel-loader?plugins=react-hot-loader/babel', 'ts-loader'],
+          : ['babel-loader', 'ts-loader'],
           exclude: /node_modules/
       },
       // css

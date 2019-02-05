@@ -58,7 +58,7 @@ export interface LinkerState {}
 
 @inject(STORE_UI, STORE_ROUTER, STORE_AUTH, STORE_NAV, STORE_BOARD)
 @observer
-export class Linker extends React.Component<LinkerAppProps, LinkerState> {
+class Linker extends React.Component<LinkerAppProps, LinkerState> {
 
   unsubscribeHistory;
 
@@ -161,3 +161,5 @@ export class Linker extends React.Component<LinkerAppProps, LinkerState> {
     )
   }
 }
+
+export default Linker;

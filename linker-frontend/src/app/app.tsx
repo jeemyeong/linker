@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Suspense, lazy } from 'react';
 import { hot } from 'react-hot-loader';
 import { Router, Route, Switch } from 'react-router';
 import { Root } from 'app/containers/root';
@@ -6,7 +7,7 @@ import { createBrowserHistory } from 'history';
 import { createStores } from 'app/stores/createStore';
 import { useStrict } from 'mobx';
 import { Provider } from 'mobx-react';
-import { Linker } from 'app/containers/linker';
+const Linker = lazy(() => import('app/containers/linker'));
 import axios from 'axios';
 
 // enable axios with cookie
@@ -23,10 +24,12 @@ export const rootStore = createStores(history);
 export const AppRouter = hot(module)(({ history }) => (
   <Root>
     <Router history={history}>
-      <Switch>
-        <Route path="/user/:userId" component={Linker} />
-        <Route component={Linker} />
-      </Switch>
+      <Suspense fallback={null}>
+        <Switch>
+          <Route path="/user/:userId" render={(props) => <Linker {...props} />} />
+          <Route render={(props) => <Linker {...props} />} />
+        </Switch>
+      </Suspense>
     </Router>
   </Root>
 ));
